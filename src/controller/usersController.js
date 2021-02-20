@@ -2,6 +2,7 @@ const path = require("path");
 const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+let {validationResult} = require("express-validator")
 
 const usersController = {
   //Registro de Usuarios
@@ -54,31 +55,33 @@ const usersController = {
 
   login: async (req, res) => {
     try {
+//console.log(validationResult(),"58")
       let { email, password } = req.body;
       // Buscar usuario
       let user = await DB.usuarios.findOne({
         where: {
           email:email ,
+       
         },
       });
    let passwordCompared = bcrypt.compareSync(password, user.password)
-   console.log(passwordCompared,'65')
-      let token;
-      !user && !passwordCompared
-        ? res.send("usuario no existe")
-        : // Creamos el token
-          (token = await jwt.sign({ user: user }, "penalty", {
+let token;
+if( !passwordCompared && !user=== false){
+  res.send({ status:401,auth: false, message: 'No existe el usuario' });
+}else{
+token = await  jwt.sign({ user: user }, "penalty", {
             expiresIn: 3600,
-          }));
+          });
       res.json({
         user: user,
         token: token,
-      })
-    } catch (error) {
+      })}
+
+}catch (error) {
       res.send(error);
     }
-  },
-};
+  }
+}
 
 //falta agregar la contraseña  modificar un poco mas el login
 module.exports = usersController;

@@ -3,8 +3,10 @@ var express = require('express');
 var multer= require('multer');
 var router = express.Router();
 var path=require('path');
-var {check} = require("express-validator");
+var { check } = require("express-validator");
 const usersController= require('../controller/usersController');
+const validationUser = require('../middlewares/validationUser');
+const validationLogin = require('../middlewares/validationLogin');
 
 //fx de multer
 const storage = multer.diskStorage({
@@ -22,14 +24,14 @@ router.post('/register',[
     check('nombre').isLength({min:2}).withMessage('ingrese su nombre'),
     check('email').isEmail().withMessage('ingrese un email'),
     check('password').isLength({min:6}).withMessage('ingrese una contraseña')
-],usersController.register);
+],validationUser,usersController.register);
 
 /* Log In */
 
 router.post('/login',[
   check('email','El campo requiere un E-mail').isEmail().isLength(),
   check('password','Debe ingresar su contraseña').isLength({min:3})
-],usersController.login); 
+],validationLogin ,usersController.login); 
 
 /* User Profile */
 //router.get('/profile',usersController.profile);
