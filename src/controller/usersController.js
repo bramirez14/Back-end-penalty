@@ -67,7 +67,7 @@ const usersController = {
    let passwordCompared = bcrypt.compareSync(password, user.password)
 let token;
 if( !passwordCompared && !user=== false){
-  res.send({ status:401,auth: false, message: 'No existe el usuario' });
+  res.send({ status:401,auth: false, message: 'Usuario o Contraseña no son correctos' });
 }else{
 token = await  jwt.sign({ user: user }, "penalty", {
             expiresIn: 3600,
