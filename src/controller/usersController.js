@@ -2,52 +2,56 @@ const path = require("path");
 const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-let {validationResult} = require("express-validator")
+
 
 const usersController = {
+  /**Lista de todos los usuarios*/
+  allusers: async (req, res) => {
+    try {
+      let result = await DB.usuarios.findAll();
+      res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
+  },
   //Registro de Usuarios
   register: async (req, res) => {
     try {
-      let { email, password, usuario, nombre, password2 } = req.body;
-      console.log(email)
-          console.log(password)
-          console.log(usuario)
-              console.log(nombre)
-              console.log(password2)
+      let data = req.body;
+      console.log(data);
+      const { email, password, password2 } = data;
       //Verificamos que el user no este registrado en la DB
       let verify = await DB.usuarios.findOne({
         where: {
-          email: req.body.email,
+          email: email,
         },
       });
-      !!verify?res.send("Ya estas registrado/a"):"";
-  //verificamos las contraseñas
-  if (password === password2) {
-      let  passwordEncriptada = bcrypt.hashSync(password, 10);
-        console.log(passwordEncriptada )
- //Creamos al usuario
-       let  user = await DB.usuarios.create({
-          usuario: usuario,
-          nombre:nombre,
-          email: email,
-          password: passwordEncriptada,
+      !!verify ? res.send("Ya estas registrado/a") : "";
+      //verificamos las contraseñas
+      if (password === password2) {
+        encryptedKey= bcrypt.hashSync(password, 10);
+        //Creamos al usuario
+        let user = await DB.usuarios.create({
+          ...data,
+          password:encryptedKey
         });
-    
-   let token;
-      //(bcrypt.compareSync(password, user.password))
-      !user
-        ? res.send("No pudo crearse el usuario intentelo mas tarde , gracias ")
-        : // Creamos el token
-          token = await jwt.sign({ user: user }, "penalty", {
-            expiresIn: 3600,
-          });
-      res.json({
-        user: user,
-        token: token,
-      });
-    
-    }else{res.send('Las contraseñas no son iguales')}
-      } catch (error) {
+        let token;
+        !user
+          ? res.send(
+              "No pudo crearse el usuario intentelo mas tarde , gracias "
+            )
+          : // Creamos el token
+            (token = await jwt.sign({ user: user }, "penalty", {
+              expiresIn: 3600,
+            }));
+        res.json({
+          user: user,
+          token: token,
+        });
+      } else {
+        res.send("Las contraseñas no son iguales");
+      }
+    } catch (error) {
       res.send(error);
     }
   },
@@ -55,33 +59,49 @@ const usersController = {
 
   login: async (req, res) => {
     try {
-//console.log(validationResult(),"58")
       let { email, password } = req.body;
+      console.log(password);
       // Buscar usuario
       let user = await DB.usuarios.findOne({
         where: {
-          email:email ,
-       
+          email: email,
         },
       });
-   let passwordCompared = bcrypt.compareSync(password, user.password)
-let token;
-if( !passwordCompared && !user=== false){
-  res.send({ status:401,auth: false, message: 'Usuario o Contraseña no son correctos' });
-}else{
-token = await  jwt.sign({ user: user }, "penalty", {
-            expiresIn: 3600,
-          });
-      res.json({
-        user: user,
-        token: token,
-      })}
 
-}catch (error) {
+      let passwordCompared = bcrypt.compareSync(password, user.password);
+
+      let token;
+      if (!passwordCompared && !user === false) {
+        res.send({
+          status: 401,
+          auth: false,
+          message: "Usuario o Contraseña no son correctos",
+        });
+      } else {
+        token = await jwt.sign({ user: user }, "penalty", {
+          expiresIn: 3600,
+        });
+        res.json({
+          user: user,
+          token: token,
+        });
+      }
+    } catch (error) {
       res.send(error);
     }
-  }
-}
+  },
+  /******sector despues de Loguearse ******/
+  anticipo: async (req, res) => {
+    try {
+      const data = req.body;
+      console.log(data, "110");
+      //crea el anticipo y lo relacion con el usuario
+      const anticipoCreated = await DB.anticipos.create(data);
+      res.send("ok");
+    } catch (error) {
+      res.send(error);
+    }
+  },
+};
 
-//falta agregar la contraseña  modificar un poco mas el login
 module.exports = usersController;
