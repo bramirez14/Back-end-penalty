@@ -2,7 +2,7 @@ const path = require("path");
 const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
+const { send } = require("process");
 
 const usersController = {
   /**Lista de todos los usuarios*/
@@ -29,11 +29,11 @@ const usersController = {
       !!verify ? res.send("Ya estas registrado/a") : "";
       //verificamos las contraseñas
       if (password === password2) {
-        encryptedKey= bcrypt.hashSync(password, 10);
+        encryptedKey = bcrypt.hashSync(password, 10);
         //Creamos al usuario
         let user = await DB.usuarios.create({
           ...data,
-          password:encryptedKey
+          password: encryptedKey,
         });
         let token;
         !user
@@ -94,10 +94,21 @@ const usersController = {
   anticipo: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data, "110");
+
       //crea el anticipo y lo relacion con el usuario
       const anticipoCreated = await DB.anticipos.create(data);
       res.send("ok");
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  vacaciones: async (req, res) => {
+    try {
+      const data = req.body;
+      console.log(data, "109");
+      const vacacionesSolicitadas = await DB.vacaciones.create(data);
+      console.log(vacacionesSolicitadas);
+      res.send({ msg: "vacacion solicitada"});
     } catch (error) {
       res.send(error);
     }
