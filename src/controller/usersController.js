@@ -2,7 +2,13 @@ const path = require("path");
 const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { send } = require("process");
+//const { send } = require("process");
+const {
+ crearRendicion,
+ guardarImagen,
+ clo,
+ tablaIntermedia
+} = require('../helper/funciones');
 
 const usersController = {
   /**Lista de todos los usuarios*/
@@ -94,7 +100,7 @@ const usersController = {
   anticipo: async (req, res) => {
     try {
       const data = req.body;
-
+console.log(data);
       //crea el anticipo y lo relacion con el usuario
       const anticipoCreated = await DB.anticipos.create(data);
       res.send("ok");
@@ -113,6 +119,29 @@ const usersController = {
       res.send(error);
     }
   },
+  rendicion: async (req, res) => {
+    try {
+      const data = req.body;
+      console.log(data,'122');
+      const rendicionCreada= await crearRendicion(data)
+      //guardamos imagenes en cloudinary y DB
+      const archivos = req.files;
+      console.log(archivos, "127");
+      const imagenes = archivos.map((archivo) => archivo.path);
+      console.log(imagenes,'132');
+     const imagenesNuevas = await clo(imagenes);
+      console.log(imagenesNuevas,'134');
+
+      const guardarImagenes = await guardarImagen(imagenesNuevas);
+      console.log(guardarImagenes,'137')
+      //guardamos los datos en la tabla intermedia
+     let tabla=  await tablaIntermedia(guardarImagenes, rendicionCreada.dataValues.id);
+      console.log(tabla,'140')
+      res.send('Rendicion e imagenes creadas satifactoriamente')
+    } catch (error) {
+      res.send(error)
+    }
+  }
 };
 
 module.exports = usersController;

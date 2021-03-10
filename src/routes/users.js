@@ -1,6 +1,6 @@
 var methodOverride = require('method-override')
 var express = require('express');
-var multer= require('multer');
+const multer= require('multer');
 var router = express.Router();
 var path=require('path');
 var { check } = require("express-validator");
@@ -8,6 +8,8 @@ const usersController= require('../controller/usersController');
 const validationUser = require('../middlewares/validationUser');
 const validationLogin = require('../middlewares/validationLogin');
 
+
+//fx de multer
 //fx de multer
 const storage = multer.diskStorage({
   destination: path.join(__dirname,'public/upload'),
@@ -16,6 +18,19 @@ const storage = multer.diskStorage({
   }
   })
 var upload = multer({ storage})
+/*const upload = multer({ storage,
+dest:path.join(__dirname,'public/upload'),
+limits:{fileSize:3000000},
+fileFilter:(req,file,cb) =>{
+  const filetypes = /jpeg|jpg|png|pdf/; 
+  const mimetype= filetypes.test(file.mimetype)
+    const extname = filetypes.test(path.extname(file.originalname))//obtengo jpg o png etc 
+    if(mimetype && extname){
+return cb(null, true)
+}
+    cb('Error: El archivo debe ser una imagen valida')
+}
+})*/
 /*Toos los usuarios registrados*/
 router.get('/allusers',usersController.allusers)
 /* User register */
@@ -36,4 +51,6 @@ router.post('/login',[
 router.post('/anticipo',usersController.anticipo)
 /*Vacaciones*/
 router.post('/vacaciones',usersController.vacaciones)
+/*Rendicion de Gastos*/ 
+router.post('/gastos',upload.array('image',4),usersController.rendicion)
 module.exports = router;
