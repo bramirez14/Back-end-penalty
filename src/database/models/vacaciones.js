@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     fechaHasta:DataTypes.STRING,
     dias: DataTypes.INTEGER,
     obs: DataTypes.STRING,
+    diasFaltantes:DataTypes.INTEGER,
     idusuario:DataTypes.INTEGER
   }, {});
  vacaciones.associate = function(models) {
