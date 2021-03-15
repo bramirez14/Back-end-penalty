@@ -53,4 +53,6 @@ router.post('/anticipo',usersController.anticipo)
 router.post('/vacaciones',usersController.vacaciones)
 /*Rendicion de Gastos*/ 
 router.post('/gastos',upload.array('image',4),usersController.rendicion)
+/*Todos los usuarios */
+router.get('/gerentes',usersController.gerentes)
 module.exports = router;

@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 //const { send } = require("process");
 const {
- crearRendicion,
- guardarImagen,
- clo,
- tablaIntermedia
-} = require('../helper/funciones');
+  crearRendicion,
+  guardarImagen,
+  clo,
+  tablaIntermedia,
+} = require("../helper/funciones");
 
 const usersController = {
   /**Lista de todos los usuarios*/
@@ -26,6 +26,7 @@ const usersController = {
       let data = req.body;
       console.log(data);
       const { email, password, password2 } = data;
+       email.toLowerCase()
       //Verificamos que el user no este registrado en la DB
       let verify = await DB.usuarios.findOne({
         where: {
@@ -66,17 +67,24 @@ const usersController = {
   login: async (req, res) => {
     try {
       let { email, password } = req.body;
-      console.log(password);
+      email.toLowerCase()
       // Buscar usuario
       let user = await DB.usuarios.findOne({
         where: {
           email: email,
         },
       });
-
+      /*condicional para verificar si no existe el usuario */
+      if (!!user === false) {
+        res.send({
+          status: 401,
+          auth: false,
+          message: "No estas registrado/a",
+        });
+      }
       let passwordCompared = bcrypt.compareSync(password, user.password);
-
       let token;
+      /*condicional para verificar al usuario existente en DB y comprobar la contraseña si machea */
       if (!passwordCompared && !user === false) {
         res.send({
           status: 401,
@@ -84,6 +92,7 @@ const usersController = {
           message: "Usuario o Contraseña no son correctos",
         });
       } else {
+        /*El token para validar a l usuario */
         token = await jwt.sign({ user: user }, "penalty", {
           expiresIn: 3600,
         });
@@ -100,7 +109,7 @@ const usersController = {
   anticipo: async (req, res) => {
     try {
       const data = req.body;
-console.log(data);
+      console.log(data);
       //crea el anticipo y lo relacion con el usuario
       const anticipoCreated = await DB.anticipos.create(data);
       res.send("ok");
@@ -114,7 +123,7 @@ console.log(data);
       console.log(data, "109");
       const vacacionesSolicitadas = await DB.vacaciones.create(data);
       console.log(vacacionesSolicitadas);
-      res.send({ msg: "vacacion solicitada"});
+      res.send({ msg: "vacacion solicitada" });
     } catch (error) {
       res.send(error);
     }
@@ -122,26 +131,33 @@ console.log(data);
   rendicion: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data,'122');
-      const rendicionCreada= await crearRendicion(data)
+      console.log(data, "122");
+      const rendicionCreada = await crearRendicion(data);
       //guardamos imagenes en cloudinary y DB
       const archivos = req.files;
       console.log(archivos, "127");
       const imagenes = archivos.map((archivo) => archivo.path);
-      console.log(imagenes,'132');
-     const imagenesNuevas = await clo(imagenes);
-      console.log(imagenesNuevas,'134');
+      console.log(imagenes, "132");
+      const imagenesNuevas = await clo(imagenes);
+      console.log(imagenesNuevas, "134");
 
       const guardarImagenes = await guardarImagen(imagenesNuevas);
-      console.log(guardarImagenes,'137')
+      console.log(guardarImagenes, "137");
       //guardamos los datos en la tabla intermedia
-     let tabla=  await tablaIntermedia(guardarImagenes, rendicionCreada.dataValues.id);
-      console.log(tabla,'140')
-      res.send('Rendicion e imagenes creadas satifactoriamente')
+      let tabla = await tablaIntermedia(
+        guardarImagenes,
+        rendicionCreada.dataValues.id
+      );
+      console.log(tabla, "140");
+      res.send("Rendicion e imagenes creadas satifactoriamente");
     } catch (error) {
-      res.send(error)
+      res.send(error);
     }
-  }
+  },
+  gerentes: async (req, res) => {
+    try {
+    } catch (error) {}
+  },
 };
 
 module.exports = usersController;
