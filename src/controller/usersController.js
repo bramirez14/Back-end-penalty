@@ -14,7 +14,9 @@ const usersController = {
   /**Lista de todos los usuarios*/
   allusers: async (req, res) => {
     try {
-      let result = await DB.usuarios.findAll();
+      let result = await DB.usuarios.findAll({
+        include:["departamento"]
+      });
       res.send(result);
     } catch (error) {
       res.send(error);
@@ -110,8 +112,18 @@ const usersController = {
     try {
       const data = req.body;
       console.log(data);
+      const {condicion,usuarioId}=data
+      console.log(condicion,'soy condicion');
+      console.log(data,'soy datos');
+
+      
       //crea el anticipo y lo relacion con el usuario
       const anticipoCreated = await DB.anticipos.create(data);
+      await DB.usuarios.update({condicion:condicion},{
+        where:{
+          id:usuarioId
+        }
+      })
       res.send("ok");
     } catch (error) {
       res.send(error);

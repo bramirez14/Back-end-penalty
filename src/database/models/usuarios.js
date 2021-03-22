@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     tipousuario: DataTypes.STRING,
     categoria:DataTypes.STRING,
     nvendedor: DataTypes.STRING,
-    fechaContratacion:DataTypes.STRING    
+    fechaContratacion:DataTypes.STRING,
+    condicion:DataTypes.STRING,
+    departamentoId:DataTypes.INTEGER
+     
   }, {});
 usuarios.associate = function(models) {
   usuarios.hasMany(models.anticipos,{
@@ -18,7 +21,11 @@ usuarios.associate = function(models) {
   usuarios.hasMany(models.vacaciones,{
     as:'vacacion',
     foreignKey:'idusuario'
-  })
+  }),
+    usuarios.belongsTo(models.departamentos,{
+        as:'departamento'
+      })
+  
 
   };
   return usuarios;
