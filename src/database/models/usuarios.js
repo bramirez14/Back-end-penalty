@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     nvendedor: DataTypes.STRING,
     fechaContratacion:DataTypes.STRING,
     condicion:DataTypes.STRING,
+    periodoPendiente:DataTypes.INTEGER,
     departamentoId:DataTypes.INTEGER
      
   }, {});

@@ -8,11 +8,15 @@ module.exports = (sequelize, DataTypes) => {
     dias: DataTypes.INTEGER,
     obs: DataTypes.STRING,
     diasFaltantes:DataTypes.INTEGER,
-    idusuario:DataTypes.INTEGER
+    idusuario:DataTypes.INTEGER,
+    idDiasvacaciones:DataTypes.INTEGER,
   }, {});
  vacaciones.associate = function(models) {
    vacaciones.belongsTo(models.usuarios,{
-        as:'usuario2'
+        as:'usuario'
+      }),
+      vacaciones.belongsTo(models.diasvacaciones,{
+        as:'vacaciones'
       })
   }
   return vacaciones;
