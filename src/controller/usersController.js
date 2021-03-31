@@ -153,6 +153,17 @@ try {
       res.send(error);
     }
   },
+  listaDiasVacaciones: async (req, res) => {
+try {
+  let result= await DB.diasvacaciones.findAll()
+  res.send(result)
+} catch (error) {
+  res.send(error);
+  
+}
+
+  },
+
   rendicion: async (req, res) => {
     try {
       const data = req.body;

@@ -53,6 +53,8 @@ router.post('/anticipo',usersController.anticipo)
 router.get('/vacaciones',usersController.allvacaciones)
 /*Vacaciones*/
 router.post('/vacaciones',usersController.vacaciones)
+/*Lista de Dias de Vacaciones*/
+router.get('/lista/vacaciones',usersController.listaDiasVacaciones)
 /*Rendicion de Gastos*/ 
 router.post('/gastos',upload.array('image',4),usersController.rendicion)
 /*Todos los usuarios */
