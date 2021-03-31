@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
 diasvacaciones.associate = function(models) {
   diasvacaciones.hasMany(models.vacaciones,{
-    as:'vacacion_dia',
-    foreignKey:'idDiasVacacionesPendientes'
+    as:'vacaciones_dias',
+    foreignKey:'idDiasVacaciones'
   })
   };
   return diasvacaciones;

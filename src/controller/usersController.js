@@ -15,7 +15,7 @@ const usersController = {
   allusers: async (req, res) => {
     try {
       let result = await DB.usuarios.findAll({
-        include:["departamento"]
+        include:["departamento","vaca"]
       });
       res.send(result);
     } catch (error) {
@@ -128,6 +128,19 @@ const usersController = {
     } catch (error) {
       res.send(error);
     }
+  },
+  allvacaciones:async (req, res) => {
+try {
+ /* let result = await DB.usuarios.findAll({
+    include:["anticipo"]
+  });*/
+  let result= await DB.vacaciones.findAll()
+  res.send(result)
+} catch (error) {
+  res.send(error);
+  
+}
+
   },
   vacaciones: async (req, res) => {
     try {

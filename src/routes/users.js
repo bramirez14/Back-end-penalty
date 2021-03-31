@@ -49,10 +49,14 @@ router.post('/login',[
 
 /* Anticipo */
 router.post('/anticipo',usersController.anticipo)
+/*Todas la vacaciones solicitadas */
+router.get('/vacaciones',usersController.allvacaciones)
 /*Vacaciones*/
 router.post('/vacaciones',usersController.vacaciones)
 /*Rendicion de Gastos*/ 
 router.post('/gastos',upload.array('image',4),usersController.rendicion)
 /*Todos los usuarios */
 router.get('/gerentes',usersController.gerentes)
+
+
 module.exports = router;
