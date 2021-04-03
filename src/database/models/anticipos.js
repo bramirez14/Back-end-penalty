@@ -7,10 +7,11 @@ module.exports = (sequelize, DataTypes) => {
     fecha:DataTypes.STRING,
     mensaje: DataTypes.STRING,
     usuId: DataTypes.INTEGER,
+  
   }, {});
   anticipos.associate = function(models) {
     anticipos.belongsTo(models.usuarios,{
-        as:'usuario2'
+        as:'usuarios'
       })
   }
   return anticipos;

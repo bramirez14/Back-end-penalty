@@ -112,7 +112,7 @@ const usersController = {
     try {
       const data = req.body;
       console.log(data);
-      const {condicion,usuarioId}=data
+      const {condicion,usuId}=data
       console.log(condicion,'soy condicion');
       console.log(data,'soy datos');
 
@@ -121,7 +121,7 @@ const usersController = {
       const anticipoCreated = await DB.anticipos.create(data);
       await DB.usuarios.update({condicion:condicion},{
         where:{
-          id:usuarioId
+          id:usuId
         }
       })
       res.send("ok");
