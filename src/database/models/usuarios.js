@@ -22,9 +22,14 @@ usuarios.associate = function(models) {
     as:'vaca',
     foreignKey:'usuarioId'
   }),
-    usuarios.belongsTo(models.departamentos,{
-        as:'departamento'
-      })
+  usuarios.hasMany(models.gastos,{
+    as:'gasto',
+    foreignKey:'uid'
+  }),
+
+  usuarios.belongsTo(models.departamentos,{
+      as:'departamento'
+    })
   
 
   };
