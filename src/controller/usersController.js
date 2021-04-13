@@ -69,6 +69,7 @@ const usersController = {
   login: async (req, res) => {
     try {
       let { email, password } = req.body;
+     
       email.toLowerCase()
       // Buscar usuario
       let user = await DB.usuarios.findOne({
@@ -76,11 +77,13 @@ const usersController = {
           email: email,
         },
       });
+     
       /*condicional para verificar si no existe el usuario */
       if (!!user === false) {
         res.send({
           status: 401,
           auth: false,
+          
           message: "No estas registrado/a",
         });
       }

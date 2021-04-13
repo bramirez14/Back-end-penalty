@@ -1,15 +1,15 @@
 module.exports = {
  "development": {
-   /* "username": "root",
-    "password": "Cambuci14",
-    "database": "intrapen",
-    "host": "190.19.91.89",
-    "dialect": "mysql"*/
     "username": "root",
+    "password": "Cambuci14",
+    "database": "intranetpenalty",
+    "host": "190.19.91.89",
+    "dialect": "mysql"
+    /*"username": "root",
     "password": "2650",
     "database": "intranet",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql"*/
   },
   "test": {
     "username": "root",
