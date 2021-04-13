@@ -112,7 +112,7 @@ const usersController = {
     try {
       const data = req.body;
       console.log(data);
-      const {condicion,usuId}=data
+      const {condicion,usuId}=datas
       console.log(condicion,'soy condicion');
       console.log(data,'soy datos');
 
@@ -193,6 +193,24 @@ try {
   gerentes: async (req, res) => {
     try {
     } catch (error) {}
+  },
+  mpagos: async (req, res) => {
+    try {
+      let result = await DB.formapagos.findAll();
+      res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  antpagos:async (req, res) => {
+    try {
+      const {data}=req.body
+      console.log(data,'208');
+     await DB.gastos.create(data);
+      res.send('se creo correctamente');
+    } catch (error) {
+      res.send(error);
+    }
   },
 };
 
