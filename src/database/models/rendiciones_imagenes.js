@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     idimagen: DataTypes.INTEGER
   }, {});
   rendiciones_imagenes.associate = function(models) {
-    // associations can be defined herez
+    
    
   };
   return rendiciones_imagenes;

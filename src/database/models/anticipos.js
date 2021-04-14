@@ -6,13 +6,13 @@ module.exports = (sequelize, DataTypes) => {
     importe: DataTypes.DECIMAL,
     fecha:DataTypes.STRING,
     mensaje: DataTypes.STRING,
-    usuId: DataTypes.INTEGER,
-  
+    usuarioId:DataTypes.INTEGER
   }, {});
   anticipos.associate = function(models) {
     anticipos.belongsTo(models.usuarios,{
-        as:'usuarios'
-      })
+      as:'usuario'
+    }) 
+ 
   }
   return anticipos;
 };

@@ -12,10 +12,26 @@ const {
 
 const usersController = {
   /**Lista de todos los usuarios*/
+  todosGastos:async (req, res) => {
+    try {
+      let result = await DB.gastos.findAll();
+      res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  todoAnt:async (req, res) => {
+    try {
+      let result = await DB.anticipos.findAll();
+      res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
+  },
   allusers: async (req, res) => {
     try {
       let result = await DB.usuarios.findAll({
-        include:["departamento","vaca"]
+        include:['anticipo','vacacion','gasto']
       });
       res.send(result);
     } catch (error) {
@@ -112,7 +128,7 @@ const usersController = {
     try {
       const data = req.body;
       console.log(data);
-      const {condicion,usuId}=datas
+      const {condicion,usuId}=data
       console.log(condicion,'soy condicion');
       console.log(data,'soy datos');
 
@@ -204,7 +220,7 @@ try {
   },
   antpagos:async (req, res) => {
     try {
-      const {data}=req.body
+      const data=req.body
       console.log(data,'208');
      await DB.gastos.create(data);
       res.send('se creo correctamente');

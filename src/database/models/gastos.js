@@ -3,19 +3,17 @@ module.exports = (sequelize, DataTypes) => {
   const gastos = sequelize.define('gastos', {
     importe: DataTypes.DECIMAL,
     msj: DataTypes.STRING,
-    uid: DataTypes.INTEGER,
-    idPago:DataTypes.INTEGER
+    usuarioId: DataTypes.INTEGER,
+    //formapagoId:DataTypes.INTEGER
   
   }, {});
   gastos.associate = function(models) {
     gastos.belongsTo(models.usuarios,{
-        as:'usu'
-      }),
-      gastos.belongsTo(models.formapagos,{
-        as:'pago'
-      })
+      as:'usuario'
+    })
+   
       
 
   }
-  return gastos;s
+  return gastos;
 };

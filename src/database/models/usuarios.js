@@ -11,22 +11,20 @@ module.exports = (sequelize, DataTypes) => {
     fechaContratacion:DataTypes.STRING,
     condicion:DataTypes.STRING,
     departamentoId:DataTypes.INTEGER
-     
   }, {});
 usuarios.associate = function(models) {
   usuarios.hasMany(models.anticipos,{
     as:'anticipo',
-    foreignKey:'usuId'
+    foreignKey:'usuarioId'
   }),
   usuarios.hasMany(models.vacaciones,{
-    as:'vaca',
+    as:'vacacion',
     foreignKey:'usuarioId'
   }),
   usuarios.hasMany(models.gastos,{
     as:'gasto',
-    foreignKey:'uid'
-  }),
-
+    foreignKey:'usuarioId'
+  })
   usuarios.belongsTo(models.departamentos,{
       as:'departamento'
     })

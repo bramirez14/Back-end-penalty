@@ -5,13 +5,13 @@ module.exports = (sequelize, DataTypes) => {
     gerenteId: DataTypes.INTEGER,
   }, {});
   departamentos.associate = function(models) {
-    departamentos.belongsTo(models.gerentes,{
+     departamentos.belongsTo(models.gerentes,{
         as:'gerente'
-      }),
+    })  
       departamentos.hasMany(models.usuarios,{
         as:'usuario',
         foreignKey:'departamentoId'
-      })
+      })  
   }
   return departamentos;
 };

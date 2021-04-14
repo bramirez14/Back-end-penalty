@@ -7,9 +7,12 @@ module.exports = {
     "dialect": "mysql"*/
     "username": "root",
     "password": "2650",
-    "database": "intranet",
+    "database": "intranetnew",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "define": {
+      "paranoid": true,
+    }
   },
   "test": {
     "username": "root",

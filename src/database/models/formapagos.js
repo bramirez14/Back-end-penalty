@@ -4,11 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     pago: DataTypes.STRING,
    
   
-  }, {});
+  }, {   timestamps:false });
   formapagos.associate = function(models) {
-    formapagos.hasMany(models.gastos,{
+    /* formapagos.hasMany(models.gastos,{
         as:'gasto'
-      })
+      }) */
   }
   return formapagos;
 };

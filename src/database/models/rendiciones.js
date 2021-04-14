@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
     
   }, {});
   rendiciones.associate = function(models) {
-    rendiciones.belongsToMany(models.imagenes,{
+     rendiciones.belongsToMany(models.imagenes,{
         as:'imagen',
         through: 'rendiciones_imagenes',
         foreingKey:'idrendicion',
         otherkey:'idimagen'
-      })
+      }) 
   }
   return rendiciones;
 };

@@ -49,6 +49,7 @@ router.post('/login',[
 
 /* Anticipo */
 router.post('/anticipo',usersController.anticipo)
+router.get('/anticipo',usersController.todoAnt)
 /*Todas la vacaciones solicitadas */
 router.get('/vacaciones',usersController.allvacaciones)
 /*Vacaciones*/
@@ -60,8 +61,9 @@ router.get('/gerentes',usersController.gerentes)
 /*Medios de pago */
 router.get('/mpagos',usersController.mpagos)
 /**Crear un anticipo de sueldo */
-router.post('/mpagos',usersController.antpagos)
-
+router.post('/mpago',usersController.antpagos)
+/**Todos los gastos */
+router.get('/gastos',usersController.todosGastos)
 
 
 module.exports = router;
