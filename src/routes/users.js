@@ -59,8 +59,8 @@ router.post('/gastos',upload.array('image',4),usersController.rendicion)
 router.get('/gerentes',usersController.gerentes)
 /*Medios de pago */
 router.get('/mpagos',usersController.mpagos)
-/**Crear un anticipo de sueldo */
-router.post('/mpagos',usersController.antpagos)
+/**Crear un anticipo de gastos */
+router.post('/mpago',usersController.antpagos)
 
 
 

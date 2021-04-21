@@ -114,8 +114,8 @@ const usersController = {
   anticipo: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data);
-      const {condicion,usuId}=datas
+      console.log(data,'117');
+      const {condicion,usuId}=data
       console.log(condicion,'soy condicion');
       console.log(data,'soy datos');
 
@@ -207,7 +207,7 @@ try {
   },
   antpagos:async (req, res) => {
     try {
-      const {data}=req.body
+      const data=req.body
       console.log(data,'208');
      await DB.gastos.create(data);
       res.send('se creo correctamente');
