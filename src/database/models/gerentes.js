@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   gerentes.associate = function(models) {
     gerentes.hasMany(models.departamentos,{
-      as:'usuario',
+      as:'departamento',
       foreignKey:'gerenteId'
     })
   }

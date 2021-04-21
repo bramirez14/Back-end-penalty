@@ -2,13 +2,16 @@
 module.exports = (sequelize, DataTypes) => {
   const formapagos = sequelize.define('formapagos', {
     pago: DataTypes.STRING,
+
    
   
   }, {   timestamps:false });
   formapagos.associate = function(models) {
-    /* formapagos.hasMany(models.gastos,{
-        as:'gasto'
-      }) */
+     formapagos.hasMany(models.gastos,{
+        as:'gasto',
+        foreignKey:'formapagoId'
+        
+      }) 
   }
   return formapagos;
 };
