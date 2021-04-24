@@ -6,9 +6,9 @@ const bcrypt = require("bcrypt");
 var cloudinary = require("cloudinary").v2;
 //config cloudinary
 cloudinary.config({
-  cloud_name: 'dtabhpdet',
-  api_key: '177248816949724',
-  api_secret:'wpeSwtO3MOHwwM58RFNf2BgYA9M',
+  cloud_name: "dtabhpdet",
+  api_key: "177248816949724",
+  api_secret: "wpeSwtO3MOHwwM58RFNf2BgYA9M",
 });
 
 //const { send } = require("process");
@@ -21,15 +21,17 @@ const {
 
 const usersController = {
   /**Lista de todos los usuarios*/
-  todosGastos:async (req, res) => {
+  todosGastos: async (req, res) => {
     try {
-      let result = await DB.gastos.findAll({include:['formapago','usuario']});
+      let result = await DB.gastos.findAll({
+        include: ["formapago", "usuario"],
+      });
       res.send(result);
     } catch (error) {
       res.send(error);
     }
   },
-  todoAnt:async (req, res) => {
+  todoAnt: async (req, res) => {
     try {
       let result = await DB.anticipos.findAll();
       res.send(result);
@@ -40,21 +42,21 @@ const usersController = {
   allusers: async (req, res) => {
     try {
       let result = await DB.usuarios.findAll({
-        include:['anticipo','vacacion','gasto','departamento']
+        include: ["anticipo", "vacacion", "gasto", "departamento"],
       });
       res.send(result);
     } catch (error) {
       res.send(error);
     }
   },
- 
+
   //Registro de Usuarios
   register: async (req, res) => {
     try {
       let data = req.body;
       console.log(data);
       const { email, password, password2 } = data;
-       email.toLowerCase()
+      email.toLowerCase();
       //Verificamos que el user no este registrado en la DB
       let verify = await DB.usuarios.findOne({
         where: {
@@ -95,7 +97,7 @@ const usersController = {
   login: async (req, res) => {
     try {
       let { email, password } = req.body;
-      email.toLowerCase()
+      email.toLowerCase();
       // Buscar usuario
       let user = await DB.usuarios.findOne({
         where: {
@@ -137,35 +139,34 @@ const usersController = {
   anticipo: async (req, res) => {
     try {
       const data = req.body;
-      const {usuId}=data
-      console.log(usuId,'soy el id del usuario');
-   
+      const { usuId } = data;
+      console.log(usuId, "soy el id del usuario");
 
-      
       //crea el anticipo y lo relacion con el usuario
       const anticipoCreado = await DB.anticipos.create(data);
-      await DB.usuarios.update({anticipoId:anticipoCreado.id},{
-        where:{
-          id:usuId
+      await DB.usuarios.update(
+        { anticipoId: anticipoCreado.id },
+        {
+          where: {
+            id: usuId,
+          },
         }
-      })
+      );
       res.send("ok");
     } catch (error) {
       res.send(error);
     }
   },
-  allvacaciones:async (req, res) => {
-try {
- /* let result = await DB.usuarios.findAll({
+  allvacaciones: async (req, res) => {
+    try {
+      /* let result = await DB.usuarios.findAll({
     include:["anticipo"]
   });*/
-  let result= await DB.vacaciones.findAll()
-  res.send(result)
-} catch (error) {
-  res.send(error);
-  
-}
-
+      let result = await DB.vacaciones.findAll();
+      res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
   },
   vacaciones: async (req, res) => {
     try {
@@ -179,14 +180,12 @@ try {
     }
   },
   listaDiasVacaciones: async (req, res) => {
-try {
-  let result= await DB.diasvacaciones.findAll()
-  res.send(result)
-} catch (error) {
-  res.send(error);
-  
-}
-
+    try {
+      let result = await DB.diasvacaciones.findAll();
+      res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
   },
 
   rendicion: async (req, res) => {
@@ -216,14 +215,13 @@ try {
     }
   },
   gerentes: async (req, res) => {
-    
-      try {
-        let result = await DB.gerentes.findAll({include:['departamento']})
-        res.send(result);
-      } catch (error) {
-        res.send(error);
-      }
-    },
+    try {
+      let result = await DB.gerentes.findAll({ include: ["departamento"] });
+      res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
+  },
   mpagos: async (req, res) => {
     try {
       let result = await DB.formapagos.findAll();
@@ -232,86 +230,100 @@ try {
       res.send(error);
     }
   },
-  antpagos:async (req, res) => {
+  antpagos: async (req, res) => {
     try {
-      const data=req.body
-      console.log(data,'208');
-     await DB.gastos.create(data);
-      res.send('se creo correctamente');
+      const data = req.body;
+      console.log(data, "208");
+      await DB.gastos.create(data);
+      res.send("se creo correctamente");
     } catch (error) {
       res.send(error);
     }
   },
-  gastos:async (req, res) => {
-  try {
-    const { id } = req.params;
-    const data=req.body
-    const {importe,notas,categoria}=data
-    const img=req.file
-    const imgPath=img.path
- console.log(id,'soy el id');
- console.log(data,'soy data ');
- console.log(img,'soy img');
- console.log(imgPath,'soy imgPath');
-let imagenURL = await cloudinary.uploader.upload(imgPath);
-    console.log(imagenURL.secure_url,'soy imagenURL');
-  let a= await DB.gastos.update(  {
-      importe:importe,
-      imagen:imagenURL.secure_url
-    },
-    {
-      where:{
-        id:id
-      }
-    }); 
-    console.log(a); 
-    res.send('ok');
-
-  } catch (error) {
-    res.send(error);
-  }
+  gastos: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = req.body;
+      console.log(data,'**************data*******************');
+      console.log(id);
+    
+       await DB.gastos.update(
+       data,
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+      res.send("ok");
+    } catch (error) {
+      res.send(error);
+    }
   },
-  editarRendicion:async (req, res) => {
+  editarRendicion: async (req, res) => {
     try {
       // id del producto
       const { id } = req.params;
       let gastos = await DB.gastos.findByPk(id);
-      res.send(gastos)
+      res.send(gastos);
     } catch (error) {
-    res.send(error);
-      
+      res.send(error);
     }
   },
-  usuarioPK:async (req, res) => {
+  usuarioPK: async (req, res) => {
     try {
       // id del producto
       const { id } = req.params;
-      let usuario = await DB.usuarios.findByPk(id,{
-        include:['anticipo','vacacion','gasto','departamento']
-    });
-      res.send(usuario)
+      let usuario = await DB.usuarios.findByPk(id, {
+        include: ["anticipo", "vacacion", "gasto", "departamento"],
+      });
+      res.send(usuario);
     } catch (error) {
-    res.send(error);
+      res.send(error);
+    }
+  },
+  crearGasto: async (req, res) => {
+    try {
+      const file = req.file;
+      console.log(file, "soy file*****************************");
+      const imgPath = file.path;
+      const imagenURL = await cloudinary.uploader.upload(imgPath);
+      const imagenSecure = imagenURL.secure_url;
+      const data = req.body;
+      console.log(data, "soy data *******************");
+      let usuario = await DB.gastos.create({ ...data, imagen: imagenSecure });
+      res.send(usuario);
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  crearImg: async (req, res) => {
+    try {
+        const {id}=req.params
+      const img = req.file;
+      const imgPath = img.path;
+      let imagenURL = await cloudinary.uploader.upload(imgPath);
+      
+      await DB.gastos.update(
+        {imagen:imagenURL.secure_url},
+         {
+           where: {
+             id: id,
+           },
+         }
+       );
+      res.send('imagen creada con exito')
+    } catch (error) {
+      res.send(error);
       
     }
   },
-  crearGasto:async (req, res) => {
-    try {
-      const file= req.file
-      console.log(file,'soy file*****************************');
-      const imgPath=file.path
-      const imagenURL = await cloudinary.uploader.upload(imgPath);
-      const imagenSecure = imagenURL.secure_url
-
-      const data= req.body
-       console.log( data , 'soy data *******************');
-
-      let usuario = await DB.gastos.create({...data,imagen:imagenSecure});
-      res.send(usuario)
-    } catch (error) {
-    res.send(error);
-      
-    }
+  borrar:  async (req, res) => {
+    await DB.vacaciones.destroy({
+      where: {
+        id: 10,
+      },
+    });
   }
 };
 
