@@ -8,13 +8,12 @@ module.exports = (sequelize, DataTypes) => {
     obs: DataTypes.STRING,
     diasFaltantes:DataTypes.INTEGER,
     usuarioId:DataTypes.INTEGER,
-    vacacionesId:DataTypes.INTEGER
   }, {});
  vacaciones.associate = function(models) {
-   vacaciones.belongsTo(models.usuarios,{
-        as:'usuario'
-      })
-      
-  }
+  vacaciones.belongsTo(models.usuarios,{
+    as:'usuario'
+  }) 
+
+}
   return vacaciones;
 };

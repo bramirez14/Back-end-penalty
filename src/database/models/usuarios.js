@@ -3,34 +3,36 @@ module.exports = (sequelize, DataTypes) => {
   const usuarios = sequelize.define('usuarios', {
     usuario: DataTypes.STRING,
     nombre: DataTypes.STRING,
+    apellido: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     tipousuario: DataTypes.STRING,
     categoria:DataTypes.STRING,
     nvendedor: DataTypes.STRING,
     fechaContratacion:DataTypes.STRING,
-    condicion:DataTypes.STRING,
-    departamentoId:DataTypes.INTEGER
-     
+    departamentoId:DataTypes.INTEGER,
+    anticipoId:DataTypes.INTEGER,
   }, {});
 usuarios.associate = function(models) {
-  usuarios.hasMany(models.anticipos,{
+  usuarios.belongsTo(models.anticipos,{
     as:'anticipo',
-    foreignKey:'usuId'
+   
   }),
   usuarios.hasMany(models.vacaciones,{
-    as:'vaca',
+    as:'vacacion',
     foreignKey:'usuarioId'
   }),
   usuarios.hasMany(models.gastos,{
     as:'gasto',
-    foreignKey:'uid'
-  }),
-
+    foreignKey:'usuarioId'
+  })
   usuarios.belongsTo(models.departamentos,{
       as:'departamento'
+    }),
+    usuarios.hasMany(models.rendiciones,{
+      as:'rendicion',
+      foreignKey:'usuarioId'
     })
-  
 
   };
   return usuarios;

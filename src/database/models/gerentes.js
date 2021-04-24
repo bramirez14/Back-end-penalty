@@ -6,7 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
   }, {});
   gerentes.associate = function(models) {
-    
+    gerentes.hasMany(models.departamentos,{
+      as:'departamento',
+      foreignKey:'gerenteId'
+    })
   }
   return gerentes;
 };

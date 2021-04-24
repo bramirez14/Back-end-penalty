@@ -6,13 +6,14 @@ module.exports = (sequelize, DataTypes) => {
     importe: DataTypes.DECIMAL,
     fecha:DataTypes.STRING,
     mensaje: DataTypes.STRING,
-    usuId: DataTypes.INTEGER,
-  
   }, {});
   anticipos.associate = function(models) {
-    anticipos.belongsTo(models.usuarios,{
-        as:'usuarios'
-      })
+    anticipos.hasMany(models.usuarios,{
+      as:'usuario',
+      foreignKey:'anticipoId'
+
+    }) 
+ 
   }
   return anticipos;
 };

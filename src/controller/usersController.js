@@ -2,6 +2,15 @@ const path = require("path");
 const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+//cloudinary
+var cloudinary = require("cloudinary").v2;
+//config cloudinary
+cloudinary.config({
+  cloud_name: 'dtabhpdet',
+  api_key: '177248816949724',
+  api_secret:'wpeSwtO3MOHwwM58RFNf2BgYA9M',
+});
+
 //const { send } = require("process");
 const {
   crearRendicion,
@@ -12,16 +21,33 @@ const {
 
 const usersController = {
   /**Lista de todos los usuarios*/
+  todosGastos:async (req, res) => {
+    try {
+      let result = await DB.gastos.findAll({include:['formapago','usuario']});
+      res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  todoAnt:async (req, res) => {
+    try {
+      let result = await DB.anticipos.findAll();
+      res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
+  },
   allusers: async (req, res) => {
     try {
       let result = await DB.usuarios.findAll({
-        include:["departamento","vaca"]
+        include:['anticipo','vacacion','gasto','departamento']
       });
       res.send(result);
     } catch (error) {
       res.send(error);
     }
   },
+ 
   //Registro de Usuarios
   register: async (req, res) => {
     try {
@@ -69,7 +95,6 @@ const usersController = {
   login: async (req, res) => {
     try {
       let { email, password } = req.body;
-     
       email.toLowerCase()
       // Buscar usuario
       let user = await DB.usuarios.findOne({
@@ -77,13 +102,11 @@ const usersController = {
           email: email,
         },
       });
-     
       /*condicional para verificar si no existe el usuario */
       if (!!user === false) {
         res.send({
           status: 401,
           auth: false,
-          
           message: "No estas registrado/a",
         });
       }
@@ -114,15 +137,14 @@ const usersController = {
   anticipo: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data,'117');
-      const {condicion,usuId}=data
-      console.log(condicion,'soy condicion');
-      console.log(data,'soy datos');
+      const {usuId}=data
+      console.log(usuId,'soy el id del usuario');
+   
 
       
       //crea el anticipo y lo relacion con el usuario
-      const anticipoCreated = await DB.anticipos.create(data);
-      await DB.usuarios.update({condicion:condicion},{
+      const anticipoCreado = await DB.anticipos.create(data);
+      await DB.usuarios.update({anticipoId:anticipoCreado.id},{
         where:{
           id:usuId
         }
@@ -194,9 +216,14 @@ try {
     }
   },
   gerentes: async (req, res) => {
-    try {
-    } catch (error) {}
-  },
+    
+      try {
+        let result = await DB.gerentes.findAll({include:['departamento']})
+        res.send(result);
+      } catch (error) {
+        res.send(error);
+      }
+    },
   mpagos: async (req, res) => {
     try {
       let result = await DB.formapagos.findAll();
@@ -215,6 +242,77 @@ try {
       res.send(error);
     }
   },
+  gastos:async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data=req.body
+    const {importe,notas,categoria}=data
+    const img=req.file
+    const imgPath=img.path
+ console.log(id,'soy el id');
+ console.log(data,'soy data ');
+ console.log(img,'soy img');
+ console.log(imgPath,'soy imgPath');
+let imagenURL = await cloudinary.uploader.upload(imgPath);
+    console.log(imagenURL.secure_url,'soy imagenURL');
+  let a= await DB.gastos.update(  {
+      importe:importe,
+      imagen:imagenURL.secure_url
+    },
+    {
+      where:{
+        id:id
+      }
+    }); 
+    console.log(a); 
+    res.send('ok');
+
+  } catch (error) {
+    res.send(error);
+  }
+  },
+  editarRendicion:async (req, res) => {
+    try {
+      // id del producto
+      const { id } = req.params;
+      let gastos = await DB.gastos.findByPk(id);
+      res.send(gastos)
+    } catch (error) {
+    res.send(error);
+      
+    }
+  },
+  usuarioPK:async (req, res) => {
+    try {
+      // id del producto
+      const { id } = req.params;
+      let usuario = await DB.usuarios.findByPk(id,{
+        include:['anticipo','vacacion','gasto','departamento']
+    });
+      res.send(usuario)
+    } catch (error) {
+    res.send(error);
+      
+    }
+  },
+  crearGasto:async (req, res) => {
+    try {
+      const file= req.file
+      console.log(file,'soy file*****************************');
+      const imgPath=file.path
+      const imagenURL = await cloudinary.uploader.upload(imgPath);
+      const imagenSecure = imagenURL.secure_url
+
+      const data= req.body
+       console.log( data , 'soy data *******************');
+
+      let usuario = await DB.gastos.create({...data,imagen:imagenSecure});
+      res.send(usuario)
+    } catch (error) {
+    res.send(error);
+      
+    }
+  }
 };
 
 module.exports = usersController;

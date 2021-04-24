@@ -14,7 +14,7 @@ const validationLogin = require('../middlewares/validationLogin');
 const storage = multer.diskStorage({
   destination: path.join(__dirname,'public/upload'),
   filename:(req,file,cb)=>{
-  cb(null, new Date().getTime() + path.extname(file.originalname));
+  cb(null, Date.now() + path.extname(file.originalname));
   }
   })
 var upload = multer({ storage})
@@ -49,18 +49,35 @@ router.post('/login',[
 
 /* Anticipo */
 router.post('/anticipo',usersController.anticipo)
+router.get('/anticipo',usersController.todoAnt)
 /*Todas la vacaciones solicitadas */
 router.get('/vacaciones',usersController.allvacaciones)
 /*Vacaciones*/
 router.post('/vacaciones',usersController.vacaciones)
 /*Rendicion de Gastos*/ 
-router.post('/gastos',upload.array('image',4),usersController.rendicion)
+router.post('/rendicion',upload.array('image',4),usersController.rendicion)
 /*Todos los usuarios */
 router.get('/gerentes',usersController.gerentes)
 /*Medios de pago */
 router.get('/mpagos',usersController.mpagos)
+
 /**Crear un anticipo de gastos */
 router.post('/mpago',usersController.antpagos)
+
+/**Crear un anticipo de sueldo */
+router.post('/mpago',usersController.antpagos)
+/**Todos los gastos */
+router.get('/gastos',usersController.todosGastos)
+/**Crea un Gasto */
+router.post('/rendiciones/gastos',upload.single('imagen'),usersController.crearGasto)
+
+/**Editar imagen de Anticipo de Gasto */
+router.put('/rendicion/gastos/:id',upload.single('imagen'),usersController.gastos)
+/** buscar rendicion por Id */
+router.get('/editar/rendicion/:id',usersController.editarRendicion)
+/**buscar  usuario por Id */
+router.get('/:id',usersController.usuarioPK)
+
 
 
 
