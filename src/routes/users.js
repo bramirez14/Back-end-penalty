@@ -70,15 +70,12 @@ router.post('/mpago',usersController.antpagos)
 router.get('/gastos',usersController.todosGastos)
 /**Crea un Gasto */
 router.post('/rendiciones/gastos',upload.single('imagen'),usersController.crearGasto)
-
-/**Editar imagen de Anticipo de Gasto */
-router.put('/rendicion/gastos/:id',upload.single('imagen'),usersController.gastos)
+/**Agregar imagen de Anticipo de Gasto */
+router.put('/rendicion/gastos/:id',usersController.gastos)
+router.post('/rendicion/gastos/img/:id',upload.single('imagen'),usersController.crearImg)
 /** buscar rendicion por Id */
 router.get('/editar/rendicion/:id',usersController.editarRendicion)
 /**buscar  usuario por Id */
 router.get('/:id',usersController.usuarioPK)
-
-
-
 
 module.exports = router;
