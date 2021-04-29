@@ -46,7 +46,7 @@ router.post('/login',[
   check('email','El campo requiere un E-mail').isEmail().isLength(),
   check('password','Debe ingresar su contraseña').isLength({min:3})
 ],validationLogin ,usersController.login); 
-
+router.get('/check',usersController.check)
 /* Anticipo */
 router.post('/anticipo',usersController.anticipo)
 router.get('/anticipo',usersController.todoAnt)
@@ -55,7 +55,9 @@ router.get('/vacaciones',usersController.allvacaciones)
 /*Vacaciones*/
 router.post('/vacaciones',usersController.vacaciones)
 /*Rendicion de Gastos*/ 
-router.post('/rendicion',upload.array('image',4),usersController.rendicion)
+router.post('/rendicion',upload.single('imagen'),usersController.rendicion)
+
+
 /*Todos los usuarios */
 router.get('/gerentes',usersController.gerentes)
 /*Medios de pago */
@@ -72,7 +74,11 @@ router.post('/rendicion/gastos/img/:id',upload.single('imagen'),usersController.
 /** buscar rendicion por Id */
 router.get('/editar/rendicion/:id',usersController.editarRendicion)
 /**buscar  usuario por Id */
-router.get('/:id',usersController.usuarioPK)
+router.get('/:id',usersController.usuarioPK);
+/**buscar rendicion por id */
+router.get('/gastos/:id',usersController.gastoPK);
 
+
+router.delete('/:id',usersController.borrar)
 module.exports = router;
 /**Editar imagen de Anticipo de Gasto */

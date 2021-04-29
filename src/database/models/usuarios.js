@@ -28,11 +28,11 @@ usuarios.associate = function(models) {
   })
   usuarios.belongsTo(models.departamentos,{
       as:'departamento'
-    }),
-    usuarios.hasMany(models.rendiciones,{
+    })
+    /* usuarios.hasMany(models.rendiciones,{
       as:'rendicion',
       foreignKey:'usuarioId'
-    })
+    }) */
 
   };
   return usuarios;

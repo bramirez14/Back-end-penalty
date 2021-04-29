@@ -4,10 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     categoria:DataTypes.STRING,
   }, {});
   categoriasgastos.associate = function(models) {
-     categoriasgastos.hasMany(models.rendiciones,{
+   /*   categoriasgastos.hasMany(models.rendiciones,{
         as:'rendicion',
         foreignKey:'categoriaId'
-      }) 
+      })  */
 }
   return categoriasgastos;
 };

@@ -5,9 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       importe: DataTypes.DECIMAL,
       notas: DataTypes.STRING,
-      categoria: DataTypes.STRING,
       fecha: DataTypes.STRING,
-      imagen : DataTypes.STRING,
       usuarioId: DataTypes.INTEGER,
       formapagoId: DataTypes.INTEGER,
     },
@@ -19,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
     });
     gastos.belongsTo(models.formapagos, {
       as: "formapago",
+    });
+    gastos.hasMany(models.rendiciones, {
+      as: "rendicion",
+    foreignKey:'gastoId'
     });
   };
   return gastos;

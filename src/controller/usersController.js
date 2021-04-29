@@ -24,7 +24,7 @@ const usersController = {
   todosGastos: async (req, res) => {
     try {
       let result = await DB.gastos.findAll({
-        include: ["formapago", "usuario"],
+        include: ["formapago", "usuario","rendicion"],
       });
       res.send(result);
     } catch (error) {
@@ -78,9 +78,7 @@ const usersController = {
               "No pudo crearse el usuario intentelo mas tarde , gracias "
             )
           : // Creamos el token
-            (token = await jwt.sign({ user: user }, "penalty", {
-              expiresIn: 3600,
-            }));
+            (token = await jwt.sign({ user: user }, "penalty"));
         res.json({
           user: user,
           token: token,
@@ -113,7 +111,7 @@ const usersController = {
         });
       }
       let passwordCompared = bcrypt.compareSync(password, user.password);
-      let token;
+
       /*condicional para verificar al usuario existente en DB y comprobar la contraseña si machea */
       if (!passwordCompared && !user === false) {
         res.send({
@@ -122,19 +120,38 @@ const usersController = {
           message: "Usuario o Contraseña no son correctos",
         });
       } else {
-        /*El token para validar a l usuario */
-        token = await jwt.sign({ user: user }, "penalty", {
-          expiresIn: 3600,
-        });
-        res.json({
-          user: user,
-          token: token,
-        });
+        /*El token para validar al usuario */
+        await jwt.sign(
+          { user: user },
+          "penalty",
+         
+          (err, token) => {
+            if (err) throw err;
+            res.json({
+              user: user,
+              token: token,
+            });
+          }
+        );
       }
     } catch (error) {
       res.send(error);
     }
   },
+  check: async (req, res) => {
+    const token = req.header("token");
+    console.log();
+    if (!token) return res.send("No hay token");
+    try {
+      const decoded = jwt.verify(token, "penalty");
+      user = decoded.user; // este user viene del login linea 102
+      res.send(user);
+    } catch (e) {
+      console.log(e);
+      res.send("Token invalido");
+    }
+  },
+
   /******sector despues de Loguearse ******/
   anticipo: async (req, res) => {
     try {
@@ -190,30 +207,24 @@ const usersController = {
 
   rendicion: async (req, res) => {
     try {
+      const file = req.file;
+      const filePath = file.path;
+       //guardamos imagen en cloudinary y DB
+      let imagenURL = await cloudinary.uploader.upload(filePath);
       const data = req.body;
-      console.log(data, "122");
-      const rendicionCreada = await crearRendicion(data);
-      //guardamos imagenes en cloudinary y DB
-      const archivos = req.files;
-      console.log(archivos, "127");
-      const imagenes = archivos.map((archivo) => archivo.path);
-      console.log(imagenes, "132");
-      const imagenesNuevas = await clo(imagenes);
-      console.log(imagenesNuevas, "134");
-
-      const guardarImagenes = await guardarImagen(imagenesNuevas);
-      console.log(guardarImagenes, "137");
-      //guardamos los datos en la tabla intermedia
-      let tabla = await tablaIntermedia(
-        guardarImagenes,
-        rendicionCreada.dataValues.id
-      );
-      console.log(tabla, "140");
+      console.log(data, "211");
+      await crearRendicion({...data,imagen: imagenURL.secure_url});
+     
+    
       res.send("Rendicion e imagenes creadas satifactoriamente");
     } catch (error) {
       res.send(error);
     }
   },
+
+
+
+
   gerentes: async (req, res) => {
     try {
       let result = await DB.gerentes.findAll({ include: ["departamento"] });
@@ -244,17 +255,14 @@ const usersController = {
     try {
       const { id } = req.params;
       const data = req.body;
-      console.log(data,'**************data*******************');
+      console.log(data, "**************data*******************");
       console.log(id);
-    
-       await DB.gastos.update(
-       data,
-        {
-          where: {
-            id: id,
-          },
-        }
-      );
+
+      await DB.gastos.update(data, {
+        where: {
+          id: id,
+        },
+      });
       res.send("ok");
     } catch (error) {
       res.send(error);
@@ -282,6 +290,17 @@ const usersController = {
       res.send(error);
     }
   },
+  gastoPK:async (req,res)=> {
+    try {
+      const { id } = req.params;
+      let g = await DB.gastos.findByPk(id, {
+        include: ["formapago", "usuario","rendicion"],
+      });
+      res.send(g)
+    } catch (e) {
+      res.send(e)
+    }
+  },
   crearGasto: async (req, res) => {
     try {
       const file = req.file;
@@ -299,32 +318,31 @@ const usersController = {
   },
   crearImg: async (req, res) => {
     try {
-        const {id}=req.params
+      const { id } = req.params;
       const img = req.file;
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
-      
+
       await DB.gastos.update(
-        {imagen:imagenURL.secure_url},
-         {
-           where: {
-             id: id,
-           },
-         }
-       );
-      res.send('imagen creada con exito')
+        { imagen: imagenURL.secure_url },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+      res.send("imagen creada con exito");
     } catch (error) {
       res.send(error);
-      
     }
   },
-  borrar:  async (req, res) => {
+  borrar: async (req, res) => {
     await DB.vacaciones.destroy({
       where: {
-        id: 10,
+        id: 16,
       },
     });
-  }
+  },
 };
 
 module.exports = usersController;
