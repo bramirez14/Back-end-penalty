@@ -62,6 +62,10 @@ router.post('/rendicion',upload.single('imagen'),usersController.rendicion)
 router.get('/gerentes',usersController.gerentes)
 /*Medios de pago */
 router.get('/mpagos',usersController.mpagos)
+
+/**Crear un anticipo de gastos */
+router.post('/mpago',usersController.antpagos)
+
 /**Crear un anticipo de sueldo */
 router.post('/mpago',usersController.antpagos)
 /**Todos los gastos */
@@ -81,4 +85,3 @@ router.get('/gastos/:id',usersController.gastoPK);
 
 router.delete('/:id',usersController.borrar)
 module.exports = router;
-/**Editar imagen de Anticipo de Gasto */
