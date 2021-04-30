@@ -258,7 +258,7 @@ const usersController = {
       console.log(data, "**************data*******************");
       console.log(id);
 
-      await DB.gastos.update(data, {
+      await DB.rendiciones.update(data, {
         where: {
           id: id,
         },
@@ -301,6 +301,18 @@ const usersController = {
       res.send(e)
     }
   },
+  rendicionPK:async(req,res)=>{
+try {
+  const { id } = req.params;
+  console.log(id);
+  let a= await DB.rendiciones.findByPk(id, {
+    include: {all:true}
+  });
+  res.send(a)
+} catch (e) {
+  res.send(e)
+}
+  },
   crearGasto: async (req, res) => {
     try {
       const file = req.file;
@@ -323,7 +335,7 @@ const usersController = {
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
 
-      await DB.gastos.update(
+      await DB.rendiciones.update(
         { imagen: imagenURL.secure_url },
         {
           where: {
