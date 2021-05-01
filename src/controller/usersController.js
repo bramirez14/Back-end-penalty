@@ -78,11 +78,18 @@ const usersController = {
               "No pudo crearse el usuario intentelo mas tarde , gracias "
             )
           : // Creamos el token
-            (token = await jwt.sign({ user: user }, "penalty"));
-        res.json({
-          user: user,
-          token: token,
-        });
+          await jwt.sign(
+            { user: user },
+            "penalty",
+           {expiresIn:28800},
+            (err, token) => {
+              if (err) throw err;
+              res.json({
+                user: user,
+                token: token,
+              });
+            }
+          );
       } else {
         res.send("Las contraseñas no son iguales");
       }
@@ -124,7 +131,7 @@ const usersController = {
         await jwt.sign(
           { user: user },
           "penalty",
-         
+         {expiresIn:28800},
           (err, token) => {
             if (err) throw err;
             res.json({
