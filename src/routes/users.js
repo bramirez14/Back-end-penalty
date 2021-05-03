@@ -83,6 +83,8 @@ router.get('/:id',usersController.usuarioPK);
 router.get('/gastos/:id',usersController.gastoPK);
 /**buscar rendicion por id */
 router.get('/rendiciones/:id',usersController.rendicionPK);
+/**Crear el anticipo gasto y guardarlo en la rendicion  */
+router.post('/gasto/rendicion',upload.single('imagen'),usersController.gr);
 
 
 

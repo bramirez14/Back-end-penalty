@@ -355,6 +355,25 @@ try {
       res.send(error);
     }
   },
+  gr:async (req,res)=>{
+    try {
+      const data= req.body
+      const img = req.file;
+      const imgPath = img.path;
+      let imagenURL = await cloudinary.uploader.upload(imgPath);
+      const {categoria,fecha,importe,notas,usuarioId,formapagoId}=data
+      const gasto=await DB.gastos.create({categoria,fecha,importe,notas,usuarioId,formapagoId})
+      const id = gasto.id;
+      const rendicion= await DB.rendiciones.create({...data,gastoId:id,imagen:imagenURL.secure_url})
+      console.log(rendicion);
+
+
+      res.send('todo ok')
+    } catch (e) {
+      res.send(e)
+    }
+ 
+  },
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({
       where: {
