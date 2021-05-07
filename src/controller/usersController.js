@@ -1,7 +1,10 @@
 const path = require("path");
+const fs = require('fs')
 const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const pdf = require('html-pdf');
+var options    = {format:'A4'};
 //cloudinary
 var cloudinary = require("cloudinary").v2;
 //config cloudinary
@@ -374,6 +377,68 @@ try {
     }
  
   },
+  pdfCreate:async (req, res) => {
+
+    try {
+      console.log(req.body);
+      pdf.create(pdfTemplate(req.body), {}).toFile('result.pdf', (err,r) => {
+        if(err) {
+            res.send(Promise.reject());
+        }
+       
+        res.send(r);
+    });
+    } catch (e) {
+      res.send(e);
+    }
+ 
+  },
+
+
+  generadorPdf:async (req, res) => {
+    const data = req.body;
+    const id = data[0].gastoId
+    const gasto= await DB.gastos.findByPk(id) 
+    const { usuarioId } = gasto
+    const usuario = await DB.usuarios.findByPk(usuarioId)
+   const {departamentoId} =usuario 
+   console.log(departamentoId);
+   const deptos = await DB.departamentos.findByPk(departamentoId)
+   const {departamento,gerenteId}=deptos
+   const gerente =await DB.gerentes.findByPk(gerenteId)
+   const {nombre,apellido,email}= gerente 
+console.log(data);
+   
+    
+    //templateHtml = templateHtml.replace('{{data}}', data[0].importe)
+    /* pdf.create(templateHtml,{data}).toFile('result.pdf', (err) => {
+      if(err) {
+          res.send(Promise.reject());
+      }
+
+      res.send(Promise.resolve());
+  }); */
+  res.render('pdf',{data,usuario,email,departamento,nombre,apellido,id},function(err,html){
+    pdf.create(html).toFile('result.pdf', function(err, result) {
+        if (err){
+            return console.log(err);
+        }
+         else{
+       /*  console.log(res); */
+        var datafile = fs.readFileSync('result.pdf');
+        res.header('content-type','application/pdf');
+        res.send(datafile);
+         }
+      });
+})
+   
+  },
+  pd:async (req, res) => {
+      console.log(path.join(__dirname))//me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
+ res.sendFile('C:/Users/bramirez/Desktop/PENALTY/Back-end-penalty/result.pdf');
+},
+
+
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({
       where: {

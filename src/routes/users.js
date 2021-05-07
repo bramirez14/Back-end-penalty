@@ -85,6 +85,19 @@ router.get('/gastos/:id',usersController.gastoPK);
 router.get('/rendiciones/:id',usersController.rendicionPK);
 /**Crear el anticipo gasto y guardarlo en la rendicion  */
 router.post('/gasto/rendicion',upload.single('imagen'),usersController.gr);
+/**PDF */
+/**Generando el pdf de la lista por anticipo */
+router.post('/generar/pdf',usersController.generadorPdf)  
+router.post('/create-pdf',usersController.pdfCreate);
+/* router.get('/pd/df',usersController.pdf); */
+router.get('/peticion/pdf',usersController.pd)
+
+
+
+
+/**Pupetter */
+//router.get('/factura', usersController.factura);
+//router.get('/descargar/pdf', usersController.descargar);
 
 
 
