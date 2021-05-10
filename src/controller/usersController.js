@@ -315,9 +315,8 @@ const usersController = {
 try {
   const { id } = req.params;
   console.log(id);
-  let a= await DB.rendiciones.findByPk(id, {
-    include: {all:true}
-  });
+  let a= await DB.rendiciones.findByPk(id,{all:true});
+  console.log(a,'okkkkkkk');
   res.send(a)
 } catch (e) {
   res.send(e)

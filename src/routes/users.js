@@ -82,7 +82,7 @@ router.get('/:id',usersController.usuarioPK);
 /**buscar gasto por id */
 router.get('/gastos/:id',usersController.gastoPK);
 /**buscar rendicion por id */
-router.get('/rendiciones/:id',usersController.rendicionPK);
+router.get('/rendicion/:id',usersController.rendicionPK);
 /**Crear el anticipo gasto y guardarlo en la rendicion  */
 router.post('/gasto/rendicion',upload.single('imagen'),usersController.gr);
 /**PDF */
@@ -91,15 +91,6 @@ router.post('/generar/pdf',usersController.generadorPdf)
 router.post('/create-pdf',usersController.pdfCreate);
 /* router.get('/pd/df',usersController.pdf); */
 router.get('/peticion/pdf',usersController.pd)
-
-
-
-
-/**Pupetter */
-//router.get('/factura', usersController.factura);
-//router.get('/descargar/pdf', usersController.descargar);
-
-
 
 router.delete('/:id',usersController.borrar)
 module.exports = router;
