@@ -4,7 +4,6 @@ module.exports = (sequelize, DataTypes) => {
   const rendiciones = sequelize.define(
     "rendiciones",
     {
-      //usuarioId: DataTypes.INTEGER,
       fecha: DataTypes.STRING,
       notas: DataTypes.STRING,
       importe: DataTypes.DECIMAL,
@@ -15,9 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   rendiciones.associate = function (models) {
-   /*  rendiciones.belongsTo(models.usuarios, {
-      as: "usuario",
-    }); */
   
     rendiciones.belongsTo(models.gastos, {
       as: "gasto",
