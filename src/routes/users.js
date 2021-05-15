@@ -48,8 +48,14 @@ router.post('/login',[
 ],validationLogin ,usersController.login); 
 router.get('/check',usersController.check)
 /* Anticipo */
-router.post('/anticipo',usersController.anticipo)
 router.get('/anticipo',usersController.todoAnt)
+router.post('/anticipo',usersController.anticipo)
+router.put('/anticipo/:id',usersController.anticipoEditar)
+router.put('/:id',usersController.anticipoIdEditar)
+router.delete('/borrar/anticipo/:id',usersController.borrarAnticipo)
+
+
+
 /*Todas la vacaciones solicitadas */
 router.get('/vacaciones',usersController.allvacaciones)
 /*Vacaciones*/
