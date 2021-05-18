@@ -1,10 +1,10 @@
 const path = require("path");
-const fs = require('fs')
+const fs = require("fs");
 const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const pdf = require('html-pdf');
-var options    = {format:'A4'};
+const pdf = require("html-pdf");
+var options = { format: "A4" };
 //cloudinary
 var cloudinary = require("cloudinary").v2;
 //config cloudinary
@@ -27,7 +27,7 @@ const usersController = {
   todosGastos: async (req, res) => {
     try {
       let result = await DB.gastos.findAll({
-        include: ["formapago", "usuario","rendicion"],
+        include: ["formapago", "usuario", "rendicion"],
       });
       res.send(result);
     } catch (error) {
@@ -36,7 +36,7 @@ const usersController = {
   },
   todoAnt: async (req, res) => {
     try {
-      let result = await DB.anticipos.findAll();
+      let result = await DB.anticipos.findAll({ include: ["usuario"] });
       res.send(result);
     } catch (error) {
       res.send(error);
@@ -81,18 +81,18 @@ const usersController = {
               "No pudo crearse el usuario intentelo mas tarde , gracias "
             )
           : // Creamos el token
-          await jwt.sign(
-            { user: user },
-            "penalty",
-           {expiresIn:28800},
-            (err, token) => {
-              if (err) throw err;
-              res.json({
-                user: user,
-                token: token,
-              });
-            }
-          );
+            await jwt.sign(
+              { user: user },
+              "penalty",
+              { expiresIn: 28800 },
+              (err, token) => {
+                if (err) throw err;
+                res.json({
+                  user: user,
+                  token: token,
+                });
+              }
+            );
       } else {
         res.send("Las contraseñas no son iguales");
       }
@@ -134,7 +134,7 @@ const usersController = {
         await jwt.sign(
           { user: user },
           "penalty",
-         {expiresIn:28800},
+          { expiresIn: 28800 },
           (err, token) => {
             if (err) throw err;
             res.json({
@@ -167,21 +167,68 @@ const usersController = {
     try {
       const data = req.body;
       const { usuId } = data;
-      console.log(usuId, "soy el id del usuario");
+      console.log(data, "soy el id del data");
 
       //crea el anticipo y lo relacion con el usuario
       const anticipoCreado = await DB.anticipos.create(data);
-      await DB.usuarios.update(
+      /* await DB.usuarios.update(
         { anticipoId: anticipoCreado.id },
         {
           where: {
             id: usuId,
           },
         }
-      );
-      res.send("ok");
+      ); */
+      res.send(anticipoCreado);
     } catch (error) {
       res.send(error);
+    }
+  },
+  anticipoRechazado: async (req, res) => {
+    const { id } = req.params;
+    const { respMensaje, estado } = req.body;
+    console.log(respMensaje, "line190");
+    console.log(estado, "line191");
+
+    try {
+      let antEditado = await DB.anticipos.update(
+        { respMensaje, estado },
+        {
+          where: { id: id },
+        }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  anticipoAprobado: async (req, res) => {
+    const { id } = req.params;
+    const { respMensaje, estado } = req.body;
+    console.log(respMensaje, "line 205");
+    console.log(estado, "line 206");
+    try {
+      let antEditado = await DB.anticipos.update(
+        { respMensaje, estado },
+        {
+          where: { id: id },
+        }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  borrarAnticipo: async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    try {
+      await DB.anticipos.destroy({
+        where: { id },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
     }
   },
   allvacaciones: async (req, res) => {
@@ -219,21 +266,17 @@ const usersController = {
     try {
       const file = req.file;
       const filePath = file.path;
-       //guardamos imagen en cloudinary y DB
+      //guardamos imagen en cloudinary y DB
       let imagenURL = await cloudinary.uploader.upload(filePath);
       const data = req.body;
       console.log(data, "211");
-      await crearRendicion({...data,imagen: imagenURL.secure_url});
-     
-    
+      await crearRendicion({ ...data, imagen: imagenURL.secure_url });
+
       res.send("Rendicion e imagenes creadas satifactoriamente");
     } catch (error) {
       res.send(error);
     }
   },
-
-
-
 
   gerentes: async (req, res) => {
     try {
@@ -300,27 +343,27 @@ const usersController = {
       res.send(error);
     }
   },
-  gastoPK:async (req,res)=> {
+  gastoPK: async (req, res) => {
     try {
       const { id } = req.params;
       let g = await DB.gastos.findByPk(id, {
-        include: ["formapago", "usuario","rendicion"],
+        include: ["formapago", "usuario", "rendicion"],
       });
-      res.send(g)
+      res.send(g);
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
   },
-  rendicionPK:async(req,res)=>{
-try {
-  const { id } = req.params;
-  console.log(id);
-  let a= await DB.rendiciones.findByPk(id,{all:true});
-  console.log(a,'okkkkkkk');
-  res.send(a)
-} catch (e) {
-  res.send(e)
-}
+  rendicionPK: async (req, res) => {
+    try {
+      const { id } = req.params;
+      console.log(id);
+      let a = await DB.rendiciones.findByPk(id, { all: true });
+      console.log(a, "okkkkkkk");
+      res.send(a);
+    } catch (e) {
+      res.send(e);
+    }
   },
   crearGasto: async (req, res) => {
     try {
@@ -344,7 +387,7 @@ try {
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
 
-      await DB.rendiciones.update(
+      let imgCreada = await DB.rendiciones.update(
         { imagen: imagenURL.secure_url },
         {
           where: {
@@ -352,63 +395,68 @@ try {
           },
         }
       );
-      res.send("imagen creada con exito");
+      res.send(imgCreada);
     } catch (error) {
       res.send(error);
     }
   },
-  gr:async (req,res)=>{
+  gr: async (req, res) => {
     try {
-      const data= req.body
+      const data = req.body;
       const img = req.file;
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
-      const {categoria,fecha,importe,notas,usuarioId,formapagoId}=data
-      const gasto=await DB.gastos.create({categoria,fecha,importe,notas,usuarioId,formapagoId})
+      const { categoria, fecha, importe, notas, usuarioId, formapagoId } = data;
+      const gasto = await DB.gastos.create({
+        categoria,
+        fecha,
+        importe,
+        notas,
+        usuarioId,
+        formapagoId,
+      });
       const id = gasto.id;
-      const rendicion= await DB.rendiciones.create({...data,gastoId:id,imagen:imagenURL.secure_url})
+      const rendicion = await DB.rendiciones.create({
+        ...data,
+        gastoId: id,
+        imagen: imagenURL.secure_url,
+      });
       console.log(rendicion);
 
-
-      res.send('todo ok')
-    } catch (e) {
-      res.send(e)
-    }
- 
-  },
-  pdfCreate:async (req, res) => {
-
-    try {
-      console.log(req.body);
-      pdf.create(pdfTemplate(req.body), {}).toFile('result.pdf', (err,r) => {
-        if(err) {
-            res.send(Promise.reject());
-        }
-       
-        res.send(r);
-    });
+      res.send("todo ok");
     } catch (e) {
       res.send(e);
     }
- 
+  },
+  pdfCreate: async (req, res) => {
+    try {
+      console.log(req.body);
+      pdf.create(pdfTemplate(req.body), {}).toFile("result.pdf", (err, r) => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+
+        res.send(r);
+      });
+    } catch (e) {
+      res.send(e);
+    }
   },
 
-
-  generadorPdf:async (req, res) => {
+  generadorPdf: async (req, res) => {
     const data = req.body;
-    const id = data[0].gastoId
-    const gasto= await DB.gastos.findByPk(id) 
-    const { usuarioId } = gasto
-    const usuario = await DB.usuarios.findByPk(usuarioId)
-   const {departamentoId} =usuario 
-   console.log(departamentoId);
-   const deptos = await DB.departamentos.findByPk(departamentoId)
-   const {departamento,gerenteId}=deptos
-   const gerente =await DB.gerentes.findByPk(gerenteId)
-   const {nombre,apellido,email}= gerente 
-console.log(data);
-   
-    
+    const id = data[0].gastoId;
+    const gasto = await DB.gastos.findByPk(id);
+    const { usuarioId } = gasto;
+    const usuario = await DB.usuarios.findByPk(usuarioId);
+    const { departamentoId } = usuario;
+    console.log(departamentoId);
+    const deptos = await DB.departamentos.findByPk(departamentoId);
+    const { departamento, gerenteId } = deptos;
+    const gerente = await DB.gerentes.findByPk(gerenteId);
+    const { nombre, apellido, email } = gerente;
+    console.log(data);
+
     //templateHtml = templateHtml.replace('{{data}}', data[0].importe)
     /* pdf.create(templateHtml,{data}).toFile('result.pdf', (err) => {
       if(err) {
@@ -417,27 +465,28 @@ console.log(data);
 
       res.send(Promise.resolve());
   }); */
-  res.render('pdf',{data,usuario,email,departamento,nombre,apellido,id},function(err,html){
-    pdf.create(html).toFile('result.pdf', function(err, result) {
-        if (err){
+    res.render(
+      "pdf",
+      { data, usuario, email, departamento, nombre, apellido, id },
+      function (err, html) {
+        pdf.create(html).toFile("result.pdf", function (err, result) {
+          if (err) {
             return console.log(err);
-        }
-         else{
-       /*  console.log(res); */
-        var datafile = fs.readFileSync('result.pdf');
-        res.header('content-type','application/pdf');
-        res.send(datafile);
-         }
-      });
-})
-   
+          } else {
+            /*  console.log(res); */
+            var datafile = fs.readFileSync("result.pdf");
+            res.header("content-type", "application/pdf");
+            res.send(datafile);
+          }
+        });
+      }
+    );
   },
+ 
   pd:async (req, res) => {
       console.log(path.join(__dirname))//me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
  res.sendFile(path.join(__dirname,'../../result.pdf'));
 },
-
-
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({
       where: {
