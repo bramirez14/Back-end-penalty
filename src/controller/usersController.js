@@ -36,7 +36,7 @@ const usersController = {
   },
   todoAnt: async (req, res) => {
     try {
-      let result = await DB.anticipos.findAll({include:["usuario"]});
+      let result = await DB.anticipos.findAll({ include: ["usuario"] });
       res.send(result);
     } catch (error) {
       res.send(error);
@@ -179,48 +179,56 @@ const usersController = {
           },
         }
       ); */
-      res.send("ok");
+      res.send(anticipoCreado);
     } catch (error) {
       res.send(error);
     }
   },
-  anticipoEditar: async (req, res) => {
-    const{id}=req.params
-    const {respMensaje,estado}=req.body;
+  anticipoRechazado: async (req, res) => {
+    const { id } = req.params;
+    const { respMensaje, estado } = req.body;
+    console.log(respMensaje, "line190");
+    console.log(estado, "line191");
+
     try {
-      await DB.anticipos.update({respMensaje,estado}, {
-        where: {id:id}
-      });
-      res.send('ok')
+      let antEditado = await DB.anticipos.update(
+        { respMensaje, estado },
+        {
+          where: { id: id },
+        }
+      );
+      res.send("ok");
     } catch (e) {
       res.send(e);
     }
   },
-  anticipoIdEditar: async (req, res) => {
-    const{id}=req.params
-    const {anticipoId,respMensaje}=req.body
+  anticipoAprobado: async (req, res) => {
+    const { id } = req.params;
+    const { respMensaje, estado } = req.body;
+    console.log(respMensaje, "line 205");
+    console.log(estado, "line 206");
     try {
-      const anticipo =  await DB.usuarios.findByPk(id)
-      const mensaje= await DB.anticipos.findByPk(anticipo.anticipoId)
-      await DB.usuarios.update({anticipoId},{where:{id}})
-      await DB.anticipos.update({respMensaje}, {
-        where: {id:mensaje.id}
-      });
-      res.send('ok')
+      let antEditado = await DB.anticipos.update(
+        { respMensaje, estado },
+        {
+          where: { id: id },
+        }
+      );
+      res.send("ok");
     } catch (e) {
       res.send(e);
     }
   },
   borrarAnticipo: async (req, res) => {
-    const {id}=req.params;
+    const { id } = req.params;
     console.log(id);
     try {
-     await DB.anticipos.destroy({
-        where:{id}
-      })
-      res.send('ok')
+      await DB.anticipos.destroy({
+        where: { id },
+      });
+      res.send("ok");
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
   },
   allvacaciones: async (req, res) => {

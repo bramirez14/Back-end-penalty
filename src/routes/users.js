@@ -50,8 +50,8 @@ router.get('/check',usersController.check)
 /* Anticipo */
 router.get('/anticipo',usersController.todoAnt)
 router.post('/anticipo',usersController.anticipo)
-router.put('/anticipo/:id',usersController.anticipoEditar)
-router.put('/:id',usersController.anticipoIdEditar)
+router.put('/anticipo/aprobado/:id',usersController.anticipoAprobado)
+router.put('/anticipo/rechazado/:id',usersController.anticipoRechazado)
 router.delete('/borrar/anticipo/:id',usersController.borrarAnticipo)
 
 
