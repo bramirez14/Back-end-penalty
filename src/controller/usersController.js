@@ -248,17 +248,11 @@ const usersController = {
   vacaciones: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data, "251");
-      const {periodo,usuarioId,dias}=data
-      const lasVacaciones = await DB.vacaciones.findAll();
+      
+  await DB.vacaciones.create(data);
+  res.send({ msg: "vacacion solicitada" });
+ 
      
-      const filtradoPorUsuarioID= lasVacaciones.filter(lv=> lv.usuarioId==usuarioId);
-      const filtradoPorAño = filtradoPorUsuarioID.filter(fu=>fu.periodo==periodo)
-      const ultimaVacacion = filtradoPorAño[filtradoPorAño.length-1].diasFaltantes;
-     const rest = ultimaVacacion - dias;
-
-      await DB.vacaciones.create({...data,diasFaltantes:rest});
-      res.send({ msg: "vacacion solicitada" });
     } catch (error) {
       res.send(error);
     }
