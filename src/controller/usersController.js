@@ -492,13 +492,11 @@ const usersController = {
       }
     );
   },
-  pd: async (req, res) => {
-    console.log(path.join(__dirname)); //me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
-    res.sendFile(
-      "C:/Users/bramirez/Desktop/PENALTY/Back-end-penalty/result.pdf"
-    );
-  },
-
+ 
+  pd:async (req, res) => {
+      console.log(path.join(__dirname))//me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
+ res.sendFile(path.join(__dirname,'../../result.pdf'));
+},
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({
       where: {
