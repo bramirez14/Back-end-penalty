@@ -59,11 +59,12 @@ const usersController = {
       let data = req.body;
       console.log(data);
       const { email, password, password2 } = data;
-      email.toLowerCase();
+      let e = email.toLowerCase();
+      console.log(e);
       //Verificamos que el user no este registrado en la DB
       let verify = await DB.usuarios.findOne({
         where: {
-          email: email,
+          email: e,
         },
       });
       !!verify ? res.send("Ya estas registrado/a") : "";
@@ -74,6 +75,7 @@ const usersController = {
         let user = await DB.usuarios.create({
           ...data,
           password: encryptedKey,
+          email:e
         });
         let token;
         !user
@@ -105,11 +107,12 @@ const usersController = {
   login: async (req, res) => {
     try {
       let { email, password } = req.body;
-      email.toLowerCase();
+     let e =  email.toLowerCase();
+     console.log(e);
       // Buscar usuario
       let user = await DB.usuarios.findOne({
         where: {
-          email: email,
+          email: e,
         },
       });
       /*condicional para verificar si no existe el usuario */
@@ -245,9 +248,16 @@ const usersController = {
   vacaciones: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data, "109");
-      const vacacionesSolicitadas = await DB.vacaciones.create(data);
-      console.log(vacacionesSolicitadas);
+      console.log(data, "251");
+      const {periodo,usuarioId,dias}=data
+      const lasVacaciones = await DB.vacaciones.findAll();
+     
+      const filtradoPorUsuarioID= lasVacaciones.filter(lv=> lv.usuarioId==usuarioId);
+      const filtradoPorAño = filtradoPorUsuarioID.filter(fu=>fu.periodo==periodo)
+      const ultimaVacacion = filtradoPorAño[filtradoPorAño.length-1].diasFaltantes;
+     const rest = ultimaVacacion - dias;
+
+      await DB.vacaciones.create({...data,diasFaltantes:rest});
       res.send({ msg: "vacacion solicitada" });
     } catch (error) {
       res.send(error);
