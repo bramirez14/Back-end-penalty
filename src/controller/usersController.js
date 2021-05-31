@@ -52,6 +52,14 @@ const usersController = {
       res.send(error);
     }
   },
+  dtos: async (req, res) => {
+    try {
+      let result = await DB.departamentos.findAll();
+      res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
+  },
 
   //Registro de Usuarios
   register: async (req, res) => {
@@ -67,36 +75,39 @@ const usersController = {
           email: e,
         },
       });
-      !!verify ? res.send("Ya estas registrado/a") : "";
-      //verificamos las contraseñas
-      if (password === password2) {
-        encryptedKey = bcrypt.hashSync(password, 10);
-        //Creamos al usuario
-        let user = await DB.usuarios.create({
-          ...data,
-          password: encryptedKey,
-          email:e
-        });
-        let token;
-        !user
-          ? res.send(
-              "No pudo crearse el usuario intentelo mas tarde , gracias "
-            )
-          : // Creamos el token
-            await jwt.sign(
-              { user: user },
-              "penalty",
-              { expiresIn: 28800 },
-              (err, token) => {
-                if (err) throw err;
-                res.json({
-                  user: user,
-                  token: token,
-                });
-              }
-            );
+      if (!!verify) {
+        res.send({ message: "Ya estas registrado/a", status: 500 });
       } else {
-        res.send("Las contraseñas no son iguales");
+        //verificamos las contraseñas
+        if (password === password2) {
+          encryptedKey = bcrypt.hashSync(password, 10);
+          //Creamos al usuario
+          let user = await DB.usuarios.create({
+            ...data,
+            password: encryptedKey,
+            email: e,
+          });
+          let token;
+          !user
+            ? res.send(
+                "No pudo crearse el usuario intentelo mas tarde , gracias "
+              )
+            : // Creamos el token
+              await jwt.sign(
+                { user: user },
+                "penalty",
+                { expiresIn: 28800 },
+                (err, token) => {
+                  if (err) throw err;
+                  res.json({
+                    user: user,
+                    token: token,
+                  });
+                }
+              );
+        } else {
+          res.send("Las contraseñas no son iguales");
+        }
       }
     } catch (error) {
       res.send(error);
@@ -107,8 +118,8 @@ const usersController = {
   login: async (req, res) => {
     try {
       let { email, password } = req.body;
-     let e =  email.toLowerCase();
-     console.log(e);
+      let e = email.toLowerCase();
+      console.log(e);
       // Buscar usuario
       let user = await DB.usuarios.findOne({
         where: {
@@ -170,18 +181,10 @@ const usersController = {
     try {
       const data = req.body;
       const { usuId } = data;
-      console.log(data, "soy el id del data");
-
       //crea el anticipo y lo relacion con el usuario
-      const anticipoCreado = await DB.anticipos.create(data);
-      /* await DB.usuarios.update(
-        { anticipoId: anticipoCreado.id },
-        {
-          where: {
-            id: usuId,
-          },
-        }
-      ); */
+    estado:'pendiente'
+      const anticipoCreado = await DB.anticipos.create({...data,estado:'pendiente',estadoFinal:'pendiente'});
+
       res.send(anticipoCreado);
     } catch (error) {
       res.send(error);
@@ -189,13 +192,13 @@ const usersController = {
   },
   anticipoRechazado: async (req, res) => {
     const { id } = req.params;
-    const { respMensaje, estado } = req.body;
-    console.log(respMensaje, "line190");
-    console.log(estado, "line191");
+    console.log(id);
 
+    const data  = req.body;
+    console.log(data);
     try {
       let antEditado = await DB.anticipos.update(
-        { respMensaje, estado },
+        {respMensaje},
         {
           where: { id: id },
         }
@@ -207,12 +210,11 @@ const usersController = {
   },
   anticipoAprobado: async (req, res) => {
     const { id } = req.params;
-    const { respMensaje, estado } = req.body;
-    console.log(respMensaje, "line 205");
-    console.log(estado, "line 206");
+    const data = req.body;
+    console.log(req.body);
     try {
       let antEditado = await DB.anticipos.update(
-        { respMensaje, estado },
+        data,
         {
           where: { id: id },
         }
@@ -221,6 +223,13 @@ const usersController = {
     } catch (e) {
       res.send(e);
     }
+  },
+  alerta: async (req, res) => {
+    const datos =req.body
+  for (const dato of datos) {
+    await DB.anticipos.update({notificacion:'activa'},{where:{id:dato}})
+  }
+  res.send('ok')
   },
   borrarAnticipo: async (req, res) => {
     const { id } = req.params;
@@ -239,7 +248,7 @@ const usersController = {
       /* let result = await DB.usuarios.findAll({
     include:["anticipo"]
   });*/
-      let result = await DB.vacaciones.findAll();
+      let result = await DB.vacaciones.findAll({include:["usuario"]});
       res.send(result);
     } catch (error) {
       res.send(error);
@@ -248,15 +257,58 @@ const usersController = {
   vacaciones: async (req, res) => {
     try {
       const data = req.body;
-      
-  await DB.vacaciones.create(data);
-  res.send({ msg: "vacacion solicitada" });
- 
-     
+
+      await DB.vacaciones.create(data);
+      res.send({ msg: "vacacion solicitada" });
     } catch (error) {
       res.send(error);
     }
   },
+  vacacionesRechazado: async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+
+    const data  = req.body;
+    console.log(data);
+    try {
+      let antEditado = await DB.vacaciones.update(
+        data,
+        {
+          where: { id: id },
+        }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  vacacionesAprobado: async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    console.log(req.body);
+    try {
+      let antEditado = await DB.vacaciones.update(
+        data,
+        {
+          where: { id: id },
+        }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+ borrarVacacion:async (req, res) => {
+   try {
+  const { id } = req.params;
+  console.log(id);
+      await DB.vacaiones.destroy({
+      where: { id },
+    });
+    res.send("ok")
+ } catch (e) {
+  res.send(e);
+ }},
   listaDiasVacaciones: async (req, res) => {
     try {
       let result = await DB.diasvacaciones.findAll();
@@ -325,6 +377,51 @@ const usersController = {
       res.send(error);
     }
   },
+  gastoRechazado: async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+
+    const data  = req.body;
+    console.log(data);
+    try {
+      let antEditado = await DB.gastos.update(
+        data,
+        {
+          where: { id: id },
+        }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  gastoAprobado: async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    console.log(req.body);
+    try {
+      let antEditado = await DB.gastos.update(
+        data,
+        {
+          where: { id: id },
+        }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  borrarGasto:async (req, res) => {
+    try {
+   const { id } = req.params;
+   console.log(id);
+       await DB.gastos.destroy({
+       where: { id },
+     });
+     res.send("ok")
+  } catch (e) {
+   res.send(e);
+  }},
   editarRendicion: async (req, res) => {
     try {
       // id del producto
@@ -486,11 +583,12 @@ const usersController = {
       }
     );
   },
- 
-  pd:async (req, res) => {
-      console.log(path.join(__dirname))//me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
- res.sendFile(path.join(__dirname,'../../result.pdf'));
-},
+
+  pd: async (req, res) => {
+    console.log(path.join(__dirname)); //me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
+    res.sendFile(path.join(__dirname, "../../result.pdf"));
+  },
+
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({
       where: {

@@ -7,8 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     fecha:DataTypes.STRING,
     mensaje: DataTypes.STRING,
     respMensaje:DataTypes.STRING,
-    estado: DataTypes.STRING
-  }, {timestamp:false});
+    estado: DataTypes.STRING,
+    estadoFinal:DataTypes.STRING,
+    notificacion: DataTypes.STRING,
+  }, { });
   anticipos.associate = function(models) {
     anticipos.belongsTo(models.usuarios,{
       as:'usuario',

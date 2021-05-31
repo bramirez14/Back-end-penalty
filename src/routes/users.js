@@ -35,7 +35,6 @@ return cb(null, true)
 router.get('/allusers',usersController.allusers)
 /* User register */
 router.post('/register',[
-    check('usuario').isLength({min:4}).withMessage('ingrese su usuario'),
     check('nombre').isLength({min:4}).withMessage('ingrese su nombre'),
     check('email').isEmail().withMessage('ingrese un email'),
     check('password').isLength({min:3}).withMessage('ingrese una contraseña')
@@ -52,14 +51,21 @@ router.get('/anticipo',usersController.todoAnt)
 router.post('/anticipo',usersController.anticipo)
 router.put('/anticipo/aprobado/:id',usersController.anticipoAprobado)
 router.put('/anticipo/rechazado/:id',usersController.anticipoRechazado)
-router.delete('/borrar/anticipo/:id',usersController.borrarAnticipo)
+router.delete('/anticipo/borrar/:id',usersController.borrarAnticipo)
+router.get('/departamentos',usersController.dtos)
+router.put('/alerta',usersController.alerta)
+
 
 
 
 /*Todas la vacaciones solicitadas */
 router.get('/vacaciones',usersController.allvacaciones)
-/*Vacaciones*/
 router.post('/vacaciones',usersController.vacaciones)
+router.put('/vacaciones/aprobado/:id',usersController.vacacionesAprobado)
+router.put('/vacaciones/rechazado/:id',usersController.vacacionesRechazado)
+router.delete('/vacaciones/borrar/:id',usersController.borrarVacacion)
+
+
 /*Rendicion de Gastos*/ 
 router.post('/rendicion',upload.single('imagen'),usersController.rendicion)
 
@@ -76,6 +82,10 @@ router.post('/mpago',usersController.antpagos)
 router.post('/mpago',usersController.antpagos)
 /**Todos los gastos */
 router.get('/gastos',usersController.todosGastos)
+router.put('/gasto/aprobado/:id',usersController.gastoAprobado)
+router.put('/gasto/rechazado/:id',usersController.gastoRechazado)
+router.delete('/gasto/borrar/:id',usersController.borrarGasto)
+
 /**Crea un Gasto */
 router.post('/rendiciones/gastos',upload.single('imagen'),usersController.crearGasto)
 /**Agregar imagen de Anticipo de Gasto */
@@ -97,6 +107,8 @@ router.post('/generar/pdf',usersController.generadorPdf)
 router.post('/create-pdf',usersController.pdfCreate);
 /* router.get('/pd/df',usersController.pdf); */
 router.get('/peticion/pdf',usersController.pd)
+
+
 
 router.delete('/:id',usersController.borrar)
 module.exports = router;
