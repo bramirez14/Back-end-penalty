@@ -59,11 +59,11 @@ const usersController = {
       let data = req.body;
       console.log(data);
       const { email, password, password2 } = data;
-      email.toLowerCase();
+      let e = email.toLowerCase();
       //Verificamos que el user no este registrado en la DB
       let verify = await DB.usuarios.findOne({
         where: {
-          email: email,
+          email: e,
         },
       });
       !!verify ? res.send("Ya estas registrado/a") : "";
@@ -74,6 +74,7 @@ const usersController = {
         let user = await DB.usuarios.create({
           ...data,
           password: encryptedKey,
+          email:e
         });
         let token;
         !user
@@ -105,11 +106,11 @@ const usersController = {
   login: async (req, res) => {
     try {
       let { email, password } = req.body;
-      email.toLowerCase();
+      let e = email.toLowerCase();
       // Buscar usuario
       let user = await DB.usuarios.findOne({
         where: {
-          email: email,
+          email: e,
         },
       });
       /*condicional para verificar si no existe el usuario */
