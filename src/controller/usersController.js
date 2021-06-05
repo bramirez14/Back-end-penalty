@@ -117,15 +117,24 @@ const usersController = {
 
   login: async (req, res) => {
     try {
-      let { email, password } = req.body;
+      let { email, password, conectado } = req.body;
+      console.log(conectado);
       let e = email.toLowerCase();
       console.log(e);
+      
       // Buscar usuario
       let user = await DB.usuarios.findOne({
         where: {
           email: e,
         },
       });
+      !!user?
+       await DB.usuarios.update({conectado},{
+        where: {
+          id: user.id,
+        },
+      }):'';
+    
       /*condicional para verificar si no existe el usuario */
       if (!!user === false) {
         res.send({
@@ -158,6 +167,8 @@ const usersController = {
           }
         );
       }
+     
+
     } catch (error) {
       res.send(error);
     }
@@ -443,6 +454,38 @@ const usersController = {
     } catch (error) {
       res.send(error);
     }
+  },
+  agregarImgUsuario:async (req, res) => {
+    try {
+      const { id } = req.params;
+    console.log(id);
+      const img = req.file;
+      console.log(img);
+      const imgPath = img.path;
+      let imagenURL = await cloudinary.uploader.upload(imgPath);
+      console.log(imagenURL);
+      let imgCreada = await DB.usuarios.update(
+        { imagen: imagenURL.secure_url },
+        {
+          where: {
+            id: id,
+          },
+        })
+        res.send('ok')
+    } catch (e) {
+      res.send(e)
+    }
+  },
+  cerrarSesion:async (req, res) => {
+try {
+  const { id } = req.params;
+  const {conectado}=req.body
+  await DB.usuarios.update({conectado},{where:{id}})
+    res.send('ok')
+} catch (e) {
+  res.send(e)
+}
+
   },
   gastoPK: async (req, res) => {
     try {

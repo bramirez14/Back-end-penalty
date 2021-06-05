@@ -95,6 +95,8 @@ router.post('/rendicion/gastos/img/:id',upload.single('imagen'),usersController.
 router.get('/editar/rendicion/:id',usersController.editarRendicion)
 /**buscar  usuario por Id */
 router.get('/:id',usersController.usuarioPK);
+router.put('/:id',upload.single('imagen'),usersController.agregarImgUsuario)
+router.put('/cs/:id',usersController.cerrarSesion)
 /**buscar gasto por id */
 router.get('/gastos/:id',usersController.gastoPK);
 /**buscar rendicion por id */

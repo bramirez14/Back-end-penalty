@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     fechaContratacion:DataTypes.STRING,
     departamentoId:DataTypes.INTEGER,
     cel:DataTypes.INTEGER,
+    imagen:DataTypes.STRING,
+    conectado:DataTypes.STRING,
   }, {});
 usuarios.associate = function(models) {
   usuarios.hasMany(models.vacaciones,{
