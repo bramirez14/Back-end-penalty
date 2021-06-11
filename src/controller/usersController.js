@@ -509,36 +509,6 @@ try {
       res.send(e);
     }
   },
-  todosAntGasto:async(req,res)=>{
-    try {
-      let res= DB.rendicionessinantgastos.findAll();
-      res.send(res)
-    } catch (e) {
-      res.send(e)
-    }
-  },
-
-  antgasto:async(req,res)=>{
-try {
-  
-   const data = req.body;
-   console.log(data);
-      const img = req.file;
-      const imgPath = img.path;
-      let imagenURL = await cloudinary.uploader.upload(imgPath);
-      const rendicion = await DB.rendiciones.create(data);
-      console.log(rendicion); 
-
-      res.send("todo ok");
-} catch (e) {
-  res.send(e)
-}
-  },
-
-
-
-
-
 
   crearGasto: async (req, res) => {
     try {
@@ -578,7 +548,6 @@ try {
   gr: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data,'oooooooooooooooooooooooooooooooo');
       const img = req.file;
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
