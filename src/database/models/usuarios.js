@@ -1,7 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const usuarios = sequelize.define('usuarios', {
-    usuario: DataTypes.STRING,
     nombre: DataTypes.STRING,
     apellido: DataTypes.STRING,
     email: DataTypes.STRING,
@@ -11,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     nvendedor: DataTypes.STRING,
     fechaContratacion:DataTypes.STRING,
     departamentoId:DataTypes.INTEGER,
-    
+    cel:DataTypes.INTEGER,
   }, {});
 usuarios.associate = function(models) {
   usuarios.hasMany(models.vacaciones,{

@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
       fecha: DataTypes.STRING,
       usuarioId: DataTypes.INTEGER,
       formapagoId: DataTypes.INTEGER,
+      estado:DataTypes.STRING,
+      estadoFinal:DataTypes.STRING,
+      notificacion:DataTypes.STRING
+      
     },
     {}
   );
