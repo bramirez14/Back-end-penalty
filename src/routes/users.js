@@ -103,6 +103,12 @@ router.get('/gastos/:id',usersController.gastoPK);
 router.get('/rendicion/:id',usersController.rendicionPK);
 /**Crear el anticipo gasto y guardarlo en la rendicion  */
 router.post('/gasto/rendicion',upload.single('imagen'),usersController.gr);
+
+/**Rendicion de gastos sin anticipo */
+router.get('/rens/gasto',usersController.todosAntGasto);
+router.post('/rens/gasto',upload.single('imagen'),usersController.antgasto);
+
+
 /**PDF */
 /**Generando el pdf de la lista por anticipo */
 router.post('/generar/pdf',usersController.generadorPdf)  
