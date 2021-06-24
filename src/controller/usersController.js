@@ -1,3 +1,5 @@
+const express = require("express");
+const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const DB = require("../database/models");
@@ -21,6 +23,18 @@ const {
   clo,
   tablaIntermedia,
 } = require("../helper/funciones");
+
+
+//Socket.io
+const app = express();
+const servidor = http.createServer(app);
+
+//Inicializamos socketio
+const socketio = require("socket.io");
+const io = socketio(servidor);
+
+
+
 
 const usersController = {
   /**Lista de todos los usuarios*/
@@ -117,6 +131,7 @@ const usersController = {
 
   login: async (req, res) => {
     try {
+
       let { email, password, conectado } = req.body;
       console.log(conectado);
       let e = email.toLowerCase();
