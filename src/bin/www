@@ -32,6 +32,7 @@ const { usuariosConectados, usuarioConectado, comprobarJWT,usuarioDesconectado }
  const io = socketIo(server);
 io.on('connection', async (socket) => { 
   const [ valido, id ] = comprobarJWT( socket.handshake.query['x-token']  );
+  console.log(valido);
   if ( !valido ) {
     console.log('socket no identificado');
     return socket.disconnect();
@@ -39,12 +40,14 @@ io.on('connection', async (socket) => {
   console.log('cliente conectado',id);
  await usuarioConectado(id);  
   socket.join( id ); 
-//io.emit( 'lista-usuarios', await usuariosConectados())
+io.emit( 'lista-usuarios', await usuariosConectados());
+
 socket.on('disconnect', async() => {
-console.log('cliente desconectado')
+console.log('cliente desconectado');
   await usuarioDesconectado( id );
-  //this.io.emit( 'lista-usuarios', await getUsuarios() )
+  io.emit( 'lista-usuarios', await usuariosConectados());  
 })
+
 });
  /**
   * Normalize a port into a number, string, or false.
