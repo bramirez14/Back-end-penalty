@@ -14,7 +14,7 @@ const usuarioConectado =async (id)=>{
        return res
 }
 const usuariosConectados= async ()=>{
-  let res = await DB.usuarios.findAll();
+  let res = await DB.usuarios.findAll({include:["anticipo", "vacacion", "gasto", "departamento"]});
       return res
 
 }
