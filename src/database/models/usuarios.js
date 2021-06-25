@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     fechaContratacion:DataTypes.STRING,
     departamentoId:DataTypes.INTEGER,
     cel:DataTypes.INTEGER,
+    imagen:DataTypes.STRING,
+    conectado:DataTypes.STRING,
   }, {});
 usuarios.associate = function(models) {
   usuarios.hasMany(models.vacaciones,{
@@ -29,11 +31,7 @@ usuarios.associate = function(models) {
     usuarios.belongsTo(models.departamentos,{
       as:'departamento'
     })
-    /* usuarios.hasMany(models.rendiciones,{
-      as:'rendicion',
-      foreignKey:'usuarioId'
-    }) */
-
+  
   };
   return usuarios;
 };

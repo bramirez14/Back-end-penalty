@@ -95,20 +95,20 @@ router.post('/rendicion/gastos/img/:id',upload.single('imagen'),usersController.
 router.get('/editar/rendicion/:id',usersController.editarRendicion)
 /**buscar  usuario por Id */
 router.get('/:id',usersController.usuarioPK);
+router.put('/:id',upload.single('imagen'),usersController.agregarImgUsuario)
+router.put('/cs/:id',usersController.cerrarSesion)
 /**buscar gasto por id */
 router.get('/gastos/:id',usersController.gastoPK);
 /**buscar rendicion por id */
 router.get('/rendicion/:id',usersController.rendicionPK);
 /**Crear el anticipo gasto y guardarlo en la rendicion  */
 router.post('/gasto/rendicion',upload.single('imagen'),usersController.gr);
+
 /**PDF */
 /**Generando el pdf de la lista por anticipo */
 router.post('/generar/pdf',usersController.generadorPdf)  
 router.post('/create-pdf',usersController.pdfCreate);
 /* router.get('/pd/df',usersController.pdf); */
 router.get('/peticion/pdf',usersController.pd)
-
-
-
 router.delete('/:id',usersController.borrar)
 module.exports = router;

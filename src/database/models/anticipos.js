@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     estado: DataTypes.STRING,
     estadoFinal:DataTypes.STRING,
     notificacion: DataTypes.STRING,
+    f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
+
   }, { });
   anticipos.associate = function(models) {
     anticipos.belongsTo(models.usuarios,{

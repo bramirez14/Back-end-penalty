@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       formapagoId: DataTypes.INTEGER,
       estado:DataTypes.STRING,
       estadoFinal:DataTypes.STRING,
-      notificacion:DataTypes.STRING
-      
+      notificacion:DataTypes.STRING,
+      sinAnticipo:DataTypes.STRING,
     },
     {}
   );
