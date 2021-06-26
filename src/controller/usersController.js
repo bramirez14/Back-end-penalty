@@ -1,3 +1,5 @@
+const express = require("express");
+const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const DB = require("../database/models");
@@ -21,6 +23,18 @@ const {
   clo,
   tablaIntermedia,
 } = require("../helper/funciones");
+
+
+//Socket.io
+const app = express();
+const servidor = http.createServer(app);
+
+//Inicializamos socketio
+const socketio = require("socket.io");
+const io = socketio(servidor);
+
+
+
 
 const usersController = {
   /**Lista de todos los usuarios*/
@@ -117,6 +131,7 @@ const usersController = {
 
   login: async (req, res) => {
     try {
+
       let { email, password, conectado } = req.body;
       console.log(conectado);
       let e = email.toLowerCase();
@@ -606,23 +621,15 @@ try {
     const { nombre, apellido, email } = gerente;
     console.log(data);
 
-    //templateHtml = templateHtml.replace('{{data}}', data[0].importe)
-    /* pdf.create(templateHtml,{data}).toFile('result.pdf', (err) => {
-      if(err) {
-          res.send(Promise.reject());
-      }
-
-      res.send(Promise.resolve());
-  }); */
     res.render(
       "pdf",
       { data, usuario, email, departamento, nombre, apellido, id },
       function (err, html) {
         pdf.create(html).toFile("result.pdf", function (err, result) {
           if (err) {
-            return console.log(err);
+            return console.log(err,'error');
           } else {
-            /*  console.log(res); */
+              console.log(res,'respuesta'); 
             var datafile = fs.readFileSync("result.pdf");
             res.header("content-type", "application/pdf");
             res.send(datafile);
