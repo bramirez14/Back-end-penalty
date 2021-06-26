@@ -1,5 +1,4 @@
 const express = require("express");
-const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const DB = require("../database/models");
@@ -7,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const pdf = require("html-pdf");
 var options = { format: "A4" };
+
 //cloudinary
 var cloudinary = require("cloudinary").v2;
 //config cloudinary
@@ -23,15 +23,10 @@ const {
   clo,
   tablaIntermedia,
 } = require("../helper/funciones");
+const db = require("../database/models2");
 
 
-//Socket.io
-const app = express();
-const servidor = http.createServer(app);
 
-//Inicializamos socketio
-const socketio = require("socket.io");
-const io = socketio(servidor);
 
 
 
@@ -651,6 +646,7 @@ try {
       },
     });
   },
+
 };
 
 module.exports = usersController;

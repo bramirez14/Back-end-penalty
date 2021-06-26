@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 
 
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/reportes');
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -27,7 +27,7 @@ app.use(cors());
 
 
 
-app.use('/', indexRouter);
+app.use('/api/reportes', indexRouter);
 app.use('/api/users', usersRouter);
 
 // catch 404 and forward to error handler

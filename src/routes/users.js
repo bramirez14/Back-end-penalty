@@ -55,9 +55,6 @@ router.delete('/anticipo/borrar/:id',usersController.borrarAnticipo)
 router.get('/departamentos',usersController.dtos)
 router.put('/alerta',usersController.alerta)
 
-
-
-
 /*Todas la vacaciones solicitadas */
 router.get('/vacaciones',usersController.allvacaciones)
 router.post('/vacaciones',usersController.vacaciones)
