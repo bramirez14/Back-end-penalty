@@ -74,7 +74,6 @@ const usersController = {
   register: async (req, res) => {
     try {
       let data = req.body;
-      console.log(data);
       const { email, password, password2 } = data;
       let e = email.toLowerCase();
       console.log(e);
@@ -247,9 +246,18 @@ const usersController = {
   },
   alerta: async (req, res) => {
     const datos =req.body
-  for (const dato of datos) {
-    await DB.anticipos.update({notificacion:'activa'},{where:{id:dato}})
-  }
+    const arraySueldos=datos[0].map(s=> s.id)
+    for (const dato of arraySueldos) {
+      await DB.anticipos.update({notificacion:'activa'},{where:{id:dato}})}
+
+     const arrayVacaciones=datos[1].map(v=> v.id)
+     for (const dato of arrayVacaciones) {
+      await DB.vacaciones.update({notificacion:'activa'},{where:{id:dato}})}
+
+    const arrayGastos=datos[2].map(g=> g.id)
+    for (const dato of arrayGastos) {
+      await DB.gastos.update({notificacion:'activa'},{where:{id:dato}})}
+  
   res.send('ok')
   },
   borrarAnticipo: async (req, res) => {
@@ -342,13 +350,18 @@ const usersController = {
   rendicion: async (req, res) => {
     try {
       const file = req.file;
-      const filePath = file.path;
-      //guardamos imagen en cloudinary y DB
-      let imagenURL = await cloudinary.uploader.upload(filePath);
       const data = req.body;
-      console.log(data, "211");
-      await crearRendicion({ ...data, imagen: imagenURL.secure_url });
+      
 
+      if(file===undefined){
+        await crearRendicion(data)
+       
+      }else{
+        const filePath = file.path;
+        //guardamos imagen en cloudinary y DB
+        let imagenURL = await cloudinary.uploader.upload(filePath);
+        await crearRendicion({ ...data, imagen: imagenURL.secure_url });
+      }
       res.send("Rendicion e imagenes creadas satifactoriamente");
     } catch (error) {
       res.send(error);
