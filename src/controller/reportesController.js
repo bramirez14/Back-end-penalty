@@ -8,7 +8,6 @@ const reportesController = {
 remito:async (req, res) => {
     try {
       let ress = await DB.remitos.findAll();
-      console.log(ress);
       res.json(ress);
     } catch (error) {
       res.send(error);
@@ -19,6 +18,14 @@ remito:async (req, res) => {
     console.log('file:///C:/Users/bramirez/Desktop/archivosPDF/planUTH.pdf'); //me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
     res.sendFile(path.join(__dirname,`../../../../archivosPDF/${body}`));
   },
+  remmes:async (req, res) => {
+    try {
+      let result= await DB.remmes.findAll();
+      res.send(result)
+    } catch (error) {
+      res.send(error)
+    }
+  }
 
 }
 module.exports = reportesController;

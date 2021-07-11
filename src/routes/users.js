@@ -46,6 +46,9 @@ router.post('/login',[
   check('password','Debe ingresar su contraseña').isLength({min:3})
 ],validationLogin ,usersController.login); 
 router.get('/check',usersController.check)
+/**Cambio de contraseña */
+router.put('/cambiar/contrasena',usersController.cambiarContraña)
+
 /* Anticipo */
 router.get('/anticipo',usersController.todoAnt)
 router.post('/anticipo',usersController.anticipo)
@@ -67,6 +70,8 @@ router.delete('/vacaciones/borrar/:id',usersController.borrarVacacion)
 router.post('/rendicion',upload.single('imagen'),usersController.rendicion)
 
 
+
+
 /*Todos los usuarios */
 router.get('/gerentes',usersController.gerentes)
 /*Medios de pago */
@@ -82,7 +87,7 @@ router.get('/gastos',usersController.todosGastos)
 router.put('/gasto/aprobado/:id',usersController.gastoAprobado)
 router.put('/gasto/rechazado/:id',usersController.gastoRechazado)
 router.delete('/gasto/borrar/:id',usersController.borrarGasto)
-
+router.put('/gasto/finalizado/:id',usersController.gastoFinalizados)
 /**Crea un Gasto */
 router.post('/rendiciones/gastos',upload.single('imagen'),usersController.crearGasto)
 /**Agregar imagen de Anticipo de Gasto */
@@ -106,6 +111,10 @@ router.post('/gasto/rendicion',upload.single('imagen'),usersController.gr);
 router.post('/generar/pdf',usersController.generadorPdf)  
 router.post('/create-pdf',usersController.pdfCreate);
 /* router.get('/pd/df',usersController.pdf); */
-router.get('/peticion/pdf',usersController.pd)
+router.get('/peticion/pdf',usersController.pd);
+router.post('/finalizar/gasto/:id',usersController.finalizar);
+router.put('/pago/anticipo/:id',usersController.pagoAnt);
+router.put('/pago/gasto/:id',usersController.pagoGasto);
+
 router.delete('/:id',usersController.borrar)
 module.exports = router;

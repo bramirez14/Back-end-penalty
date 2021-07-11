@@ -13,7 +13,7 @@ const inicioSocket = (server) =>{
     }
       console.log('cliente conectado',id);
      await usuarioConectado(id);  
-      socket.join( id ); 
+    /*   socket.join( id );  */
     io.emit( 'lista-usuarios', await usuariosConectados());
     socket.on('disconnect', async() => {
     console.log('cliente desconectado');

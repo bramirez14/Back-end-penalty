@@ -25,12 +25,6 @@ const {
 } = require("../helper/funciones");
 const db = require("../database/models2");
 
-
-
-
-
-
-
 const usersController = {
   /**Lista de todos los usuarios*/
   todosGastos: async (req, res) => {
@@ -76,7 +70,6 @@ const usersController = {
       let data = req.body;
       const { email, password, password2 } = data;
       let e = email.toLowerCase();
-      console.log(e);
       //Verificamos que el user no este registrado en la DB
       let verify = await DB.usuarios.findOne({
         where: {
@@ -127,9 +120,7 @@ const usersController = {
     try {
 
       let { email, password, conectado } = req.body;
-      console.log(conectado);
       let e = email.toLowerCase();
-      console.log(e);
       
       // Buscar usuario
       let user = await DB.usuarios.findOne({
@@ -181,6 +172,16 @@ const usersController = {
     } catch (error) {
       res.send(error);
     }
+  },
+  cambiarContraña:async (req, res) => {
+    const {id,password}=req.body;
+    const passwordNew=bcrypt.hashSync(password, 10);
+     await DB.usuarios.update({password:passwordNew},{
+      where: {
+        id
+      },
+    });
+    res.send('ok')
   },
   check: async (req, res) => {
     const token = req.header("token");
@@ -351,11 +352,16 @@ const usersController = {
     try {
       const file = req.file;
       const data = req.body;
-      
-
+     const {gastoId,total}=data
+console.log(data);
       if(file===undefined){
         await crearRendicion(data)
-       
+        await DB.gastos.update({
+          importerendido:total},{
+            where: {
+              id: gastoId,
+            },
+          })
       }else{
         const filePath = file.path;
         //guardamos imagen en cloudinary y DB
@@ -367,6 +373,7 @@ const usersController = {
       res.send(error);
     }
   },
+  
 
   gerentes: async (req, res) => {
     try {
@@ -388,7 +395,7 @@ const usersController = {
     try {
       const data = req.body;
       console.log(data, "208");
-      await DB.gastos.create(data);
+      await DB.gastos.create({...data,importerendido:data.importe});
       res.send("se creo correctamente");
     } catch (error) {
       res.send(error);
@@ -400,10 +407,16 @@ const usersController = {
       const data = req.body;
       console.log(data, "**************data*******************");
       console.log(id);
+      const {gastoId,total}=data
 
       await DB.rendiciones.update(data, {
         where: {
           id: id,
+        },
+      });
+      await DB.gastos.update({importerendido:total}, {
+        where: {
+          id:gastoId,
         },
       });
       res.send("ok");
@@ -465,6 +478,18 @@ const usersController = {
     } catch (error) {
       res.send(error);
     }
+  },
+  gastoFinalizados : async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {listo} = req.body
+    console.log(id);
+    await DB.gastos.update({listo},{where:{id}});
+
+    res.send('ok')
+  } catch (e) {
+    res.send(e)
+  }
   },
   usuarioPK: async (req, res) => {
     try {
@@ -532,6 +557,7 @@ try {
       res.send(e);
     }
   },
+  
 
   crearGasto: async (req, res) => {
     try {
@@ -574,7 +600,7 @@ try {
       const img = req.file;
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
-      const { categoria, fecha, importe, notas, usuarioId, formapagoId,sinAnticipo,estado,estadoFinal,notificacion} = data;
+      const { categoria, fecha, importe, notas, usuarioId, formapagoId,sinAnticipo,estado,estadoFinal,notificacion,importerendido} = data;
       const gasto = await DB.gastos.create({
         categoria,
         fecha,
@@ -585,21 +611,47 @@ try {
         sinAnticipo,
         estado,
         estadoFinal,
-        notificacion
+        notificacion,
+        importerendido
       });
       const id = gasto.id;
-      const rendicion = await DB.rendiciones.create({
+       await DB.rendiciones.create({
         ...data,
         gastoId: id,
         imagen: imagenURL.secure_url,
       });
-      console.log(rendicion);
 
-      res.send("todo ok");
+      res.send("ok");
     } catch (e) {
       res.send(e);
     }
   },
+  finalizar:async (req, res) => {
+    try {
+      const {id}= req.params
+      const {procesoFinalizado} = req.body;
+      await DB.gastos.update({procesoFinalizado},{where:{id}})
+      res.send('ok')
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  pagoAnt: async (req, res) => {
+    const {id}=req.params;
+    const {pagoRealizado}=req.body;
+    await DB.anticipos.update({pagoRealizado},{where:{id}})
+    res.send('ok')
+  },
+  pagoGasto: async (req, res) => {
+    const {id}=req.params;
+    const {pagoRealizado}=req.body;
+    console.log(pagoRealizado,id);
+    await DB.gastos.update({pagoRealizado},{where:{id}})
+    res.send('ok')
+
+  },
+
+
   pdfCreate: async (req, res) => {
     try {
       console.log(req.body);
@@ -622,7 +674,6 @@ try {
     const { usuarioId } = gasto;
     const usuario = await DB.usuarios.findByPk(usuarioId);
     const { departamentoId } = usuario;
-    console.log(departamentoId);
     const deptos = await DB.departamentos.findByPk(departamentoId);
     const { departamento, gerenteId } = deptos;
     const gerente = await DB.gerentes.findByPk(gerenteId);
@@ -631,7 +682,7 @@ try {
 
     res.render(
       "pdf",
-      { data, usuario, email, departamento, nombre, apellido, id },
+      { data, usuario, email, departamento, nombre, apellido, id,gasto},
       function (err, html) {
         pdf.create(html).toFile("result.pdf", function (err, result) {
           if (err) {
