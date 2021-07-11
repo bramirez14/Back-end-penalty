@@ -2,8 +2,8 @@ module.exports = {
     "development": {
       "username": "root",
        "password": "Cambuci14",
+        "port":3306,
        "database": "wbt8",
-       "port": 3306,
        "host": "190.19.91.89",
        "dialect": "mysql",
        "define":{

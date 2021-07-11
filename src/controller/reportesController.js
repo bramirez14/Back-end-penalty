@@ -6,12 +6,17 @@ const DB = require("../database/models2");
 const reportesController = {
 remito:async (req, res) => {
     try {
-      let res = await DB.w_remitos.findAll();
-      console.log(res);
-      res.json(res);
+      let ress = await DB.remitos.findAll();
+      res.send(ress);
     } catch (error) {
       res.send(error);
     }
   },
+  remitoPdf: async (req, res) => {
+    const header = req.header("archivo");
+    console.log(header);
+    res.sendFile(`C:/ftp/REMITOVACLOG/${header}`);
+  },
+
 }
 module.exports = reportesController;

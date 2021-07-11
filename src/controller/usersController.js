@@ -342,13 +342,16 @@ const usersController = {
   rendicion: async (req, res) => {
     try {
       const file = req.file;
-      const filePath = file.path;
-      //guardamos imagen en cloudinary y DB
-      let imagenURL = await cloudinary.uploader.upload(filePath);
       const data = req.body;
-      console.log(data, "211");
-      await crearRendicion({ ...data, imagen: imagenURL.secure_url });
 
+      if(file===undefined){
+        await crearRendicion(data)
+      }else{
+        const filePath = file.path;
+        //guardamos imagen en cloudinary y DB
+        let imagenURL = await cloudinary.uploader.upload(filePath);
+        await crearRendicion({ ...data, imagen: imagenURL.secure_url });
+      }
       res.send("Rendicion e imagenes creadas satifactoriamente");
     } catch (error) {
       res.send(error);
