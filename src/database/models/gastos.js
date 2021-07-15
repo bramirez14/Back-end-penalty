@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
       importerendido:DataTypes.DECIMAL,
       procesoFinalizado:DataTypes.STRING,
       pagoRealizado: DataTypes.STRING,
+      f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
+      aprobacion: DataTypes.STRING,
     },
     {}
   );

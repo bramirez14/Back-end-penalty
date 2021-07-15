@@ -5,8 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     razonsoc: DataTypes.STRING,
     vendedor: DataTypes.INTEGER,
     PEDIDO: DataTypes.STRING,
-    a:DataTypes.STRING,
-    
+    fecemision:DataTypes.STRING,
+    apeynom:DataTypes.STRING,
+    UNIDADES:DataTypes.INTEGER,
+    REMITO:DataTypes.STRING,
+
   }, {timestamps:false});
   remitos.associate = function(models) {
     

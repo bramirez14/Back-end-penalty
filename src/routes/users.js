@@ -84,10 +84,12 @@ router.post('/mpago',usersController.antpagos)
 router.post('/mpago',usersController.antpagos)
 /**Todos los gastos */
 router.get('/gastos',usersController.todosGastos)
+router.put('/verficacion/gasto/:id',usersController.verificacionGasto)
 router.put('/gasto/aprobado/:id',usersController.gastoAprobado)
 router.put('/gasto/rechazado/:id',usersController.gastoRechazado)
 router.delete('/gasto/borrar/:id',usersController.borrarGasto)
 router.put('/gasto/finalizado/:id',usersController.gastoFinalizados)
+
 /**Crea un Gasto */
 router.post('/rendiciones/gastos',upload.single('imagen'),usersController.crearGasto)
 /**Agregar imagen de Anticipo de Gasto */

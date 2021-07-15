@@ -469,6 +469,9 @@ console.log(data);
   } catch (e) {
    res.send(e);
   }},
+
+
+
   editarRendicion: async (req, res) => {
     try {
       // id del producto
@@ -490,6 +493,18 @@ console.log(data);
   } catch (e) {
     res.send(e)
   }
+  },
+  verificacionGasto:async (req, res) => {
+
+    try {
+      const { id } = req.params;
+    const {aprobacion}=req.body;
+    await DB.gastos.update({aprobacion},{where:{id}});
+      res.send('ok')
+    } catch (e) {
+      res.send(e)
+    }
+    
   },
   usuarioPK: async (req, res) => {
     try {
@@ -598,29 +613,26 @@ try {
     try {
       const data = req.body;
       const img = req.file;
-      const imgPath = img.path;
-      let imagenURL = await cloudinary.uploader.upload(imgPath);
-      const { categoria, fecha, importe, notas, usuarioId, formapagoId,sinAnticipo,estado,estadoFinal,notificacion,importerendido} = data;
-      const gasto = await DB.gastos.create({
-        categoria,
-        fecha,
-        importe,
-        notas,
-        usuarioId,
-        formapagoId,
-        sinAnticipo,
-        estado,
-        estadoFinal,
-        notificacion,
-        importerendido
-      });
-      const id = gasto.id;
-       await DB.rendiciones.create({
-        ...data,
-        gastoId: id,
-        imagen: imagenURL.secure_url,
-      });
-
+    
+if(img===undefined){
+ const {id} = await DB.gastos.create(data)
+  await DB.rendiciones.create({
+    ...data,
+    gastoId: id,
+  })
+}else{
+  const imgPath = img.path;
+  let imagenURL = await cloudinary.uploader.upload(imgPath);
+  const { categoria, fecha, importe, notas, usuarioId, formapagoId,sinAnticipo,estado,estadoFinal,notificacion,importerendido} = data;
+  const gasto = await DB.gastos.create(data);
+  console.log(gasto,'soy la linea 617');
+  const id = gasto.id;
+   await DB.rendiciones.create({
+    ...data,
+    gastoId: id,
+    imagen: imagenURL.secure_url,
+  });
+}
       res.send("ok");
     } catch (e) {
       res.send(e);
