@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       estadoFinal:DataTypes.STRING,
       notificacion:DataTypes.STRING,
       sinAnticipo:DataTypes.STRING,
+      listo:DataTypes.STRING,
+      importerendido:DataTypes.DECIMAL,
+      procesoFinalizado:DataTypes.STRING,
+      pagoRealizado: DataTypes.STRING,
     },
     {}
   );
