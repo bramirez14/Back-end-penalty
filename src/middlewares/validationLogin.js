@@ -1,4 +1,4 @@
-let {validationResult, body} = require("express-validator")
+const {validationResult, body} = require("express-validator")
 
 function validationLoginUser(req,res,next){
 console.log(validationResult (req),"4")

@@ -6,7 +6,9 @@ const inicioSocket = (server) =>{
     const io = socketIo(server);
 
     io.on('connection', async (socket) => { 
-      const [ valido, id ] = comprobarJWT( socket.handshake.query['x-token']  );
+      console.log('Un cliente se conecto');
+       
+      /* const [ valido, id ] = comprobarJWT( socket.handshake.query['x-token']  );
       if ( !valido ) {
         console.log('socket no identificado');
         return socket.disconnect();
@@ -19,7 +21,7 @@ const inicioSocket = (server) =>{
     console.log('cliente desconectado');
       await usuarioDesconectado( id );
       io.emit( 'lista-usuarios', await usuariosConectados());  
-    })
+    }) 
     
     });
 

@@ -10,14 +10,21 @@ const validationLogin = require('../middlewares/validationLogin');
 
 
 //fx de multer
-//fx de multer
 const storage = multer.diskStorage({
-  destination: path.join(__dirname,'public/upload'),
+    destination: path.join(__dirname,'../file/image'),
+    filename:(req,file,cb)=>{
+    cb(null, Date.now() + path.extname(file.originalname));
+    }
+  })
+var upload = multer({ storage});
+
+const storagepdf = multer.diskStorage({
+  destination: path.join(__dirname,'../file/public'),
   filename:(req,file,cb)=>{
   cb(null, Date.now() + path.extname(file.originalname));
   }
-  })
-var upload = multer({ storage})
+})
+var uploadpdf= multer({ storage:storagepdf});
 /*const upload = multer({ storage,
 dest:path.join(__dirname,'public/upload'),
 limits:{fileSize:3000000},
@@ -117,6 +124,8 @@ router.get('/peticion/pdf',usersController.pd);
 router.post('/finalizar/gasto/:id',usersController.finalizar);
 router.put('/pago/anticipo/:id',usersController.pagoAnt);
 router.put('/pago/gasto/:id',usersController.pagoGasto);
+/**ruta pdf  */
+router.post('/archivo/pdf/:id',uploadpdf.single('file'),usersController.archivoPdf);
 
 router.delete('/:id',usersController.borrar)
 module.exports = router;

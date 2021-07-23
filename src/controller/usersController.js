@@ -715,6 +715,18 @@ if(img===undefined){
     res.sendFile(path.join(__dirname, "../../result.pdf"));
   },
 
+  archivoPdf:async (req, res) => {
+    try {
+      const { id }= req.params;
+      const {norden} = req.body
+      const {originalname} = req.file;
+      await DB.gastos.update({pdf:originalname,norden},{where: {id}})
+      res.send('ok')
+    } catch (e) {
+      res.send(e)
+    }
+  },
+
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({
       where: {
