@@ -20,6 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       aprobacion: DataTypes.STRING,
       norden: DataTypes.STRING,
       pdf: DataTypes.STRING,
+      pdfinal: DataTypes.STRING,
+
 
     },
     {}
