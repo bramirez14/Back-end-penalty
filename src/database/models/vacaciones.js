@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     estadoFinal:DataTypes.STRING,
     respMensaje:DataTypes.STRING,
     notificacion:DataTypes.STRING,
+    f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
+
   }, {});
  vacaciones.associate = function(models) {
   vacaciones.belongsTo(models.usuarios,{
