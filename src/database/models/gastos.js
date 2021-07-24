@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       pagoRealizado: DataTypes.STRING,
       f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
       aprobacion: DataTypes.STRING,
+      norden: DataTypes.STRING,
+      pdf: DataTypes.STRING,
+      pdfinal: DataTypes.STRING,
+
+
     },
     {}
   );

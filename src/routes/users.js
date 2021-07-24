@@ -7,30 +7,37 @@ var { check } = require("express-validator");
 const usersController= require('../controller/usersController');
 const validationUser = require('../middlewares/validationUser');
 const validationLogin = require('../middlewares/validationLogin');
-
-
-//fx de multer
+const { uid } = require('uid');
 //fx de multer
 const storage = multer.diskStorage({
-  destination: path.join(__dirname,'public/upload'),
-  filename:(req,file,cb)=>{
-  cb(null, Date.now() + path.extname(file.originalname));
-  }
+    destination: path.join(__dirname,'../file/image'),
+    filename:(req,file,cb)=>{
+    cb(null, Date.now() + path.extname(file.originalname));
+    }
   })
-var upload = multer({ storage})
-/*const upload = multer({ storage,
-dest:path.join(__dirname,'public/upload'),
-limits:{fileSize:3000000},
-fileFilter:(req,file,cb) =>{
-  const filetypes = /jpeg|jpg|png|pdf/; 
-  const mimetype= filetypes.test(file.mimetype)
-    const extname = filetypes.test(path.extname(file.originalname))//obtengo jpg o png etc 
-    if(mimetype && extname){
-return cb(null, true)
-}
-    cb('Error: El archivo debe ser una imagen valida')
-}
-})*/
+var upload = multer({ storage});
+
+const storagepdf = multer.diskStorage({
+  destination: path.join(__dirname,'../file/public'),
+  filename:(req,file,cb)=>{
+    let name=file.originalname.split('.')[0]
+    cb(null, name+ '-' + uid() + path.extname(file.originalname))
+  }
+})
+var uploadpdf= multer({ storage:storagepdf});
+
+/* var storagepdf = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images/products')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now()+ path.extname(file.originalname))
+  }
+})
+ 
+var upload = multer({ storage: storage }) */
+
+
 /*Toos los usuarios registrados*/
 router.get('/allusers',usersController.allusers)
 /* User register */
@@ -116,7 +123,9 @@ router.post('/create-pdf',usersController.pdfCreate);
 router.get('/peticion/pdf',usersController.pd);
 router.post('/finalizar/gasto/:id',usersController.finalizar);
 router.put('/pago/anticipo/:id',usersController.pagoAnt);
-router.put('/pago/gasto/:id',usersController.pagoGasto);
-
+router.put('/pago/gasto/:id',uploadpdf.single('file'),usersController.pagoGasto);//pdf final
+/**ruta pdf  */
+router.post('/archivo/pdf/:id',uploadpdf.single('file'),usersController.archivoPdf);//norden y pdf 
+router.get('/pdf/gastos/rendicion',usersController.gastoPDF);
 router.delete('/:id',usersController.borrar)
 module.exports = router;

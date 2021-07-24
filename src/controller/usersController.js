@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const pdf = require("html-pdf");
 var options = { format: "A4" };
+const { v4: uuidv4 } = require('uuid');
+
 
 //cloudinary
 var cloudinary = require("cloudinary").v2;
@@ -658,9 +660,9 @@ if(img===undefined){
   },
   pagoGasto: async (req, res) => {
     const {id}=req.params;
+    const {filename}=req.file
     const {pagoRealizado}=req.body;
-    console.log(pagoRealizado,id);
-    await DB.gastos.update({pagoRealizado},{where:{id}})
+    await DB.gastos.update({pagoRealizado,pdfinal:filename},{where:{id}})
     res.send('ok')
 
   },
@@ -711,11 +713,38 @@ if(img===undefined){
       }
     );
   },
+  gastoPDF: async (req, res) => {
+    try {
+      const header = req.header("archivo");
+    console.log(header);
+    
+    
+    res.sendFile(path.join(__dirname,`../file/public/${header}`));
+    } catch (error) {
+      res.send(e)
+    }
+    
 
+  },
   pd: async (req, res) => {
     console.log(path.join(__dirname)); //me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
     res.sendFile(path.join(__dirname, "../../result.pdf"));
   },
+
+  archivoPdf:async (req, res) => {
+    try {
+      console.log('estoy aca');
+      const { id }= req.params;
+      const {norden} = req.body
+      const { filename} = req.file;
+      await DB.gastos.update({pdf:filename,norden},{where: {id}})
+      res.send('ok')
+    } catch (e) {
+      res.send(e)
+    }
+  },
+ 
+
 
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({
