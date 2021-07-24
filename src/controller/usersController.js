@@ -657,14 +657,31 @@ if(img===undefined){
     res.send('ok')
   },
   pagoGasto: async (req, res) => {
-    const {id}=req.params;
-    const {filename}=req.file
+    try {
+      const {id}=req.params;
+    const {filename}=req.file;
     const {pagoRealizado}=req.body;
+    
     await DB.gastos.update({pagoRealizado,pdfinal:filename},{where:{id}})
     res.send('ok')
-
+    } catch (e) {
+      res.send(e)
+    }
+    
   },
-
+  encurso: async (req, res) => {
+    try {
+      const {id}=req.params;
+      const {pagoRealizado}=req.body;
+      console.log(req.body);
+      await DB.gastos.update({pagoRealizado},{where:{id}})
+    } catch (e) {
+      res.send
+    }
+  
+     
+    
+  },
 
   pdfCreate: async (req, res) => {
     try {
@@ -733,9 +750,9 @@ if(img===undefined){
     try {
       console.log('estoy aca');
       const { id }= req.params;
-      const {norden} = req.body
+      const {norden,procesoFinalizado} = req.body
       const { filename} = req.file;
-      await DB.gastos.update({pdf:filename,norden},{where: {id}})
+      await DB.gastos.update({pdf:filename,norden,procesoFinalizado},{where: {id}})
       res.send('ok')
     } catch (e) {
       res.send(e)
