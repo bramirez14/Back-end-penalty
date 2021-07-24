@@ -124,6 +124,8 @@ router.get('/peticion/pdf',usersController.pd);
 router.post('/finalizar/gasto/:id',usersController.finalizar);
 router.put('/pago/anticipo/:id',usersController.pagoAnt);
 router.put('/pago/gasto/:id',uploadpdf.single('file'),usersController.pagoGasto);//pdf final
+router.put('/pago/encurso/:id',usersController.encurso);
+
 /**ruta pdf  */
 router.post('/archivo/pdf/:id',uploadpdf.single('file'),usersController.archivoPdf);//norden y pdf 
 router.get('/pdf/gastos/rendicion',usersController.gastoPDF);
