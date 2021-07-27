@@ -758,8 +758,18 @@ if(img===undefined){
       res.send(e)
     }
   },
- 
+kilometros: async (req, res) => {
+  try {
+    const resp=await DB.kilometros.findAll({include: {all:true}});
+    res.send(resp)
+  } catch (e) {
+    res.send(e)
+  }
+},
 
+Km: async (req, res) => {
+  console.log(req.body);
+},
 
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({

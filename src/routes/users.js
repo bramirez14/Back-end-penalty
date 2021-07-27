@@ -129,5 +129,9 @@ router.put('/pago/encurso/:id',usersController.encurso);
 /**ruta pdf  */
 router.post('/archivo/pdf/:id',uploadpdf.single('file'),usersController.archivoPdf);//norden y pdf 
 router.get('/pdf/gastos/rendicion',usersController.gastoPDF);
+
+router.get('/todos/kilometros',usersController.kilometros);
+router.post('/kilometros',usersController.Km);
+
 router.delete('/:id',usersController.borrar)
 module.exports = router;
