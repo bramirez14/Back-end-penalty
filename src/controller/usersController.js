@@ -766,9 +766,57 @@ kilometros: async (req, res) => {
     res.send(e)
   }
 },
+kmRendicion: async (req, res) => {
+  try {
+    const resp=await DB.rendicionesKms.findAll();
+    res.send(resp)
+  } catch (e) {
+    res.send(e)
+  }
+},
 
 Km: async (req, res) => {
-  console.log(req.body);
+  try {
+  const data= req.body
+  
+  const result = await DB.rendicionesKms.create(data);
+    res.send(result)
+  } catch (e) {
+    res.send(e)
+  }
+},
+Kms: async (req, res) =>{
+  try {
+    const data = req.body;
+    const file = req.file;
+    console.log(data);
+    console.log(file);
+  } catch (e) {
+    res.send(e)
+  }
+},
+kmId: async (req, res) => {
+  try {
+  const { id } = req.params;
+  const result= await DB.kilometros.findByPk(id);
+  res.send(result);
+} catch (e) {
+  res.send(e)
+}
+
+},
+DeletekmRendicion: async (req, res) => {
+  try {
+    const { id } = req.params;
+    await DB.rendicionesKms.destroy({
+      where: {
+        id
+      },
+    });
+    res.send('ok')
+  } catch (e) {
+    res.send(e)
+  }
 },
 
   borrar: async (req, res) => {

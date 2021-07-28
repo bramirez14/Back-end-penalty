@@ -2,7 +2,8 @@
 module.exports = (sequelize, DataTypes) => {
   const kilometros = sequelize.define('kilometros', {
     fecha:DataTypes.STRING,
-    total: DataTypes.DECIMAL,
+    kmTotal: DataTypes.DECIMAL,
+    importeTotal:DataTypes.DECIMAL,
     imagen: DataTypes.STRING,
     usuarioId: DataTypes.INTEGER,
   }, { });
@@ -11,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       as: "usuario",
     });
     kilometros.hasMany(models.rendicionesKms, {
-      as: "kilometro",
+      as: "rendicionKm",
     foreignKey:'KilometroId'
     });
   };

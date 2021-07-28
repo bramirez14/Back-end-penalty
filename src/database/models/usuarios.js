@@ -28,6 +28,11 @@ usuarios.associate = function(models) {
       foreignKey:'usuarioId'
 
     })
+    usuarios.hasMany(models.kilometros,{
+      as:'kilometro',
+      foreignKey:'usuarioId'
+    })
+    
     usuarios.belongsTo(models.departamentos,{
       as:'departamento'
     })
