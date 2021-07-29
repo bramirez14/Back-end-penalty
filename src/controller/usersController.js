@@ -778,7 +778,7 @@ kmRendicion: async (req, res) => {
 Km: async (req, res) => {
   try {
   const data= req.body
-  
+  console.log(data);
   const result = await DB.rendicionesKms.create(data);
     res.send(result)
   } catch (e) {
@@ -788,9 +788,20 @@ Km: async (req, res) => {
 Kms: async (req, res) =>{
   try {
     const data = req.body;
-    const file = req.file;
-    console.log(data);
-    console.log(file);
+    const img = req.file;
+    const imgPath = img.path;
+    let imagenURL = await cloudinary.uploader.upload(imgPath);
+    const {importeTotal,kmTotal,usuarioId} = data
+    const km = await DB.kilometros.create({importeTotal,kmTotal,usuarioId,imagen: imagenURL.secure_url});
+    for (const d of data.id) {
+      let v = await DB.rendicionesKms.update(
+        {
+          kilometroId:km.id
+        },{
+          where:{id:d}
+        }
+      )
+    }
   } catch (e) {
     res.send(e)
   }

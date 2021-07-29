@@ -1,7 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const kilometros = sequelize.define('kilometros', {
-    fecha:DataTypes.STRING,
     kmTotal: DataTypes.DECIMAL,
     importeTotal:DataTypes.DECIMAL,
     imagen: DataTypes.STRING,
@@ -13,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     kilometros.hasMany(models.rendicionesKms, {
       as: "rendicionKm",
-    foreignKey:'KilometroId'
+    foreignKey:'kilometroId'
     });
   };
   return kilometros;
