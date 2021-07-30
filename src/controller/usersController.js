@@ -760,8 +760,91 @@ if(img===undefined){
       res.send(e)
     }
   },
- 
+kilometros: async (req, res) => {
+  try {
+    const resp=await DB.kilometros.findAll({include: {all:true}});
+    res.send(resp)
+  } catch (e) {
+    res.send(e)
+  }
+},
+kmRendicion: async (req, res) => {
+  try {
+    const resp=await DB.rendicionesKms.findAll();
+    res.send(resp)
+  } catch (e) {
+    res.send(e)
+  }
+},
 
+Km: async (req, res) => {
+  try {
+  const data= req.body
+  console.log(data);
+  const result = await DB.rendicionesKms.create(data);
+    res.send(result)
+  } catch (e) {
+    res.send(e)
+  }
+},
+Kms: async (req, res) =>{
+  try {
+    const data = req.body;
+  console.log(data,'791');
+  const verificacion=Array.isArray(data.id);
+    const img = req.file;
+    const imgPath = img.path;
+    let imagenURL = await cloudinary.uploader.upload(imgPath);
+    const {importeTotal,kmTotal,usuarioId} = data
+    const km = await DB.kilometros.create({importeTotal,kmTotal,usuarioId,imagen: imagenURL.secure_url});
+    if(verificacion===true){
+      for (const d of data.id) {
+        let v = await DB.rendicionesKms.update(
+          {
+            kilometroId:km.id
+          },{
+            where:{id:d}
+          }
+        )
+      }
+    }else{
+      let v = await DB.rendicionesKms.update(
+        {
+          kilometroId:km.id
+        },{
+          where:{id:data.id}
+        }
+      )
+    }
+    
+    res.send('ok')
+  } catch (e) {
+    res.send(e)
+  }
+},
+kmId: async (req, res) => {
+  try {
+  const { id } = req.params;
+  const result= await DB.kilometros.findByPk(id);
+  res.send(result);
+} catch (e) {
+  res.send(e)
+}
+
+},
+DeletekmRendicion: async (req, res) => {
+  try {
+    const { id } = req.params;
+    await DB.rendicionesKms.destroy({
+      where: {
+        id
+      },
+    });
+    res.send('ok')
+  } catch (e) {
+    res.send(e)
+  }
+},
 
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({
