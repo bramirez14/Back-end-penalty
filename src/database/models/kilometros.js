@@ -5,6 +5,10 @@ module.exports = (sequelize, DataTypes) => {
     importeTotal:DataTypes.DECIMAL,
     imagen: DataTypes.STRING,
     usuarioId: DataTypes.INTEGER,
+    listo:DataTypes.STRING,
+    procesoPagar:DataTypes.STRING,
+    estado:DataTypes.STRING,
+    estadoFinal:DataTypes.STRING,
   }, { });
   kilometros.associate = function (models) {
     kilometros.belongsTo(models.usuarios, {
