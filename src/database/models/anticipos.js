@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     notificacion: DataTypes.STRING,
     f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
     pagoRealizado: DataTypes.STRING,
+    norden: DataTypes.STRING,
+    pdf: DataTypes.STRING,
+    pdfinal: DataTypes.STRING,
+    procesoFinalizado: DataTypes.STRING,
 
   }, { });
   anticipos.associate = function(models) {

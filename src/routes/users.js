@@ -139,6 +139,11 @@ router.put('/km/aprobado/:id',usersController.kmAprobado)
 router.put('/km/rechazado/:id',usersController.kmRechazado)
 router.post('/km/pdf/:id',uploadpdf.single('file'),usersController.kmPdf);//norden y pdf 
 router.put('/pago/km/:id',uploadpdf.single('file'),usersController.pagoPDF);//pdf final
+router.post('/sueldo/pdf/:id',uploadpdf.single('file'),usersController.sueldoPdf);//norden y pdf
+router.put('/pago/sueldo/:id',uploadpdf.single('file'),usersController.sueldoPDF);//pdf final
+
+
+
 router.delete('/borrar/rendicionKm/:id',usersController.DeletekmRendicion);
 
 
