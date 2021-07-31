@@ -9,6 +9,13 @@ module.exports = (sequelize, DataTypes) => {
     procesoPagar:DataTypes.STRING,
     estado:DataTypes.STRING,
     estadoFinal:DataTypes.STRING,
+    notificacion:DataTypes.STRING,
+    f: DataTypes.STRING,
+    respMensaje:DataTypes.STRING,
+    procesoFinalizado:DataTypes.STRING,
+    pdf:DataTypes.STRING,
+    pdfinal: DataTypes.STRING,
+    norden: DataTypes.STRING,
   }, { });
   kilometros.associate = function (models) {
     kilometros.belongsTo(models.usuarios, {

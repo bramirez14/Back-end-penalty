@@ -857,6 +857,67 @@ const usersController = {
       res.send(e);
     }
   },
+  kmAprobado: async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    console.log(req.body,'line 863');
+    try {
+      await DB.kilometros.update(data, {
+        where: { id: id },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  kmRechazado: async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+
+    const data = req.body;
+    console.log(data,'line 878');
+    try {
+       await DB.kilometros.update(data, {
+        where: { id: id },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  kmPdf:async (req, res) => {
+    try {
+      console.log("estoy aca");
+      const { id } = req.params;
+      const { norden, procesoFinalizado } = req.body;
+      const { filename } = req.file;
+      await DB.kilometros.update(
+        { pdf: filename, norden, procesoFinalizado },
+        { where: { id } }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  pagoPDF: async (req, res) => {
+    try {
+      const { id } = req.params;
+      console.log(id);
+      const { filename } = req.file;
+      console.log(filename);
+      const { procesoPagar } = req.body;
+      console.log(procesoPagar);
+
+      await DB.kilometros.update(
+        { procesoPagar, pdfinal: filename },
+        { where: { id } }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
   DeletekmRendicion: async (req, res) => {
     try {
       const { id } = req.params;

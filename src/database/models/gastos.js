@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       norden: DataTypes.STRING,
       pdf: DataTypes.STRING,
       pdfinal: DataTypes.STRING,
-
+      respMensaje:DataTypes.STRING,
 
     },
     {}
