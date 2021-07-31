@@ -931,6 +931,39 @@ const usersController = {
       res.send(e);
     }
   },
+  sueldoPdf:async (req, res) => {
+    try {
+      console.log("estoy aca");
+      const { id } = req.params;
+      const { norden, procesoFinalizado } = req.body;
+      const { filename } = req.file;
+      await DB.anticipos.update(
+        { pdf: filename, norden, procesoFinalizado },
+        { where: { id } }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  sueldoPDF: async (req, res) => {
+    try {
+      const { id } = req.params;
+      console.log(id);
+      const { filename } = req.file;
+      console.log(filename);
+      const { pagoRealizado } = req.body;
+      console.log(pagoRealizado);
+
+      await DB.anticipos.update(
+        { pagoRealizado, pdfinal: filename },
+        { where: { id } }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
 
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({
