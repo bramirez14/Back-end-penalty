@@ -6,8 +6,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const pdf = require("html-pdf");
 var options = { format: "A4" };
-const { v4: uuidv4 } = require('uuid');
-
+const { v4: uuidv4 } = require("uuid");
 
 //cloudinary
 var cloudinary = require("cloudinary").v2;
@@ -120,23 +119,26 @@ const usersController = {
 
   login: async (req, res) => {
     try {
-
       let { email, password, conectado } = req.body;
       let e = email.toLowerCase();
-      
+
       // Buscar usuario
       let user = await DB.usuarios.findOne({
         where: {
           email: e,
         },
       });
-      !!user?
-       await DB.usuarios.update({conectado},{
-        where: {
-          id: user.id,
-        },
-      }):'';
-    
+      !!user
+        ? await DB.usuarios.update(
+            { conectado },
+            {
+              where: {
+                id: user.id,
+              },
+            }
+          )
+        : "";
+
       /*condicional para verificar si no existe el usuario */
       if (!!user === false) {
         res.send({
@@ -169,21 +171,22 @@ const usersController = {
           }
         );
       }
-     
-
     } catch (error) {
       res.send(error);
     }
   },
-  cambiarContraña:async (req, res) => {
-    const {id,password}=req.body;
-    const passwordNew=bcrypt.hashSync(password, 10);
-     await DB.usuarios.update({password:passwordNew},{
-      where: {
-        id
-      },
-    });
-    res.send('ok')
+  cambiarContraña: async (req, res) => {
+    const { id, password } = req.body;
+    const passwordNew = bcrypt.hashSync(password, 10);
+    await DB.usuarios.update(
+      { password: passwordNew },
+      {
+        where: {
+          id,
+        },
+      }
+    );
+    res.send("ok");
   },
   check: async (req, res) => {
     const token = req.header("token");
@@ -205,8 +208,12 @@ const usersController = {
       const data = req.body;
       const { usuId } = data;
       //crea el anticipo y lo relacion con el usuario
-    estado:'pendiente'
-      const anticipoCreado = await DB.anticipos.create({...data,estado:'pendiente',estadoFinal:'pendiente'});
+      estado: "pendiente";
+      const anticipoCreado = await DB.anticipos.create({
+        ...data,
+        estado: "pendiente",
+        estadoFinal: "pendiente",
+      });
 
       res.send(anticipoCreado);
     } catch (error) {
@@ -217,11 +224,11 @@ const usersController = {
     const { id } = req.params;
     console.log(id);
 
-    const data  = req.body;
+    const data = req.body;
     console.log(data);
     try {
       let antEditado = await DB.anticipos.update(
-        {respMensaje},
+        { respMensaje },
         {
           where: { id: id },
         }
@@ -236,32 +243,41 @@ const usersController = {
     const data = req.body;
     console.log(req.body);
     try {
-      let antEditado = await DB.anticipos.update(
-        data,
-        {
-          where: { id: id },
-        }
-      );
+      let antEditado = await DB.anticipos.update(data, {
+        where: { id: id },
+      });
       res.send("ok");
     } catch (e) {
       res.send(e);
     }
   },
   alerta: async (req, res) => {
-    const datos =req.body
-    const arraySueldos=datos[0].map(s=> s.id)
+    const datos = req.body;
+    const arraySueldos = datos[0].map((s) => s.id);
     for (const dato of arraySueldos) {
-      await DB.anticipos.update({notificacion:'activa'},{where:{id:dato}})}
+      await DB.anticipos.update(
+        { notificacion: "activa" },
+        { where: { id: dato } }
+      );
+    }
 
-     const arrayVacaciones=datos[1].map(v=> v.id)
-     for (const dato of arrayVacaciones) {
-      await DB.vacaciones.update({notificacion:'activa'},{where:{id:dato}})}
+    const arrayVacaciones = datos[1].map((v) => v.id);
+    for (const dato of arrayVacaciones) {
+      await DB.vacaciones.update(
+        { notificacion: "activa" },
+        { where: { id: dato } }
+      );
+    }
 
-    const arrayGastos=datos[2].map(g=> g.id)
+    const arrayGastos = datos[2].map((g) => g.id);
     for (const dato of arrayGastos) {
-      await DB.gastos.update({notificacion:'activa'},{where:{id:dato}})}
-  
-  res.send('ok')
+      await DB.gastos.update(
+        { notificacion: "activa" },
+        { where: { id: dato } }
+      );
+    }
+
+    res.send("ok");
   },
   borrarAnticipo: async (req, res) => {
     const { id } = req.params;
@@ -280,7 +296,7 @@ const usersController = {
       /* let result = await DB.usuarios.findAll({
     include:["anticipo"]
   });*/
-      let result = await DB.vacaciones.findAll({include:["usuario"]});
+      let result = await DB.vacaciones.findAll({ include: ["usuario"] });
       res.send(result);
     } catch (error) {
       res.send(error);
@@ -300,15 +316,12 @@ const usersController = {
     const { id } = req.params;
     console.log(id);
 
-    const data  = req.body;
+    const data = req.body;
     console.log(data);
     try {
-      let antEditado = await DB.vacaciones.update(
-        data,
-        {
-          where: { id: id },
-        }
-      );
+      let antEditado = await DB.vacaciones.update(data, {
+        where: { id: id },
+      });
       res.send("ok");
     } catch (e) {
       res.send(e);
@@ -319,28 +332,26 @@ const usersController = {
     const data = req.body;
     console.log(req.body);
     try {
-      let antEditado = await DB.vacaciones.update(
-        data,
-        {
-          where: { id: id },
-        }
-      );
+      let antEditado = await DB.vacaciones.update(data, {
+        where: { id: id },
+      });
       res.send("ok");
     } catch (e) {
       res.send(e);
     }
   },
- borrarVacacion:async (req, res) => {
-   try {
-  const { id } = req.params;
-  console.log(id);
+  borrarVacacion: async (req, res) => {
+    try {
+      const { id } = req.params;
+      console.log(id);
       await DB.vacaiones.destroy({
-      where: { id },
-    });
-    res.send("ok")
- } catch (e) {
-  res.send(e);
- }},
+        where: { id },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
   listaDiasVacaciones: async (req, res) => {
     try {
       let result = await DB.diasvacaciones.findAll();
@@ -354,19 +365,21 @@ const usersController = {
     try {
       const file = req.file;
       const data = req.body;
-
-     const {gastoId,total}=data
-console.log(data);
-      if(file===undefined){
-        await crearRendicion(data)
-        await DB.gastos.update({
-          importerendido:total},{
+      const { gastoId, total } = data;
+      console.log(data);
+      if (file === undefined) {
+        await crearRendicion(data);
+        await DB.gastos.update(
+          {
+            importerendido: total,
+          },
+          {
             where: {
               id: gastoId,
             },
-          })
-
-      }else{
+          }
+        );
+      } else {
         const filePath = file.path;
         //guardamos imagen en cloudinary y DB
         let imagenURL = await cloudinary.uploader.upload(filePath);
@@ -377,7 +390,6 @@ console.log(data);
       res.send(error);
     }
   },
-  
 
   gerentes: async (req, res) => {
     try {
@@ -399,7 +411,7 @@ console.log(data);
     try {
       const data = req.body;
       console.log(data, "208");
-      await DB.gastos.create({...data,importerendido:data.importe});
+      await DB.gastos.create({ ...data, importerendido: data.importe });
       res.send("se creo correctamente");
     } catch (error) {
       res.send(error);
@@ -411,18 +423,21 @@ console.log(data);
       const data = req.body;
       console.log(data, "**************data*******************");
       console.log(id);
-      const {gastoId,total}=data
+      const { gastoId, total } = data;
 
       await DB.rendiciones.update(data, {
         where: {
           id: id,
         },
       });
-      await DB.gastos.update({importerendido:total}, {
-        where: {
-          id:gastoId,
-        },
-      });
+      await DB.gastos.update(
+        { importerendido: total },
+        {
+          where: {
+            id: gastoId,
+          },
+        }
+      );
       res.send("ok");
     } catch (error) {
       res.send(error);
@@ -432,15 +447,12 @@ console.log(data);
     const { id } = req.params;
     console.log(id);
 
-    const data  = req.body;
+    const data = req.body;
     console.log(data);
     try {
-      let antEditado = await DB.gastos.update(
-        data,
-        {
-          where: { id: id },
-        }
-      );
+      let antEditado = await DB.gastos.update(data, {
+        where: { id: id },
+      });
       res.send("ok");
     } catch (e) {
       res.send(e);
@@ -451,30 +463,26 @@ console.log(data);
     const data = req.body;
     console.log(req.body);
     try {
-      let antEditado = await DB.gastos.update(
-        data,
-        {
-          where: { id: id },
-        }
-      );
+      let antEditado = await DB.gastos.update(data, {
+        where: { id: id },
+      });
       res.send("ok");
     } catch (e) {
       res.send(e);
     }
   },
-  borrarGasto:async (req, res) => {
+  borrarGasto: async (req, res) => {
     try {
-   const { id } = req.params;
-   console.log(id);
-       await DB.gastos.destroy({
-       where: { id },
-     });
-     res.send("ok")
-  } catch (e) {
-   res.send(e);
-  }},
-
-
+      const { id } = req.params;
+      console.log(id);
+      await DB.gastos.destroy({
+        where: { id },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
 
   editarRendicion: async (req, res) => {
     try {
@@ -486,29 +494,27 @@ console.log(data);
       res.send(error);
     }
   },
-  gastoFinalizados : async (req, res) => {
-  try {
-    const { id } = req.params;
-    const {listo} = req.body
-    console.log(id);
-    await DB.gastos.update({listo},{where:{id}});
-
-    res.send('ok')
-  } catch (e) {
-    res.send(e)
-  }
-  },
-  verificacionGasto:async (req, res) => {
-
+  gastoFinalizados: async (req, res) => {
     try {
       const { id } = req.params;
-    const {aprobacion}=req.body;
-    await DB.gastos.update({aprobacion},{where:{id}});
-      res.send('ok')
+      const { listo } = req.body;
+      console.log(id);
+      await DB.gastos.update({ listo }, { where: { id } });
+
+      res.send("ok");
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
-    
+  },
+  verificacionGasto: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { aprobacion } = req.body;
+      await DB.gastos.update({ aprobacion }, { where: { id } });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
   },
   usuarioPK: async (req, res) => {
     try {
@@ -522,10 +528,10 @@ console.log(data);
       res.send(error);
     }
   },
-  agregarImgUsuario:async (req, res) => {
+  agregarImgUsuario: async (req, res) => {
     try {
       const { id } = req.params;
-    console.log(id);
+      console.log(id);
       const img = req.file;
       console.log(img);
       const imgPath = img.path;
@@ -537,22 +543,22 @@ console.log(data);
           where: {
             id: id,
           },
-        })
-        res.send('ok')
+        }
+      );
+      res.send("ok");
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
   },
-  cerrarSesion:async (req, res) => {
-try {
-  const { id } = req.params;
-  const {conectado}=req.body
-  await DB.usuarios.update({conectado},{where:{id}})
-    res.send('ok')
-} catch (e) {
-  res.send(e)
-}
-
+  cerrarSesion: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { conectado } = req.body;
+      await DB.usuarios.update({ conectado }, { where: { id } });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
   },
   gastoPK: async (req, res) => {
     try {
@@ -576,7 +582,6 @@ try {
       res.send(e);
     }
   },
-  
 
   crearGasto: async (req, res) => {
     try {
@@ -617,72 +622,83 @@ try {
     try {
       const data = req.body;
       const img = req.file;
-    
-if(img===undefined){
- const {id} = await DB.gastos.create(data)
-  await DB.rendiciones.create({
-    ...data,
-    gastoId: id,
-  })
-}else{
-  const imgPath = img.path;
-  let imagenURL = await cloudinary.uploader.upload(imgPath);
-  const { categoria, fecha, importe, notas, usuarioId, formapagoId,sinAnticipo,estado,estadoFinal,notificacion,importerendido} = data;
-  const gasto = await DB.gastos.create(data);
-  console.log(gasto,'soy la linea 617');
-  const id = gasto.id;
-   await DB.rendiciones.create({
-    ...data,
-    gastoId: id,
-    imagen: imagenURL.secure_url,
-  });
-}
+
+      if (img === undefined) {
+        const { id } = await DB.gastos.create(data);
+        await DB.rendiciones.create({
+          ...data,
+          gastoId: id,
+        });
+      } else {
+        const imgPath = img.path;
+        let imagenURL = await cloudinary.uploader.upload(imgPath);
+        const {
+          categoria,
+          fecha,
+          importe,
+          notas,
+          usuarioId,
+          formapagoId,
+          sinAnticipo,
+          estado,
+          estadoFinal,
+          notificacion,
+          importerendido,
+        } = data;
+        const gasto = await DB.gastos.create(data);
+        console.log(gasto, "soy la linea 617");
+        const id = gasto.id;
+        await DB.rendiciones.create({
+          ...data,
+          gastoId: id,
+          imagen: imagenURL.secure_url,
+        });
+      }
       res.send("ok");
     } catch (e) {
       res.send(e);
     }
   },
-  finalizar:async (req, res) => {
+  finalizar: async (req, res) => {
     try {
-      const {id}= req.params
-      const {procesoFinalizado} = req.body;
-      await DB.gastos.update({procesoFinalizado},{where:{id}})
-      res.send('ok')
+      const { id } = req.params;
+      const { procesoFinalizado } = req.body;
+      await DB.gastos.update({ procesoFinalizado }, { where: { id } });
+      res.send("ok");
     } catch (e) {
       res.send(e);
     }
   },
   pagoAnt: async (req, res) => {
-    const {id}=req.params;
-    const {pagoRealizado}=req.body;
-    await DB.anticipos.update({pagoRealizado},{where:{id}})
-    res.send('ok')
+    const { id } = req.params;
+    const { pagoRealizado } = req.body;
+    await DB.anticipos.update({ pagoRealizado }, { where: { id } });
+    res.send("ok");
   },
   pagoGasto: async (req, res) => {
     try {
-      const {id}=req.params;
-    const {filename}=req.file;
-    const {pagoRealizado}=req.body;
-    
-    await DB.gastos.update({pagoRealizado,pdfinal:filename},{where:{id}})
-    res.send('ok')
+      const { id } = req.params;
+      const { filename } = req.file;
+      const { pagoRealizado } = req.body;
+
+      await DB.gastos.update(
+        { pagoRealizado, pdfinal: filename },
+        { where: { id } }
+      );
+      res.send("ok");
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
-    
   },
   encurso: async (req, res) => {
     try {
-      const {id}=req.params;
-      const {pagoRealizado}=req.body;
+      const { id } = req.params;
+      const { pagoRealizado } = req.body;
       console.log(req.body);
-      await DB.gastos.update({pagoRealizado},{where:{id}})
+      await DB.gastos.update({ pagoRealizado }, { where: { id } });
     } catch (e) {
-      res.send
+      res.send;
     }
-  
-     
-    
   },
 
   pdfCreate: async (req, res) => {
@@ -715,13 +731,13 @@ if(img===undefined){
 
     res.render(
       "pdf",
-      { data, usuario, email, departamento, nombre, apellido, id,gasto},
+      { data, usuario, email, departamento, nombre, apellido, id, gasto },
       function (err, html) {
         pdf.create(html).toFile("result.pdf", function (err, result) {
           if (err) {
-            return console.log(err,'error');
+            return console.log(err, "error");
           } else {
-              console.log(res,'respuesta'); 
+            console.log(res, "respuesta");
             var datafile = fs.readFileSync("result.pdf");
             res.header("content-type", "application/pdf");
             res.send(datafile);
@@ -733,118 +749,188 @@ if(img===undefined){
   gastoPDF: async (req, res) => {
     try {
       const header = req.header("archivo");
-    console.log(header);
-    
-    
-    res.sendFile(path.join(__dirname,`../file/public/${header}`));
-    } catch (error) {
-      res.send(e)
-    }
-    
+      console.log(header);
 
+      res.sendFile(path.join(__dirname, `../file/public/${header}`));
+    } catch (error) {
+      res.send(e);
+    }
   },
   pd: async (req, res) => {
     console.log(path.join(__dirname)); //me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
     res.sendFile(path.join(__dirname, "../../result.pdf"));
   },
 
-  archivoPdf:async (req, res) => {
+  archivoPdf: async (req, res) => {
     try {
-      console.log('estoy aca');
-      const { id }= req.params;
-      const {norden,procesoFinalizado} = req.body
-      const { filename} = req.file;
-      await DB.gastos.update({pdf:filename,norden,procesoFinalizado},{where: {id}})
-      res.send('ok')
+      console.log("estoy aca");
+      const { id } = req.params;
+      const { norden, procesoFinalizado } = req.body;
+      const { filename } = req.file;
+      await DB.gastos.update(
+        { pdf: filename, norden, procesoFinalizado },
+        { where: { id } }
+      );
+      res.send("ok");
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
   },
-kilometros: async (req, res) => {
-  try {
-    const resp=await DB.kilometros.findAll({include: {all:true}});
-    res.send(resp)
-  } catch (e) {
-    res.send(e)
-  }
-},
-kmRendicion: async (req, res) => {
-  try {
-    const resp=await DB.rendicionesKms.findAll();
-    res.send(resp)
-  } catch (e) {
-    res.send(e)
-  }
-},
+  kilometros: async (req, res) => {
+    try {
+      const resp = await DB.kilometros.findAll({ include: { all: true } });
+      res.send(resp);
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  kmRendicion: async (req, res) => {
+    try {
+      const resp = await DB.rendicionesKms.findAll();
+      res.send(resp);
+    } catch (e) {
+      res.send(e);
+    }
+  },
 
-Km: async (req, res) => {
-  try {
-  const data= req.body
-  console.log(data);
-  const result = await DB.rendicionesKms.create(data);
-    res.send(result)
-  } catch (e) {
-    res.send(e)
-  }
-},
-Kms: async (req, res) =>{
-  try {
-    const data = req.body;
-  console.log(data,'791');
-  const verificacion=Array.isArray(data.id);
-    const img = req.file;
-    const imgPath = img.path;
-    let imagenURL = await cloudinary.uploader.upload(imgPath);
-    const {importeTotal,kmTotal,usuarioId} = data
-    const km = await DB.kilometros.create({importeTotal,kmTotal,usuarioId,imagen: imagenURL.secure_url});
-    if(verificacion===true){
-      for (const d of data.id) {
+  Km: async (req, res) => {
+    try {
+      const data = req.body;
+      console.log(data);
+      const result = await DB.rendicionesKms.create(data);
+      res.send(result);
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  Kms: async (req, res) => {
+    try {
+      const data = req.body;
+      console.log(data, "791");
+      const verificacion = Array.isArray(data.id);
+      const img = req.file;
+      const imgPath = img.path;
+      let imagenURL = await cloudinary.uploader.upload(imgPath);
+      const { importeTotal, kmTotal, usuarioId } = data;
+      const km = await DB.kilometros.create({
+        importeTotal,
+        kmTotal,
+        usuarioId,
+        imagen: imagenURL.secure_url,
+        listo: "Si",
+        estado:'pendiente',
+        estadoFinal:'pendiente'
+      });
+      if (verificacion === true) {
+        for (const d of data.id) {
+          let v = await DB.rendicionesKms.update(
+            {
+              kilometroId: km.id,
+            },
+            {
+              where: { id: d },
+            }
+          );
+        }
+      } else {
         let v = await DB.rendicionesKms.update(
           {
-            kilometroId:km.id
-          },{
-            where:{id:d}
+            kilometroId: km.id,
+          },
+          {
+            where: { id: data.id },
           }
-        )
+        );
       }
-    }else{
-      let v = await DB.rendicionesKms.update(
-        {
-          kilometroId:km.id
-        },{
-          where:{id:data.id}
-        }
-      )
-    }
-    
-    res.send('ok')
-  } catch (e) {
-    res.send(e)
-  }
-},
-kmId: async (req, res) => {
-  try {
-  const { id } = req.params;
-  const result= await DB.kilometros.findByPk(id);
-  res.send(result);
-} catch (e) {
-  res.send(e)
-}
 
-},
-DeletekmRendicion: async (req, res) => {
-  try {
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  kmId: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await DB.kilometros.findByPk(id);
+      res.send(result);
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  kmAprobado: async (req, res) => {
     const { id } = req.params;
-    await DB.rendicionesKms.destroy({
-      where: {
-        id
-      },
-    });
-    res.send('ok')
-  } catch (e) {
-    res.send(e)
-  }
-},
+    const data = req.body;
+    console.log(req.body,'line 863');
+    try {
+      await DB.kilometros.update(data, {
+        where: { id: id },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  kmRechazado: async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+
+    const data = req.body;
+    console.log(data,'line 878');
+    try {
+       await DB.kilometros.update(data, {
+        where: { id: id },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  kmPdf:async (req, res) => {
+    try {
+      console.log("estoy aca");
+      const { id } = req.params;
+      const { norden, procesoFinalizado } = req.body;
+      const { filename } = req.file;
+      await DB.kilometros.update(
+        { pdf: filename, norden, procesoFinalizado },
+        { where: { id } }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  pagoPDF: async (req, res) => {
+    try {
+      const { id } = req.params;
+      console.log(id);
+      const { filename } = req.file;
+      console.log(filename);
+      const { procesoPagar } = req.body;
+      console.log(procesoPagar);
+
+      await DB.kilometros.update(
+        { procesoPagar, pdfinal: filename },
+        { where: { id } }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  DeletekmRendicion: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await DB.rendicionesKms.destroy({
+        where: {
+          id,
+        },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
 
   borrar: async (req, res) => {
     await DB.vacaciones.destroy({
@@ -853,7 +939,6 @@ DeletekmRendicion: async (req, res) => {
       },
     });
   },
-
 };
 
 module.exports = usersController;

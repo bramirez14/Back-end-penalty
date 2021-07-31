@@ -128,13 +128,17 @@ router.put('/pago/encurso/:id',usersController.encurso);
 
 /**ruta pdf  */
 router.post('/archivo/pdf/:id',uploadpdf.single('file'),usersController.archivoPdf);//norden y pdf 
-router.get('/pdf/gastos/rendicion',usersController.gastoPDF);
+router.get('/pdf/gastos/rendicion',usersController.gastoPDF);//se usa para todos
 
 router.get('/todos/kilometros',usersController.kilometros);
 router.post('/kilometros',usersController.Km);
 router.post('/km',upload.single('imagen'),usersController.Kms);
 router.get('/kilometros/:id',usersController.kmId);
 router.get('/rendiciones/kilometros',usersController.kmRendicion);
+router.put('/km/aprobado/:id',usersController.kmAprobado)
+router.put('/km/rechazado/:id',usersController.kmRechazado)
+router.post('/km/pdf/:id',uploadpdf.single('file'),usersController.kmPdf);//norden y pdf 
+router.put('/pago/km/:id',uploadpdf.single('file'),usersController.pagoPDF);//pdf final
 router.delete('/borrar/rendicionKm/:id',usersController.DeletekmRendicion);
 
 

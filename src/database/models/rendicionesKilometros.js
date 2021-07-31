@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       KmRecorrido: DataTypes.DECIMAL,
       kilometroId: DataTypes.INTEGER,
       usuarioId:DataTypes.INTEGER,
-      notas:DataTypes.STRING,
+      nota:DataTypes.STRING,
     },
     {}
   );
