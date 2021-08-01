@@ -206,11 +206,10 @@ const usersController = {
   anticipo: async (req, res) => {
     try {
       const data = req.body;
-      const { usuId } = data;
-      //crea el anticipo y lo relacion con el usuario
-      estado: "pendiente";
+      const cuota = data.cuotas.target.value
       const anticipoCreado = await DB.anticipos.create({
         ...data,
+        cuotas:cuota,
         estado: "pendiente",
         estadoFinal: "pendiente",
       });
@@ -226,9 +225,9 @@ const usersController = {
 
     const data = req.body;
     console.log(data);
-    try {
-      let antEditado = await DB.anticipos.update(
-        { respMensaje },
+    try{
+      await DB.anticipos.update(
+         data ,
         {
           where: { id: id },
         }
@@ -241,9 +240,9 @@ const usersController = {
   anticipoAprobado: async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    console.log(req.body);
+    
     try {
-      let antEditado = await DB.anticipos.update(data, {
+      await DB.anticipos.update(data, {
         where: { id: id },
       });
       res.send("ok");
