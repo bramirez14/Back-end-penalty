@@ -695,6 +695,7 @@ const usersController = {
       const { pagoRealizado } = req.body;
       console.log(req.body);
       await DB.gastos.update({ pagoRealizado }, { where: { id } });
+      res.send('ok')
     } catch (e) {
       res.send;
     }
