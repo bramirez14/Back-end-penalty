@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const DB = require("../database/models2");
 const pdf = require("html-pdf");
+const { getreportes } = require("./helpers/funcionesReportes");
 
 const reportesController = {
 remito:async (req, res) => {
@@ -18,14 +19,11 @@ remito:async (req, res) => {
     console.log('file:///C:/Users/bramirez/Desktop/archivosPDF/planUTH.pdf'); //me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
     res.sendFile(path.join(__dirname,`../../../../archivosPDF/${body}`));
   },
-  remmes:async (req, res) => {
-    try {
-      let result= await DB.remmes.findAll();
-      res.send(result)
-    } catch (error) {
-      res.send(error)
-    }
-  }
+  
+  remmes:async(req,res) => { await getreportes(res,DB.remmes)},
+  facturacionmes:async(req,res) => { await getreportes(res,DB.factmes)},//ok
+  mesgral:async(req,res) => { await getreportes(res,DB.factmesfull)},//ok
+  anno:async(req,res) => { await getreportes(res,DB.factanos)},//ok
 
 }
 module.exports = reportesController;

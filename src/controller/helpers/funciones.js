@@ -1,4 +1,4 @@
-let DB = require("../database/models");
+let DB = require("../../database/models");
 //cloudinary
 var cloudinary = require("cloudinary").v2;
 //config cloudinary
