@@ -4,8 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     razonsoc: DataTypes.STRING,
     vendedor: DataTypes.INTEGER,
     importe: DataTypes.DECIMAL,
-    numctacte: DataTypes.STRING,
-    unidades: DataTypes.INTEGER,
+    numctacte: DataTypes.INTEGER,
+    unidades: DataTypes.DECIMAL
   }, {timestamps:false});
   remmes.associate = function(models) {
     
