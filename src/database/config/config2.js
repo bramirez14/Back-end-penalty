@@ -7,8 +7,9 @@ module.exports = {
        "host": "190.19.91.89",
        "dialect": "mysql",
        "define":{
-        "paranoid":true,
+        "paranoid": true,
         "timestamps": false,
+        'freezeTableName': true,
       }
    
      },

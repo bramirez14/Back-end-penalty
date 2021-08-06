@@ -5,8 +5,11 @@ const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const pdf = require("html-pdf");
-var options = { format: "A4" };
-const { v4: uuidv4 } = require("uuid");
+var app = require('../app');
+var http = require('http');
+var server = http.createServer(app);
+var socketIo=require('socket.io');
+const io = socketIo(server);// desp continuares desde el controller para scoket io
 
 //cloudinary
 var cloudinary = require("cloudinary").v2;
@@ -23,7 +26,7 @@ const {
   guardarImagen,
   clo,
   tablaIntermedia,
-} = require("../helper/funciones");
+} = require("./helpers/funciones");
 const db = require("../database/models2");
 
 const usersController = {
