@@ -5,6 +5,7 @@ const reportesController= require('../controller/reportesController');
 router.get('/remitos',reportesController.remito);
 
 router.get('/remitos/pdf',reportesController.remitoPdf);
+router.get('/remitos/pdf/comprobantes',reportesController.pdfComprobantes)
 router.get('/remmes',reportesController.remmes);
 router.get('/facturacion/mes',reportesController.facturacionmes);
 router.get('/facturacion/mesgral',reportesController.mesgral);

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     apeynom:DataTypes.STRING,
     UNIDADES:DataTypes.INTEGER,
     REMITO:DataTypes.STRING,
-
+    pdf:DataTypes.STRING,
   }, {timestamps:false});
   remitos.associate = function(models) {
     
