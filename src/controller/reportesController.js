@@ -21,7 +21,7 @@ remito:async (req, res) => {
 
     const header = req.header("archivo");
     console.log(header);
-    res.sendFile(`C:/ftp/REMITOVACLOG/${header}`);
+    res.sendFile(`C:/xampp/htdocs/intranet/archivos/REMITOVACLOG${header}`);
   },
 
   remmes:async(req,res) => { await getreportes(res,DB.remmes)},//ok
