@@ -13,8 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     pdf:DataTypes.STRING,
   }, {timestamps:false});
   remitos.associate = function(models) {
-    
- 
   }
   return remitos;
 };
