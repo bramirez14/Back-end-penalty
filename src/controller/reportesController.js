@@ -18,26 +18,17 @@ remito:async (req, res) => {
     }
   },
   remitoPdf: async (req, res) => {
-<<<<<<< HEAD
-
     const header = req.header("archivo");
     console.log(header);
-    res.sendFile(`C:/xampp/htdocs/intranet/archivos/REMITOVACLOG${header}`);
+    res.sendFile(`C:/xampp/htdocs/intranet/archivos/REMITOVACLOG/${header}`);
   },
 
-=======
-    let body ='Zuly votaciones.pdf'
-    const header = req.header("archivo");
-    console.log(header);
-    console.log('file:///C:/Users/bramirez/Desktop/archivosPDF/planUTH.pdf'); //me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
-    res.sendFile(path.join(__dirname,`../../../../archivosPDF/${body}`));
-  },
   pdfComprobantes: async (req, res) => {
     const header = req.header("archivo");
     console.log(header);
-    res.sendFile(`C:/xampp/htdocs/intranet/archivos/COMPROBANTES/${header}`)
+    res.sendFile(`C:/xampp/htdocs/intranet/archivos/COMPROBANTES/${header}.pdf`)
   },
->>>>>>> 9aa4cf67ca888af0f84af161fef7326c47845ae0
+
   remmes:async(req,res) => { await getreportes(res,DB.remmes)},//ok
   facturacionmes:async(req,res) => { await getreportes(res,DB.factmes)},//ok
   mesgral:async(req,res) => { await getreportes(res,DB.factmesfull)},//ok
