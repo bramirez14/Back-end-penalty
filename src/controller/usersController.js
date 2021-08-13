@@ -209,17 +209,20 @@ const usersController = {
   anticipo: async (req, res) => {
     try {
       const data = req.body;
-      const cuota = data.cuotas.target.value
-      const anticipoCreado = await DB.anticipos.create({
-        ...data,
-        cuotas:cuota,
-        estado: "pendiente",
-        estadoFinal: "pendiente",
-      });
-
+      console.log(data,'line 212');
+      let anticipoCreado;
+      if(data.sueldo==='Sueldo'){
+         anticipoCreado = await DB.anticipos.create(data);
+      }else{
+        const cuota = data.cuotas.target.value
+         anticipoCreado = await DB.anticipos.create({
+          ...data,
+          cuotas:cuota,
+        });
+      }
       res.send(anticipoCreado);
-    } catch (error) {
-      res.send(error);
+    } catch (e) {
+      res.send(e);
     }
   },
   anticipoRechazado: async (req, res) => {
@@ -243,7 +246,7 @@ const usersController = {
   anticipoAprobado: async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    
+    console.log(data,'line 249');
     try {
       await DB.anticipos.update(data, {
         where: { id: id },
