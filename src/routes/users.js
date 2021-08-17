@@ -70,7 +70,7 @@ router.get('/vacaciones',usersController.allvacaciones)
 router.post('/vacaciones',usersController.vacaciones)
 router.put('/vacaciones/aprobado/:id',usersController.vacacionesAprobado)
 router.put('/vacaciones/rechazado/:id',usersController.vacacionesRechazado)
-router.delete('/vacaciones/borrar/:id',usersController.borrarVacacion)
+router.delete('/vacacion/borrar/:id',usersController.borrarVacacion)
 
 
 /*Rendicion de Gastos*/ 
@@ -139,6 +139,7 @@ router.put('/km/aprobado/:id',usersController.kmAprobado)
 router.put('/km/rechazado/:id',usersController.kmRechazado)
 router.post('/km/pdf/:id',uploadpdf.single('file'),usersController.kmPdf);//norden y pdf 
 router.put('/pago/km/:id',uploadpdf.single('file'),usersController.pagoPDF);//pdf final
+router.delete('/km/borrar/:id',usersController.kmborrar)
 router.post('/sueldo/pdf/:id',uploadpdf.single('file'),usersController.sueldoPdf);//norden y pdf
 router.put('/pago/sueldo/:id',uploadpdf.single('file'),usersController.sueldoPDF);//pdf final
 

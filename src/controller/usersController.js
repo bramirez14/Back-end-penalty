@@ -349,7 +349,7 @@ const usersController = {
     try {
       const { id } = req.params;
       console.log(id);
-      await DB.vacaiones.destroy({
+      await DB.vacaciones.destroy({
         where: { id },
       });
       res.send("ok");
@@ -479,7 +479,9 @@ const usersController = {
   borrarGasto: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
+      await DB.rendiciones.destroy({
+        where:{gastoId:id}
+      })
       await DB.gastos.destroy({
         where: { id },
       });
@@ -906,6 +908,34 @@ const usersController = {
       res.send(e);
     }
   },
+  kmborrar: async (req, res) => {
+    try {
+      const { id } = req.params;
+      //const busquedaId= await DB.rendicionesKms.findAll( )
+     // const filtradoId= busquedaId.filter(d=>d.kilometroId !== id  )
+
+      /* for (const d of filtradoId) {
+        console.log(d.id,'line921');
+        await DB.rendicionesKms.destroy({
+          where:{ id:d.id}
+        })
+      }
+      await DB.kilometros.destroy({
+        where: {id} ,
+      }); */
+
+      const { id } = req.params;
+      await DB.rendicionesKms.destroy({
+        where:{kilometroId:id}
+      })
+      await DB.kilometros.destroy({
+        where: { id },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
   pagoPDF: async (req, res) => {
     try {
       const { id } = req.params;
@@ -972,11 +1002,11 @@ const usersController = {
   },
 
   borrar: async (req, res) => {
-    await DB.vacaciones.destroy({
+    /* await DB.vacaciones.destroy({
       where: {
         id: 16,
       },
-    });
+    }); */
   },
 };
 
