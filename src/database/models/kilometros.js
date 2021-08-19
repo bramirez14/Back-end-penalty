@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     estadoFinal:DataTypes.STRING,
     notificacion:DataTypes.STRING,
     f: DataTypes.STRING,
+    fd: DataTypes.STRING,
     respMensaje:DataTypes.STRING,
     procesoFinalizado:DataTypes.STRING,
     pdf:DataTypes.STRING,

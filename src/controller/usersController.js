@@ -52,7 +52,7 @@ const usersController = {
   allusers: async (req, res) => {
     try {
       let result = await DB.usuarios.findAll({
-        include: ["anticipo", "vacacion", "gasto", "departamento"],
+        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro"],
       });
       res.send(result);
     } catch (error) {
@@ -256,34 +256,7 @@ const usersController = {
       res.send(e);
     }
   },
-  alerta: async (req, res) => {
-    const datos = req.body;
-    const arraySueldos = datos[0].map((s) => s.id);
-    for (const dato of arraySueldos) {
-      await DB.anticipos.update(
-        { notificacion: "activa" },
-        { where: { id: dato } }
-      );
-    }
 
-    const arrayVacaciones = datos[1].map((v) => v.id);
-    for (const dato of arrayVacaciones) {
-      await DB.vacaciones.update(
-        { notificacion: "activa" },
-        { where: { id: dato } }
-      );
-    }
-
-    const arrayGastos = datos[2].map((g) => g.id);
-    for (const dato of arrayGastos) {
-      await DB.gastos.update(
-        { notificacion: "activa" },
-        { where: { id: dato } }
-      );
-    }
-
-    res.send("ok");
-  },
   borrarAnticipo: async (req, res) => {
     const { id } = req.params;
     console.log(id);
@@ -349,7 +322,7 @@ const usersController = {
     try {
       const { id } = req.params;
       console.log(id);
-      await DB.vacaiones.destroy({
+      await DB.vacaciones.destroy({
         where: { id },
       });
       res.send("ok");
@@ -479,7 +452,9 @@ const usersController = {
   borrarGasto: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
+      await DB.rendiciones.destroy({
+        where:{gastoId:id}
+      })
       await DB.gastos.destroy({
         where: { id },
       });
@@ -526,7 +501,7 @@ const usersController = {
       // id del producto
       const { id } = req.params;
       let usuario = await DB.usuarios.findByPk(id, {
-        include: ["anticipo", "vacacion", "gasto", "departamento"],
+        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro"],
       });
       res.send(usuario);
     } catch (error) {
@@ -906,6 +881,33 @@ const usersController = {
       res.send(e);
     }
   },
+  kmborrar: async (req, res) => {
+    try {
+      const { id } = req.params;
+      //const busquedaId= await DB.rendicionesKms.findAll( )
+     // const filtradoId= busquedaId.filter(d=>d.kilometroId !== id  )
+
+      /* for (const d of filtradoId) {
+        console.log(d.id,'line921');
+        await DB.rendicionesKms.destroy({
+          where:{ id:d.id}
+        })
+      }
+      await DB.kilometros.destroy({
+        where: {id} ,
+      }); */
+
+      await DB.rendicionesKms.destroy({
+        where:{kilometroId:id}
+      })
+      await DB.kilometros.destroy({
+        where: { id },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
   pagoPDF: async (req, res) => {
     try {
       const { id } = req.params;
@@ -970,13 +972,45 @@ const usersController = {
       res.send(e);
     }
   },
+  //alertas
+  alertaanticipo: async (req, res) => {
+    try {
+      const {id}= req.params;
+      const {notificacion} = req.body;
+      await DB.anticipos.update({notificacion }, { where: { id }})
+      res.send('ok')
+    } catch (e) {
+      res.send(e)
+    }
+  },
+  alertagasto: async (req, res) => {
+    try {
+      
+    } catch (e) {
+      res.send(e)
+    }
+  },
+  alertavacaciones: async (req, res) => {
+    try {
+      
+    } catch (e) {
+      res.send(e)
+    }
+  },
+  alertakm: async (req, res) => {
+    try {
+      
+    } catch (e) {
+      res.send(e)
+    }
+  },
 
   borrar: async (req, res) => {
-    await DB.vacaciones.destroy({
+    /* await DB.vacaciones.destroy({
       where: {
         id: 16,
       },
-    });
+    }); */
   },
 };
 
