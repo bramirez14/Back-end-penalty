@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     estadoFinal:DataTypes.STRING,
     notificacion: DataTypes.STRING,
     f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
+    fd: DataTypes.STRING,
     pagoRealizado: DataTypes.STRING,
     norden: DataTypes.STRING,
     pdf: DataTypes.STRING,

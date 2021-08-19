@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     respMensaje:DataTypes.STRING,
     notificacion:DataTypes.STRING,
     f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
+    fd: DataTypes.STRING,
 
   }, {});
  vacaciones.associate = function(models) {

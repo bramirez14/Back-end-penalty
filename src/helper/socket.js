@@ -2,20 +2,36 @@ const DB = require("../database/models");
 const jwt = require('jsonwebtoken');
 
 const usuarioConectado =async (id)=>{
-        let res = await DB.usuarios.findByPk(id, {
-          include: ["anticipo", "vacacion", "gasto", "departamento"],
-        });
         await DB.usuarios.update(
           {conectado:'SI'},
           {
             where: { id: id },
           }
         )
-       return res
+      
 }
 const usuariosConectados= async ()=>{
-  let res = await DB.usuarios.findAll({include:["anticipo", "vacacion", "gasto", "departamento"]});
-      return res
+  let result = await DB.usuarios.findAll();
+  return result
+}
+const gastos= async ()=>{
+  let result = await DB.gastos.findAll({ include: { all: true } });
+return result
+}
+
+const km= async ()=>{
+  const resp = await DB.kilometros.findAll({ include: { all: true } });
+return resp
+}
+const vacaciones= async ()=>{
+  let result = await DB.vacaciones.findAll(({ include: { all: true } }));
+      return result
+
+}
+const anticipo= async ()=>{
+  let result = await DB.anticipos.findAll(({ include: { all: true } }));
+
+      return result
 
 }
 
@@ -33,21 +49,26 @@ const comprobarJWT = ( token = '' ) => {
 }
 
 const usuarioDesconectado = async( id ) => {
-  let res = await DB.usuarios.findByPk(id, {
+ /*  let res = await DB.usuarios.findByPk(id, {
     include: ["anticipo", "vacacion", "gasto", "departamento"],
-  });
+  }); */
   await DB.usuarios.update(
     {conectado:'NO'},
     {
       where: { id: id },
     }
   )
- return res
+ 
 }
 module.exports = {
-    usuariosConectados,
     usuarioConectado,
+    usuariosConectados,
     comprobarJWT,
     usuarioDesconectado,
+    gastos,
+    km,
+    vacaciones,
+    anticipo,
+
     
 }
