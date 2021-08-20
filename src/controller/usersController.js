@@ -1004,6 +1004,26 @@ const usersController = {
       res.send(e)
     }
   },
+  preciokm: async (req, res) => {
+try {
+  const {precio} = req.body;
+  console.log(precio);
+  await DB.preciokms.update({precio},{where:{id:1}})
+  res.send('ok')
+} catch (e) {
+  res.send(e)
+}
+  },
+  precioactualkm: async (req, res) => {
+try {
+  const resul= await DB.preciokms.findAll();
+  res.send(resul)
+} catch (e) {
+  res.send(e)
+}
+  },
+
+  
 
   borrar: async (req, res) => {
     /* await DB.vacaciones.destroy({

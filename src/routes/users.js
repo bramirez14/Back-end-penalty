@@ -147,6 +147,10 @@ router.put('/alerta/anticipo/:id',usersController.alertaanticipo)
 router.put('/alerta/gasto/:id',usersController.alertagasto)
 router.put('/alerta/km/:id',usersController.alertakm)
 router.put('/alerta/vacaciones/:id',usersController.alertavacaciones)
+router.put('/precio/km',usersController.preciokm);
+router.get('/precio/km',usersController.precioactualkm);
+
+
 
 
 
