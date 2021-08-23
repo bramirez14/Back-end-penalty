@@ -210,16 +210,9 @@ const usersController = {
     try {
       const data = req.body;
       console.log(data,'line 212');
-      let anticipoCreado;
-      if(data.sueldo==='Sueldo'){
+      
          anticipoCreado = await DB.anticipos.create(data);
-      }else{
-        const cuota = data.cuotas.target.value
-         anticipoCreado = await DB.anticipos.create({
-          ...data,
-          cuotas:cuota,
-        });
-      }
+       
       res.send(anticipoCreado);
     } catch (e) {
       res.send(e);
@@ -1007,7 +1000,7 @@ const usersController = {
   preciokm: async (req, res) => {
 try {
   const {precio} = req.body;
-  console.log(precio);
+  console.log(precio,'lineeeeeeeeee 1010');
   await DB.preciokms.update({precio},{where:{id:1}})
   res.send('ok')
 } catch (e) {
