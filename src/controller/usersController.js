@@ -338,25 +338,30 @@ const usersController = {
       const data = req.body;
       const { gastoId, total } = data;
       console.log(data);
-      if (file === undefined) {
-        await crearRendicion(data);
-        await DB.gastos.update(
-          {
-            importerendido: total,
+      console.log(file,'line 341');
+    
+      await DB.gastos.update(
+        {
+          importerendido: total,
+        },
+        {
+          where: {
+            id: gastoId,
           },
-          {
-            where: {
-              id: gastoId,
-            },
-          }
-        );
+        }
+      );
+      if(file === undefined) {
+        await DB.rendiciones.create(data);
+       
       } else {
-        const filePath = file.path;
+        console.log('soy img');
         //guardamos imagen en cloudinary y DB
-        let imagenURL = await cloudinary.uploader.upload(filePath);
-        await crearRendicion({ ...data, imagen: imagenURL.secure_url });
+        const imgPath = file.path;
+        const imagenURL = await cloudinary.uploader.upload(imgPath);
+        const imagenSecure = imagenURL.secure_url;
+        await DB.rendiciones.create({ ...data, imagen: imagenSecure });
       }
-      res.send("Rendicion e imagenes creadas satifactoriamente");
+      res.send({msg:"Rendicion e imagenes creadas satifactoriamente",status:200});
     } catch (error) {
       res.send(error);
     }
@@ -556,17 +561,23 @@ const usersController = {
     }
   },
 
-  crearGasto: async (req, res) => {
+  crearGasto: async (req, res) => {///// verificar si anda bien nnn
     try {
       const file = req.file;
-      console.log(file, "soy file*****************************");
-      const imgPath = file.path;
-      const imagenURL = await cloudinary.uploader.upload(imgPath);
-      const imagenSecure = imagenURL.secure_url;
       const data = req.body;
+      console.log(file, "soy file*****************************");
+     
+     
       console.log(data, "soy data *******************");
-      let usuario = await DB.gastos.create({ ...data, imagen: imagenSecure });
-      res.send(usuario);
+      if (file === undefined) {
+        await DB.gastos.create(data);
+      }else{
+        const imgPath = file.path;
+        const imagenURL = await cloudinary.uploader.upload(imgPath);
+        const imagenSecure = imagenURL.secure_url;
+        await DB.gastos.create({ ...data, imagen: imagenSecure });
+      }
+      res.send({msg:'ok', status:200});
     } catch (error) {
       res.send(error);
     }
@@ -575,18 +586,21 @@ const usersController = {
     try {
       const { id } = req.params;
       const img = req.file;
-      const imgPath = img.path;
-      let imagenURL = await cloudinary.uploader.upload(imgPath);
+      if(img !== undefined){
+        const imgPath = img.path;
+              let imagenURL = await cloudinary.uploader.upload(imgPath);
 
-      let imgCreada = await DB.rendiciones.update(
-        { imagen: imagenURL.secure_url },
-        {
-          where: {
-            id: id,
-          },
-        }
-      );
-      res.send(imgCreada);
+              let imgCreada = await DB.rendiciones.update(
+                { imagen: imagenURL.secure_url },
+                {
+                  where: {
+                    id: id,
+                  },
+                }
+              );
+      }
+      
+      res.send({msg:'ok', status:200});
     } catch (error) {
       res.send(error);
     }
@@ -627,11 +641,26 @@ const usersController = {
           imagen: imagenURL.secure_url,
         });
       }
-      res.send("ok");
+      res.send({msg:"ok",status:200});
     } catch (e) {
       res.send(e);
     }
   },
+  deleterendicion: async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+  try {
+    await DB.rendiciones.destroy({
+      where:{id}
+    })
+    res.send('ok')
+  } catch (e) {
+  res.send(e)
+}
+  },
+
+
+
   finalizar: async (req, res) => {
     try {
       const { id } = req.params;
@@ -1000,7 +1029,6 @@ const usersController = {
   preciokm: async (req, res) => {
 try {
   const {precio} = req.body;
-  console.log(precio,'lineeeeeeeeee 1010');
   await DB.preciokms.update({precio},{where:{id:1}})
   res.send('ok')
 } catch (e) {
