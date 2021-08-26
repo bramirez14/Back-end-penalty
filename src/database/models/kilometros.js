@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     procesoFinalizado:DataTypes.STRING,
     pdf:DataTypes.STRING,
     pdfinal: DataTypes.STRING,
+    pdfpagoFinal:DataTypes.STRING,
     norden: DataTypes.STRING,
   }, { });
   kilometros.associate = function (models) {
