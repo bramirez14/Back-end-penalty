@@ -124,7 +124,8 @@ router.post('/create-pdf',usersController.pdfCreate);
 router.get('/peticion/pdf',usersController.pd);
 router.post('/finalizar/gasto/:id',usersController.finalizar);
 router.put('/pago/anticipo/:id',usersController.pagoAnt);
-router.put('/pago/gasto/:id',uploadpdf.single('file'),usersController.pagoGasto);//pdf final
+router.put('/pago/gasto/:id',uploadpdf.single('file'),usersController.pagoGasto);
+router.put('/pagofinal/:id',uploadpdf.single('file'),usersController.pagofinalGasto);//pdf final
 router.put('/pago/encurso/:id',usersController.encurso);
 
 /**ruta pdf  */
@@ -139,10 +140,15 @@ router.get('/rendiciones/kilometros',usersController.kmRendicion);
 router.put('/km/aprobado/:id',usersController.kmAprobado)
 router.put('/km/rechazado/:id',usersController.kmRechazado)
 router.post('/km/pdf/:id',uploadpdf.single('file'),usersController.kmPdf);//norden y pdf 
-router.put('/pago/km/:id',uploadpdf.single('file'),usersController.pagoPDF);//pdf final
+router.put('/pago/km/:id',uploadpdf.single('file'),usersController.pagoPDF);
+router.put('/pagofinal/kilometros/:id',uploadpdf.single('file'),usersController.pagokmfinal);//pdf final
+
 router.delete('/km/borrar/:id',usersController.kmborrar)
 router.post('/sueldo/pdf/:id',uploadpdf.single('file'),usersController.sueldoPdf);//norden y pdf
-router.put('/pago/sueldo/:id',uploadpdf.single('file'),usersController.sueldoPDF);//pdf final
+router.put('/pago/sueldo/:id',uploadpdf.single('file'),usersController.sueldoPDF);
+router.put('/pagofinal/sueldo/:id',uploadpdf.single('file'),usersController.sueldopdffinal);//pdf final
+
+
 
 /**Alewrta */
 router.put('/alerta/anticipo/:id',usersController.alertaanticipo)

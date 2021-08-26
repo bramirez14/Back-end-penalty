@@ -189,7 +189,7 @@ const usersController = {
         },
       }
     );
-    res.send("ok");
+    res.send({msg:'ok', status:200});
   },
   check: async (req, res) => {
     const token = req.header("token");
@@ -692,6 +692,22 @@ const usersController = {
       res.send(e);
     }
   },
+  pagofinalGasto: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { filename } = req.file;
+      console.log(id);
+      console.log(filename);
+      await DB.gastos.update(
+        { pdfpagoFinal: filename },
+        { where: { id } }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e)
+    }
+  },
+
   encurso: async (req, res) => {
     try {
       const { id } = req.params;
@@ -948,6 +964,22 @@ const usersController = {
       res.send(e);
     }
   },
+  pagokmfinal: async (req, res) => {
+ try {
+  const { id } = req.params;
+  const { filename } = req.file;
+  console.log(id);
+  console.log(filename);
+  await DB.kilometros.update(
+    { pdfpagoFinal: filename },
+    { where: { id } }
+  );
+  res.send("ok");
+ } catch (e) {
+   res.send(e);
+ }
+
+},
   DeletekmRendicion: async (req, res) => {
     try {
       const { id } = req.params;
@@ -993,6 +1025,21 @@ const usersController = {
     } catch (e) {
       res.send(e);
     }
+  },
+  sueldopdffinal: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { filename } = req.file;
+      console.log(id);
+      console.log(filename);
+      await DB.anticipos.update(
+        { pdfpagoFinal: filename },
+        { where: { id } }
+      );
+      res.send("ok");
+    } catch (e) {
+      res.send(e)
+      }
   },
   //alertas
   alertaanticipo: async (req, res) => {

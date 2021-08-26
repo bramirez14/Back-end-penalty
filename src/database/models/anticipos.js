@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     norden: DataTypes.STRING,
     pdf: DataTypes.STRING,
     pdfinal: DataTypes.STRING,
+    pdfpagoFinal:DataTypes.STRING,
     procesoFinalizado: DataTypes.STRING,
     listo: DataTypes.STRING,
 
