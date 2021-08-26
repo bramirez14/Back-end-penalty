@@ -561,7 +561,7 @@ const usersController = {
     }
   },
 
-  crearGasto: async (req, res) => {///// verificar si anda bien nnn
+  crearGasto: async (req, res) => {///// verificar si anda bien.
     try {
       const file = req.file;
       const data = req.body;
