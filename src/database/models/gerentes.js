@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       as:'departamento',
       foreignKey:'gerenteId'
     })
+    gerentes.hasMany(models.usuarios,{
+      as:'usuario',
+      foreignKey:'gerenteId'
+    }) 
   }
   return gerentes;
 };

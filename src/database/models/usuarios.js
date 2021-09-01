@@ -32,9 +32,16 @@ usuarios.associate = function(models) {
       as:'kilometro',
       foreignKey:'usuarioId'
     })
+    usuarios.hasMany(models.alertas,{
+      as:'alerta',
+      foreignKey:'usuarioId'
+    })
     
     usuarios.belongsTo(models.departamentos,{
       as:'departamento'
+    })
+    usuarios.belongsTo(models.gerentes,{
+      as:'gerente'
     })
   
   };
