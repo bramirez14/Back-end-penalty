@@ -22,9 +22,13 @@ module.exports = (sequelize, DataTypes) => {
 
   }, { });
   anticipos.associate = function(models) {
+    
     anticipos.belongsTo(models.usuarios,{
       as:'usuario',
-     
+    })
+
+    anticipos.belongsTo(models.alertas,{
+      as:'alerta',
     })
  
   }

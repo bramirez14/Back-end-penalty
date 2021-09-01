@@ -27,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
       as: "rendicionKm",
     foreignKey:'kilometroId'
     });
+    kilometros.belongsTo(models.alertas,{
+      as:'alerta',
+    })
   };
   return kilometros;
 };

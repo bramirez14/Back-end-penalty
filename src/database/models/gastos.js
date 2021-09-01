@@ -39,6 +39,12 @@ module.exports = (sequelize, DataTypes) => {
       as: "rendicion",
     foreignKey:'gastoId'
     });
+
+    gastos.belongsTo(models.alertas,{
+      as:'alerta',
+    })
+
+
   };
   return gastos;
 };

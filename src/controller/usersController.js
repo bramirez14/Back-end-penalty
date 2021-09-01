@@ -52,9 +52,21 @@ const usersController = {
   allusers: async (req, res) => {
     try {
       let result = await DB.usuarios.findAll({
-        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro"],
+        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro","gerente","alerta"],
       });
       res.send(result);
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  usuarioPK: async (req, res) => {
+    try {
+      // id del producto
+      const { id } = req.params;
+      let usuario = await DB.usuarios.findByPk(id, {
+        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro","gerente","alerta"],
+      });
+      res.send(usuario);
     } catch (error) {
       res.send(error);
     }
@@ -276,7 +288,7 @@ const usersController = {
   vacaciones: async (req, res) => {
     try {
       const data = req.body;
-
+      console.log(data);
       await DB.vacaciones.create(data);
       res.send({ msg: "vacacion solicitada" });
     } catch (error) {
@@ -494,18 +506,7 @@ const usersController = {
       res.send(e);
     }
   },
-  usuarioPK: async (req, res) => {
-    try {
-      // id del producto
-      const { id } = req.params;
-      let usuario = await DB.usuarios.findByPk(id, {
-        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro"],
-      });
-      res.send(usuario);
-    } catch (error) {
-      res.send(error);
-    }
-  },
+ 
   agregarImgUsuario: async (req, res) => {
     try {
       const { id } = req.params;
@@ -830,7 +831,7 @@ const usersController = {
       const img = req.file;
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
-      const { importeTotal, kmTotal, usuarioId } = data;
+      const { importeTotal, kmTotal, usuarioId,alertaId } = data;
       const km = await DB.kilometros.create({
         importeTotal,
         kmTotal,
@@ -838,7 +839,8 @@ const usersController = {
         imagen: imagenURL.secure_url,
         listo: "Si",
         estado:'pendiente',
-        estadoFinal:'pendiente'
+        estadoFinal:'pendiente',
+        alertaId
       });
       if (verificacion === true) {
         for (const d of data.id) {
@@ -1091,7 +1093,14 @@ try {
 }
   },
 
-  
+  alerta: async (req, res) => {
+    try {
+        const resut= await DB.gastos.findAll();
+        res.send(result)
+    } catch (e) {
+        res.send(e)
+    }
+},
 
   borrar: async (req, res) => {
     /* await DB.vacaciones.destroy({

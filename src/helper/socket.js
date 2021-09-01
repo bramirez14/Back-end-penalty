@@ -60,6 +60,21 @@ const usuarioDesconectado = async( id ) => {
   )
  
 }
+const alertas = async ()=>{
+  
+    const result = await DB.alertas.findAll( {include: ["usuario"]},);
+    return result 
+}
+const guardarAlerta =async (data)=>{
+  return await DB.alertas.create(data)
+}
+const editarAlerta= async (id)=>{
+  
+  const result = await DB.alertas.update({estado:'inactiva'},{where:{id:id}})
+  return result
+       
+}
+
 module.exports = {
     usuarioConectado,
     usuariosConectados,
@@ -69,6 +84,9 @@ module.exports = {
     km,
     vacaciones,
     anticipo,
+    alertas,
+    guardarAlerta,
+    editarAlerta,
 
     
 }

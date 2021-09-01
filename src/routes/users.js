@@ -8,6 +8,7 @@ const usersController= require('../controller/usersController');
 const validationUser = require('../middlewares/validationUser');
 const validationLogin = require('../middlewares/validationLogin');
 const { uid } = require('uid');
+const alertaController = require('../controller/alertaController');
 //fx de multer
 const storage = multer.diskStorage({
     destination: path.join(__dirname,'../file/image'),
@@ -157,6 +158,13 @@ router.put('/alerta/km/:id',usersController.alertakm)
 router.put('/alerta/vacaciones/:id',usersController.alertavacaciones)
 router.put('/precio/km',usersController.preciokm);
 router.get('/precio/km',usersController.precioactualkm);
+
+/*alertas de campana*/
+router.get('/msg/alertas',alertaController.alerta);
+router.post('/msg/alerta',alertaController.guardaralerta);
+router.put('/msg/alerta/:id',alertaController.editaralerta);
+router.delete('msg/alerta/:id',alertaController.borraralerta);
+
 
 
 

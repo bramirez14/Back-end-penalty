@@ -19,7 +19,12 @@ module.exports = (sequelize, DataTypes) => {
  vacaciones.associate = function(models) {
   vacaciones.belongsTo(models.usuarios,{
     as:'usuario'
-  }) 
+  })
+      
+  vacaciones.belongsTo(models.alertas,{
+    as:'alerta',
+  })  
+
 
 }
   return vacaciones;
