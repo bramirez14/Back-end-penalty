@@ -1,4 +1,5 @@
 var socketIo = require("socket.io");
+const { postRecibo } = require("../controller/cobranzasController");
 const {
   comprobarJWT,
   usuariosConectados,
@@ -37,13 +38,15 @@ const inicioSocket = (server) => {
     io.emit("todas-alertas", await alertas());
 
     socket.on('alerta-nueva', async(alerta) => {
+      console.log(alerta,'line41');
       const result = await guardarAlerta(alerta)
       io.emit( 'todas-alertas', await alertas());
   })
-  socket.on('editar-alerta', async (id) => {
-      await editarAlerta(id)
-    io.emit('todas-alertas', await alertas());
-  })
+    socket.on('editar-alerta', async (id) => {
+        await editarAlerta(id)
+      io.emit('todas-alertas', await alertas());
+    })
+    
 
     socket.on("disconnect", async () => {
       console.log("cliente desconectado");

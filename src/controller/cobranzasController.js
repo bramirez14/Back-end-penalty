@@ -1,8 +1,8 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
-const DB = require("../database/models3");
-const DBa = require("../database/models3a");
+const DB2 = require("../database/models2");
+const DB = require("../database/models");
 
 const pdf = require("html-pdf");
 const { getcobranzas } = require("./helpers/funcionesCobranzas");
@@ -10,17 +10,17 @@ const { loadavg } = require("os");
 
 const cobranzasController = {
   recibo: async (req, res) => {
-    await getcobranzas(res, DB.clientes);
+    await getcobranzas(res, DB2.clientes);
   },
   postRecibo: async (req, res) => {
     try {
       const data = req.body;
       console.log(data, "linea 15");
       for (const d of data.newIngresos) {
-        const a = await DBa.recibosingresos.create(d);
+        const a = await DB.recibosingresos.create(d);
       }
       for (const d of data.newDataCheck) {
-        await DBa.recibosliquidaciones.create(d);
+        await DB.recibosliquidaciones.create(d);
       }
 
       res.send({ msg: "datos guardados con exito!!!", status: 200 });
@@ -30,8 +30,8 @@ const cobranzasController = {
   },
   todosRecibos: async (req, res) => {
     try {
-      const a = await DBa.recibosingresos.findAll();
-      const b = await DBa.recibosliquidaciones.findAll();
+      const a = await DB.recibosingresos.findAll();
+      const b = await DB.recibosliquidaciones.findAll();
       const total = [a,b];
       res.send(total);
     } catch (e) {
@@ -42,12 +42,12 @@ const cobranzasController = {
     try {
       const { id } = req.params;
       
-      const a = await DBa.recibosingresos.findAll({
+      const a = await DB.recibosingresos.findAll({
         where: {
           numerorecibo: id,
         },
       });
-      const b = await DBa.recibosliquidaciones.findAll({
+      const b = await DB.recibosliquidaciones.findAll({
         where: {
           numerorecibo: id,
         },
@@ -64,8 +64,8 @@ const cobranzasController = {
       console.log(id,'line64');
       const {ncomprobante} = req.body;
       console.log(ncomprobante,'line66');
-       await DBa.recibosliquidaciones.update({ncomprobante},{where: {numerorecibo:id }})
-       await DBa.recibosingresos.update({ncomprobante},{where: {numerorecibo:id }})
+       await DB.recibosliquidaciones.update({ncomprobante},{where: {numerorecibo:id }})
+       await DB.recibosingresos.update({ncomprobante},{where: {numerorecibo:id }})
        res.send({msg:'Comprobante agregado',status:200})
     } catch (e) {
       res.send(e)
