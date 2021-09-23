@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     nombrecompleto:DataTypes.STRING,
     numerorecibo: DataTypes.STRING,
     ncomprobante:DataTypes.STRING,
+    razonsocial: DataTypes.STRING,
     
   }, { });
   recibosingresos.associate = function(models) {
