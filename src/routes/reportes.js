@@ -34,19 +34,4 @@ router.get('/scc',reportesController.w_scc);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 module.exports = router;
