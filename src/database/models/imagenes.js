@@ -5,15 +5,14 @@ module.exports = (sequelize, DataTypes) => {
    
 }, {
     
-  });
+});
   imagenes.associate = function(models) {
     // associations can be defined here
-    imagenes.belongsToMany(models.rendiciones,{
-      as:'rendicion',
-      through:'rendiciones_imagenes',
-      foreignKey:'idimagen',
-      otherKey:'idrendicion'
-    })
+    imagenes.hasMany(models.tarjetacreditos,{
+      as:'tarjetacredito',
+      foreignKey:'imagenId'
+    }) 
+        
   };
   return imagenes;
 };

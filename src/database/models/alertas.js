@@ -12,23 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     usuarioId: DataTypes.INTEGER,
   }, {});
     alertas.associate = function(models) {
-  alertas.hasMany(models.vacaciones,{
-    as:'vacacion',
-    
-  }),
-  alertas.hasMany(models.gastos,{
-    as:'gasto',
-  })
-    alertas.hasMany(models.anticipos,{
-      as:'anticipo',
-    })
-    alertas.hasMany(models.kilometros,{
-      as:'kilometro',
-    })
-    alertas.belongsTo(models.usuarios,{
-      as:'usuario',
-    })
-    
+ 
    
   };
   return alertas;

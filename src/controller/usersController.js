@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
+const fs = require('fs-extra')
 const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -10,6 +10,7 @@ var http = require('http');
 var server = http.createServer(app);
 var socketIo=require('socket.io');
 const io = socketIo(server);// desp continuares desde el controller para scoket io
+
 
 //cloudinary
 var cloudinary = require("cloudinary").v2;
@@ -30,6 +31,50 @@ const {
 const db = require("../database/models2");
 
 const usersController = {
+files: async (req, res) => {
+try {
+  const file = req.file;
+ const  fileFormat = file.mimetype.split('/');
+ if(fileFormat[1] !== 'pdf'){
+  const filePath= file.path;
+  const fileURL = await cloudinary.uploader.upload(filePath);
+  const fileSecure = fileURL.secure_url;
+  var result= await DB.imagenes.create({imagen:fileSecure})
+  await fs.unlink(filePath)
+
+}else{
+  var result = await DB.pdfs.create({pdf:file.originalname})
+}
+res.send({msg:'Archivo se cargo con exito',status:200,result:result})
+
+} catch (e) {
+  res.send({msg:e, status:500})
+}
+
+},
+fileDelete: async (req, res) => {
+
+  try {
+    const file = req.body;
+    const  fileFormat = file.type.split('/');
+    const { id } = req.params;
+
+    console.log(fileFormat,'line58');
+    if(fileFormat[1] !== 'pdf'){
+     await DB.imagenes.destroy({
+      where: { id },
+    })}else{
+      await DB.pdfs.destroy({
+        where: { id },
+      })
+    }
+    res.send({msg:'Archivo se elimino con exito', status:200})
+  } catch (e) {
+    res.send(e)
+  }
+ 
+},
+
   /**Lista de todos los usuarios*/
   todosGastos: async (req, res) => {
     try {
@@ -610,7 +655,7 @@ const usersController = {
     try {
       const data = req.body;
       const img = req.file;
-
+      console.log(img,'line613');
       if (img === undefined) {
         const { id } = await DB.gastos.create(data);
         await DB.rendiciones.create({
@@ -1109,6 +1154,35 @@ try {
       },
     }); */
   },
+/*tarjet de credito*/
+ todasTJ:async (req, res) => {
+  try {
+    res.send(await DB.tarjetacredito.findAll()) 
+  } catch (e) {
+    res.send(e)    
+  }
+ },
+ TJ:async (req, res) => {
+   try {
+    const file = req.file;
+    const data = req.body;
+ const  fileFormat = file.mimetype.split('/');
+ const filePath= file.path;
+ const fileURL = await cloudinary.uploader.upload(filePath);
+ const fileSecure = fileURL.secure_url;
+ 
+    if(fileFormat[1] !== 'pdf'){
+      var result = await DB.tarjetacreditos.create({...data,archivo:fileSecure})
+      await fs.unlink(filePath)
+    }else{
+      var result = await DB.tarjetacreditos.create({...data,archivo:file.originalname})
+    }
+     res.send({msg:'creado con exito', status:200})
+  } catch (e) {
+    res.send(e)     
+   }
+},
+
 };
 
 module.exports = usersController;

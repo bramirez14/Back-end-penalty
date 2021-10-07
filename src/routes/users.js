@@ -11,11 +11,11 @@ const { uid } = require('uid');
 const alertaController = require('../controller/alertaController');
 //fx de multer
 const storage = multer.diskStorage({
-    destination: path.join(__dirname,'../file/image'),
+    destination: path.join(__dirname,'../../public/upload'),
     filename:(req,file,cb)=>{
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null,file.originalname);
     }
-  })
+})
 var upload = multer({ storage});
 
 const storagepdf = multer.diskStorage({
@@ -41,6 +41,14 @@ var upload = multer({ storage: storage }) */
 
 /*Toos los usuarios registrados*/
 router.get('/allusers',usersController.allusers)
+
+/** Todas las imagenes */
+router.post('/file',upload.single('file'),usersController.files);
+/** Borrar una imagen */
+router.post('/file/delete/:id',usersController.fileDelete);
+
+
+
 /* User register */
 router.post('/register',[
     check('nombre').isLength({min:4}).withMessage('ingrese su nombre'),
@@ -163,7 +171,13 @@ router.get('/precio/km',usersController.precioactualkm);
 router.get('/msg/alertas',alertaController.alerta);
 router.post('/msg/alerta',alertaController.guardaralerta);
 router.put('/msg/alerta/:id',alertaController.editaralerta);
-router.delete('msg/alerta/:id',alertaController.borraralerta);
+router.delete('/msg/alerta/:id',alertaController.borraralerta);
+
+/* tarjeta de credito */
+router.get('/tarjeta/credito',usersController.todasTJ);
+router.post('/tarjeta/credito',upload.single("file"),usersController.TJ);
+
+
 
 
 

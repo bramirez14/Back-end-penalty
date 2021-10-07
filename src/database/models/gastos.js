@@ -10,14 +10,11 @@ module.exports = (sequelize, DataTypes) => {
       formapagoId: DataTypes.INTEGER,
       estado:DataTypes.STRING,
       estadoFinal:DataTypes.STRING,
-      notificacion:DataTypes.STRING,
       sinAnticipo:DataTypes.STRING,
       listo:DataTypes.STRING,
       importerendido:DataTypes.DECIMAL,
       procesoFinalizado:DataTypes.STRING,
       pagoRealizado: DataTypes.STRING,
-      f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
-      fd: DataTypes.STRING,
       aprobacion: DataTypes.STRING,
       norden: DataTypes.STRING,
       pdf: DataTypes.STRING,
@@ -40,10 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     foreignKey:'gastoId'
     });
 
-    gastos.belongsTo(models.alertas,{
-      as:'alerta',
-    })
-
+ 
 
   };
   return gastos;

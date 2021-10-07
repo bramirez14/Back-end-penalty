@@ -9,9 +9,6 @@ module.exports = (sequelize, DataTypes) => {
     procesoPagar:DataTypes.STRING,
     estado:DataTypes.STRING,
     estadoFinal:DataTypes.STRING,
-    notificacion:DataTypes.STRING,
-    f: DataTypes.STRING,
-    fd: DataTypes.STRING,
     respMensaje:DataTypes.STRING,
     procesoFinalizado:DataTypes.STRING,
     pdf:DataTypes.STRING,
@@ -27,9 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       as: "rendicionKm",
     foreignKey:'kilometroId'
     });
-    kilometros.belongsTo(models.alertas,{
-      as:'alerta',
-    })
+  
   };
   return kilometros;
 };

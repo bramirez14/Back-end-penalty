@@ -9,12 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     respMensaje:DataTypes.STRING,
     estado: DataTypes.STRING,
     estadoFinal:DataTypes.STRING,
-    notificacion: DataTypes.STRING,
-    f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
-    fd: DataTypes.STRING,
     pagoRealizado: DataTypes.STRING,
     norden: DataTypes.STRING,
-    pdf: DataTypes.STRING,
     pdfinal: DataTypes.STRING,
     pdfpagoFinal:DataTypes.STRING,
     procesoFinalizado: DataTypes.STRING,
@@ -27,9 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       as:'usuario',
     })
 
-    anticipos.belongsTo(models.alertas,{
-      as:'alerta',
-    })
+   
  
   }
   return anticipos;
