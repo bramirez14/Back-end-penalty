@@ -11,12 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   tarjetacreditos.associate = function (models) {
-    tarjetacreditos.belongsTo(models.imagenes,{
-      as:'imagen'
-    })
-    tarjetacreditos.belongsTo(models.pdfs,{
-      as:'pdf'
-    })
+  
    
   };
   return tarjetacreditos;

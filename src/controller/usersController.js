@@ -654,39 +654,38 @@ fileDelete: async (req, res) => {
   gr: async (req, res) => {
     try {
       const data = req.body;
-      const img = req.file;
-      console.log(img,'line613');
-      if (img === undefined) {
-        const { id } = await DB.gastos.create(data);
+      const file = req.file;
+      console.log(data);
+      console.log(file);
+
+      const { id } = await DB.gastos.create(data);
+      if (file === undefined) {
         await DB.rendiciones.create({
           ...data,
           gastoId: id,
         });
-      } else {
-        const imgPath = img.path;
+      }else{
+      const extension= file.mimetype.split('/')[1]
+      if(extension !== 'pdf'){
+        
+        const imgPath = file.path;
         let imagenURL = await cloudinary.uploader.upload(imgPath);
-        const {
-          categoria,
-          fecha,
-          importe,
-          notas,
-          usuarioId,
-          formapagoId,
-          sinAnticipo,
-          estado,
-          estadoFinal,
-          notificacion,
-          importerendido,
-        } = data;
-        const gasto = await DB.gastos.create(data);
-        console.log(gasto, "soy la linea 617");
-        const id = gasto.id;
+      
         await DB.rendiciones.create({
           ...data,
           gastoId: id,
-          imagen: imagenURL.secure_url,
+          archivo: imagenURL.secure_url,
+        });
+      
+      }else{
+        console.log('soy pdf jijiiji');
+        await DB.rendiciones.create({
+          ...data,
+          gastoId: id,
+          archivo: file.originalname,
         });
       }
+    }
       res.send({msg:"ok",status:200});
     } catch (e) {
       res.send(e);

@@ -121,7 +121,7 @@ router.get('/gastos/:id',usersController.gastoPK);
 /**buscar rendicion por id */
 router.get('/rendicion/:id',usersController.rendicionPK);
 /**Crear el anticipo gasto y guardarlo en la rendicion  */
-router.post('/gasto/rendicion',upload.single('imagen'),usersController.gr);
+router.post('/gasto/rendicion',upload.single('file'),usersController.gr);
 router.delete('/delete/rendicion/gasto/:id',usersController.deleterendicion);
 
 
@@ -156,8 +156,6 @@ router.delete('/km/borrar/:id',usersController.kmborrar)
 router.post('/sueldo/pdf/:id',uploadpdf.single('file'),usersController.sueldoPdf);//norden y pdf
 router.put('/pago/sueldo/:id',uploadpdf.single('file'),usersController.sueldoPDF);
 router.put('/pagofinal/sueldo/:id',uploadpdf.single('file'),usersController.sueldopdffinal);//pdf final
-
-
 
 /**Alewrta */
 router.put('/alerta/anticipo/:id',usersController.alertaanticipo)

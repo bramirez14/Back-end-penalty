@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     "gastos",
     {
       importe: DataTypes.DECIMAL,
-      notas: DataTypes.STRING,
+      nota: DataTypes.STRING,
       fecha: DataTypes.STRING,
       usuarioId: DataTypes.INTEGER,
       formapagoId: DataTypes.INTEGER,
