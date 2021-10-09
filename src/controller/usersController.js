@@ -655,8 +655,6 @@ fileDelete: async (req, res) => {
     try {
       const data = req.body;
       const file = req.file;
-      console.log(data);
-      console.log(file);
 
       const { id } = await DB.gastos.create(data);
       if (file === undefined) {
@@ -678,7 +676,6 @@ fileDelete: async (req, res) => {
         });
       
       }else{
-        console.log('soy pdf jijiiji');
         await DB.rendiciones.create({
           ...data,
           gastoId: id,
@@ -703,8 +700,6 @@ fileDelete: async (req, res) => {
   res.send(e)
 }
   },
-
-
 
   finalizar: async (req, res) => {
     try {
@@ -1181,7 +1176,17 @@ try {
     res.send(e)     
    }
 },
-
+//descarga de pdf
+PDF: async (req, res) => {
+  try {
+    const header = req.header("archivo");
+    console.log(header);
+  console.log('aca estoy');
+    res.sendFile(path.join(__dirname, `../../public/upload/${header}`));
+  } catch (error) {
+    res.send(e);
+  }
+},
 };
 
 module.exports = usersController;

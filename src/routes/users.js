@@ -174,12 +174,8 @@ router.delete('/msg/alerta/:id',alertaController.borraralerta);
 /* tarjeta de credito */
 router.get('/tarjeta/credito',usersController.todasTJ);
 router.post('/tarjeta/credito',upload.single("file"),usersController.TJ);
-
-
-
-
-
-
+/*Descarga de pdf */
+router.get('/descarga/pdf',usersController.PDF);
 
 
 router.delete('/borrar/rendicionKm/:id',usersController.DeletekmRendicion);
