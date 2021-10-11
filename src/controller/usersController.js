@@ -393,6 +393,7 @@ fileDelete: async (req, res) => {
     try {
       const file = req.file;
       const data = req.body;
+      const extension= file?.mimetype.split('/');
       const { gastoId, total } = data;
       console.log(data);
       console.log(file,'line 341');
@@ -409,16 +410,18 @@ fileDelete: async (req, res) => {
       );
       if(file === undefined) {
         await DB.rendiciones.create(data);
-       
+      }else{
+        if(extension[1]==='pdf'){
+       await DB.rendiciones.create({ ...data, archivo: file.originalname });
       } else {
-        console.log('soy img');
         //guardamos imagen en cloudinary y DB
         const imgPath = file.path;
         const imagenURL = await cloudinary.uploader.upload(imgPath);
         const imagenSecure = imagenURL.secure_url;
-        await DB.rendiciones.create({ ...data, imagen: imagenSecure });
+        await DB.rendiciones.create({ ...data, archivo: imagenSecure });
       }
-      res.send({msg:"Rendicion e imagenes creadas satifactoriamente",status:200});
+      }
+      res.send({msg:"Rendicion e imagen creadas satifactoriamente",status:200});
     } catch (error) {
       res.send(error);
     }
@@ -478,10 +481,8 @@ fileDelete: async (req, res) => {
   },
   gastoRechazado: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
 
     const data = req.body;
-    console.log(data);
     try {
       let antEditado = await DB.gastos.update(data, {
         where: { id: id },
@@ -611,10 +612,12 @@ fileDelete: async (req, res) => {
     try {
       const file = req.file;
       const data = req.body;
+      
       console.log(file, "soy file*****************************");
      
      
       console.log(data, "soy data *******************");
+    
       if (file === undefined) {
         await DB.gastos.create(data);
       }else{
@@ -631,19 +634,33 @@ fileDelete: async (req, res) => {
   crearImg: async (req, res) => {
     try {
       const { id } = req.params;
-      const img = req.file;
-      if(img !== undefined){
-        const imgPath = img.path;
+      const file = req.file;
+      const extension= file?.mimetype.split('/')
+    console.log(file,'soyu file');
+      if(file !== undefined){
+        if(extension[1]==='pdf'){
+          await DB.rendiciones.update(
+             { archivo: file.originalname},
+                {
+                  where: {
+                    id: id,
+                  },
+                }
+          )
+      }else{
+         const imgPath = file.path;
               let imagenURL = await cloudinary.uploader.upload(imgPath);
 
               let imgCreada = await DB.rendiciones.update(
-                { imagen: imagenURL.secure_url },
+                { archivo: imagenURL.secure_url },
                 {
                   where: {
                     id: id,
                   },
                 }
               );
+      }
+       
       }
       
       res.send({msg:'ok', status:200});
@@ -1180,8 +1197,6 @@ try {
 PDF: async (req, res) => {
   try {
     const header = req.header("archivo");
-    console.log(header);
-  console.log('aca estoy');
     res.sendFile(path.join(__dirname, `../../public/upload/${header}`));
   } catch (error) {
     res.send(e);

@@ -82,7 +82,7 @@ router.delete('/vacacion/borrar/:id',usersController.borrarVacacion)
 
 
 /*Rendicion de Gastos*/ 
-router.post('/rendicion',upload.single('imagen'),usersController.rendicion)
+router.post('/rendicion',upload.single('file'),usersController.rendicion)
 
 
 
@@ -109,7 +109,7 @@ router.put('/gasto/finalizado/:id',usersController.gastoFinalizados)
 router.post('/rendiciones/gastos',upload.single('imagen'),usersController.crearGasto)
 /**Agregar imagen de Anticipo de Gasto */
 router.put('/rendicion/gastos/:id',usersController.gastos)
-router.post('/rendicion/gastos/img/:id',upload.single('imagen'),usersController.crearImg)//img
+router.post('/rendicion/gastos/img/:id',upload.single('file'),usersController.crearImg)//img
 /** buscar rendicion por Id */
 router.get('/editar/rendicion/:id',usersController.editarRendicion)
 /**buscar  usuario por Id */
