@@ -40,9 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     foreignKey:'gastoId'
     });
 
-    gastos.belongsTo(models.alertas,{
-      as:'alerta',
-    })
+   
 
 
   };

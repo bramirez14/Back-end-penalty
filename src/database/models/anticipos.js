@@ -27,10 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       as:'usuario',
     })
 
-    anticipos.belongsTo(models.alertas,{
-      as:'alerta',
-    })
- 
+   
   }
   return anticipos;
 };

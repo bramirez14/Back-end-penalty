@@ -21,9 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     as:'usuario'
   })
       
-  vacaciones.belongsTo(models.alertas,{
-    as:'alerta',
-  })  
+  
 
 
 }
