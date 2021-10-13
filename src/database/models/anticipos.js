@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     pdfpagoFinal:DataTypes.STRING,
     procesoFinalizado: DataTypes.STRING,
     listo: DataTypes.STRING,
+    finpago: DataTypes.STRING,
 
   }, { });
   anticipos.associate = function(models) {

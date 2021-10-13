@@ -885,6 +885,7 @@ fileDelete: async (req, res) => {
       console.log(data, "791");
       const verificacion = Array.isArray(data.id);
       const img = req.file;
+      console.log(img);
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
       const { importeTotal, kmTotal, usuarioId,alertaId } = data;
@@ -920,7 +921,7 @@ fileDelete: async (req, res) => {
         );
       }
 
-      res.send("ok");
+      res.send({msg:'completado', status:200});
     } catch (e) {
       res.send(e);
     }
