@@ -11,11 +11,11 @@ const { uid } = require('uid');
 const alertaController = require('../controller/alertaController');
 //fx de multer
 const storage = multer.diskStorage({
-    destination: path.join(__dirname,'../file/image'),
+    destination: path.join(__dirname,'../../public/upload'),
     filename:(req,file,cb)=>{
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null,file.originalname);
     }
-  })
+})
 var upload = multer({ storage});
 
 const storagepdf = multer.diskStorage({
@@ -41,6 +41,14 @@ var upload = multer({ storage: storage }) */
 
 /*Toos los usuarios registrados*/
 router.get('/allusers',usersController.allusers)
+
+/** Todas las imagenes */
+router.post('/file',upload.single('file'),usersController.files);
+/** Borrar una imagen */
+router.post('/file/delete/:id',usersController.fileDelete);
+
+
+
 /* User register */
 router.post('/register',[
     check('nombre').isLength({min:4}).withMessage('ingrese su nombre'),
@@ -74,7 +82,7 @@ router.delete('/vacacion/borrar/:id',usersController.borrarVacacion)
 
 
 /*Rendicion de Gastos*/ 
-router.post('/rendicion',upload.single('imagen'),usersController.rendicion)
+router.post('/rendicion',upload.single('file'),usersController.rendicion)
 
 
 
@@ -101,7 +109,7 @@ router.put('/gasto/finalizado/:id',usersController.gastoFinalizados)
 router.post('/rendiciones/gastos',upload.single('imagen'),usersController.crearGasto)
 /**Agregar imagen de Anticipo de Gasto */
 router.put('/rendicion/gastos/:id',usersController.gastos)
-router.post('/rendicion/gastos/img/:id',upload.single('imagen'),usersController.crearImg)//img
+router.post('/rendicion/gastos/img/:id',upload.single('file'),usersController.crearImg)//img
 /** buscar rendicion por Id */
 router.get('/editar/rendicion/:id',usersController.editarRendicion)
 /**buscar  usuario por Id */
@@ -113,7 +121,7 @@ router.get('/gastos/:id',usersController.gastoPK);
 /**buscar rendicion por id */
 router.get('/rendicion/:id',usersController.rendicionPK);
 /**Crear el anticipo gasto y guardarlo en la rendicion  */
-router.post('/gasto/rendicion',upload.single('imagen'),usersController.gr);
+router.post('/gasto/rendicion',upload.single('file'),usersController.gr);
 router.delete('/delete/rendicion/gasto/:id',usersController.deleterendicion);
 
 
@@ -149,8 +157,6 @@ router.post('/sueldo/pdf/:id',uploadpdf.single('file'),usersController.sueldoPdf
 router.put('/pago/sueldo/:id',uploadpdf.single('file'),usersController.sueldoPDF);
 router.put('/pagofinal/sueldo/:id',uploadpdf.single('file'),usersController.sueldopdffinal);//pdf final
 
-
-
 /**Alewrta */
 router.put('/alerta/anticipo/:id',usersController.alertaanticipo)
 router.put('/alerta/gasto/:id',usersController.alertagasto)
@@ -163,11 +169,13 @@ router.get('/precio/km',usersController.precioactualkm);
 router.get('/msg/alertas',alertaController.alerta);
 router.post('/msg/alerta',alertaController.guardaralerta);
 router.put('/msg/alerta/:id',alertaController.editaralerta);
-router.delete('msg/alerta/:id',alertaController.borraralerta);
+router.delete('/msg/alerta/:id',alertaController.borraralerta);
 
-
-
-
+/* tarjeta de credito */
+router.get('/tarjeta/credito',usersController.todasTJ);
+router.post('/tarjeta/credito',upload.single("file"),usersController.TJ);
+/*Descarga de pdf */
+router.get('/descarga/pdf',usersController.PDF);
 
 
 router.delete('/borrar/rendicionKm/:id',usersController.DeletekmRendicion);

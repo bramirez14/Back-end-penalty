@@ -4,20 +4,17 @@ module.exports = (sequelize, DataTypes) => {
     "gastos",
     {
       importe: DataTypes.DECIMAL,
-      notas: DataTypes.STRING,
+      nota: DataTypes.STRING,
       fecha: DataTypes.STRING,
       usuarioId: DataTypes.INTEGER,
       formapagoId: DataTypes.INTEGER,
       estado:DataTypes.STRING,
       estadoFinal:DataTypes.STRING,
-      notificacion:DataTypes.STRING,
       sinAnticipo:DataTypes.STRING,
       listo:DataTypes.STRING,
       importerendido:DataTypes.DECIMAL,
       procesoFinalizado:DataTypes.STRING,
       pagoRealizado: DataTypes.STRING,
-      f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
-      fd: DataTypes.STRING,
       aprobacion: DataTypes.STRING,
       norden: DataTypes.STRING,
       pdf: DataTypes.STRING,
@@ -39,9 +36,6 @@ module.exports = (sequelize, DataTypes) => {
       as: "rendicion",
     foreignKey:'gastoId'
     });
-
-   
-
 
   };
   return gastos;

@@ -9,16 +9,13 @@ module.exports = (sequelize, DataTypes) => {
     respMensaje:DataTypes.STRING,
     estado: DataTypes.STRING,
     estadoFinal:DataTypes.STRING,
-    notificacion: DataTypes.STRING,
-    f: DataTypes.STRING,//fecha cuando lo aprueba Cristian Rios
-    fd: DataTypes.STRING,
     pagoRealizado: DataTypes.STRING,
     norden: DataTypes.STRING,
-    pdf: DataTypes.STRING,
     pdfinal: DataTypes.STRING,
     pdfpagoFinal:DataTypes.STRING,
     procesoFinalizado: DataTypes.STRING,
     listo: DataTypes.STRING,
+    finpago: DataTypes.STRING,
 
   }, { });
   anticipos.associate = function(models) {
@@ -26,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
     anticipos.belongsTo(models.usuarios,{
       as:'usuario',
     })
-
    
   }
   return anticipos;

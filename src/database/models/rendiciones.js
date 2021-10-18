@@ -5,9 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     "rendiciones",
     {
       fecha: DataTypes.STRING,
-      notas: DataTypes.STRING,
+      nota: DataTypes.STRING,
       importe: DataTypes.DECIMAL,
-      imagen: DataTypes.STRING,
+      archivo: DataTypes.STRING,
       categoria: DataTypes.STRING,
       gastoId: DataTypes.INTEGER,
     },

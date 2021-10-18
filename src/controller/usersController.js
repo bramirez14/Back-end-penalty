@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
+const fs = require('fs-extra')
 const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -10,6 +10,7 @@ var http = require('http');
 var server = http.createServer(app);
 var socketIo=require('socket.io');
 const io = socketIo(server);// desp continuares desde el controller para scoket io
+
 
 //cloudinary
 var cloudinary = require("cloudinary").v2;
@@ -30,6 +31,50 @@ const {
 const db = require("../database/models2");
 
 const usersController = {
+files: async (req, res) => {
+try {
+  const file = req.file;
+ const  fileFormat = file.mimetype.split('/');
+ if(fileFormat[1] !== 'pdf'){
+  const filePath= file.path;
+  const fileURL = await cloudinary.uploader.upload(filePath);
+  const fileSecure = fileURL.secure_url;
+  var result= await DB.imagenes.create({imagen:fileSecure})
+  await fs.unlink(filePath)
+
+}else{
+  var result = await DB.pdfs.create({pdf:file.originalname})
+}
+res.send({msg:'Archivo se cargo con exito',status:200,result:result})
+
+} catch (e) {
+  res.send({msg:e, status:500})
+}
+
+},
+fileDelete: async (req, res) => {
+
+  try {
+    const file = req.body;
+    const  fileFormat = file.type.split('/');
+    const { id } = req.params;
+
+    console.log(fileFormat,'line58');
+    if(fileFormat[1] !== 'pdf'){
+     await DB.imagenes.destroy({
+      where: { id },
+    })}else{
+      await DB.pdfs.destroy({
+        where: { id },
+      })
+    }
+    res.send({msg:'Archivo se elimino con exito', status:200})
+  } catch (e) {
+    res.send(e)
+  }
+ 
+},
+
   /**Lista de todos los usuarios*/
   todosGastos: async (req, res) => {
     try {
@@ -348,6 +393,7 @@ const usersController = {
     try {
       const file = req.file;
       const data = req.body;
+      const extension= file?.mimetype.split('/');
       const { gastoId, total } = data;
       console.log(data);
       console.log(file,'line 341');
@@ -364,16 +410,18 @@ const usersController = {
       );
       if(file === undefined) {
         await DB.rendiciones.create(data);
-       
+      }else{
+        if(extension[1]==='pdf'){
+       await DB.rendiciones.create({ ...data, archivo: file.originalname });
       } else {
-        console.log('soy img');
         //guardamos imagen en cloudinary y DB
         const imgPath = file.path;
         const imagenURL = await cloudinary.uploader.upload(imgPath);
         const imagenSecure = imagenURL.secure_url;
-        await DB.rendiciones.create({ ...data, imagen: imagenSecure });
+        await DB.rendiciones.create({ ...data, archivo: imagenSecure });
       }
-      res.send({msg:"Rendicion e imagenes creadas satifactoriamente",status:200});
+      }
+      res.send({msg:"Rendicion e imagen creadas satifactoriamente",status:200});
     } catch (error) {
       res.send(error);
     }
@@ -433,10 +481,8 @@ const usersController = {
   },
   gastoRechazado: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
 
     const data = req.body;
-    console.log(data);
     try {
       let antEditado = await DB.gastos.update(data, {
         where: { id: id },
@@ -566,10 +612,12 @@ const usersController = {
     try {
       const file = req.file;
       const data = req.body;
+      
       console.log(file, "soy file*****************************");
      
      
       console.log(data, "soy data *******************");
+    
       if (file === undefined) {
         await DB.gastos.create(data);
       }else{
@@ -586,19 +634,33 @@ const usersController = {
   crearImg: async (req, res) => {
     try {
       const { id } = req.params;
-      const img = req.file;
-      if(img !== undefined){
-        const imgPath = img.path;
+      const file = req.file;
+      const extension= file?.mimetype.split('/')
+    console.log(file,'soyu file');
+      if(file !== undefined){
+        if(extension[1]==='pdf'){
+          await DB.rendiciones.update(
+             { archivo: file.originalname},
+                {
+                  where: {
+                    id: id,
+                  },
+                }
+          )
+      }else{
+         const imgPath = file.path;
               let imagenURL = await cloudinary.uploader.upload(imgPath);
 
               let imgCreada = await DB.rendiciones.update(
-                { imagen: imagenURL.secure_url },
+                { archivo: imagenURL.secure_url },
                 {
                   where: {
                     id: id,
                   },
                 }
               );
+      }
+       
       }
       
       res.send({msg:'ok', status:200});
@@ -609,39 +671,35 @@ const usersController = {
   gr: async (req, res) => {
     try {
       const data = req.body;
-      const img = req.file;
+      const file = req.file;
 
-      if (img === undefined) {
-        const { id } = await DB.gastos.create(data);
+      const { id } = await DB.gastos.create(data);
+      if (file === undefined) {
         await DB.rendiciones.create({
           ...data,
           gastoId: id,
         });
-      } else {
-        const imgPath = img.path;
+      }else{
+      const extension= file.mimetype.split('/')[1]
+      if(extension !== 'pdf'){
+        
+        const imgPath = file.path;
         let imagenURL = await cloudinary.uploader.upload(imgPath);
-        const {
-          categoria,
-          fecha,
-          importe,
-          notas,
-          usuarioId,
-          formapagoId,
-          sinAnticipo,
-          estado,
-          estadoFinal,
-          notificacion,
-          importerendido,
-        } = data;
-        const gasto = await DB.gastos.create(data);
-        console.log(gasto, "soy la linea 617");
-        const id = gasto.id;
+      
         await DB.rendiciones.create({
           ...data,
           gastoId: id,
-          imagen: imagenURL.secure_url,
+          archivo: imagenURL.secure_url,
+        });
+      
+      }else{
+        await DB.rendiciones.create({
+          ...data,
+          gastoId: id,
+          archivo: file.originalname,
         });
       }
+    }
       res.send({msg:"ok",status:200});
     } catch (e) {
       res.send(e);
@@ -659,8 +717,6 @@ const usersController = {
   res.send(e)
 }
   },
-
-
 
   finalizar: async (req, res) => {
     try {
@@ -829,6 +885,7 @@ const usersController = {
       console.log(data, "791");
       const verificacion = Array.isArray(data.id);
       const img = req.file;
+      console.log(img);
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
       const { importeTotal, kmTotal, usuarioId,alertaId } = data;
@@ -864,7 +921,7 @@ const usersController = {
         );
       }
 
-      res.send("ok");
+      res.send({msg:'completado', status:200});
     } catch (e) {
       res.send(e);
     }
@@ -1109,6 +1166,43 @@ try {
       },
     }); */
   },
+/*tarjet de credito*/
+ todasTJ:async (req, res) => {
+  try {
+    res.send(await DB.tarjetacredito.findAll()) 
+  } catch (e) {
+    res.send(e)    
+  }
+ },
+ TJ:async (req, res) => {
+   try {
+    const file = req.file;
+    const data = req.body;
+ const  fileFormat = file.mimetype.split('/');
+ const filePath= file.path;
+ const fileURL = await cloudinary.uploader.upload(filePath);
+ const fileSecure = fileURL.secure_url;
+ 
+    if(fileFormat[1] !== 'pdf'){
+      var result = await DB.tarjetacreditos.create({...data,archivo:fileSecure})
+      await fs.unlink(filePath)
+    }else{
+      var result = await DB.tarjetacreditos.create({...data,archivo:file.originalname})
+    }
+     res.send({msg:'creado con exito', status:200})
+  } catch (e) {
+    res.send(e)     
+   }
+},
+//descarga de pdf
+PDF: async (req, res) => {
+  try {
+    const header = req.header("archivo");
+    res.sendFile(path.join(__dirname, `../../public/upload/${header}`));
+  } catch (error) {
+    res.send(e);
+  }
+},
 };
 
 module.exports = usersController;
