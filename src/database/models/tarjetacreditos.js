@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       archivo: DataTypes.STRING,
       importe: DataTypes.DECIMAL,
       tarjeta: DataTypes.STRING,
+      nota: DataTypes.STRING,
     },
     {}
   );
