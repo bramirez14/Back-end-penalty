@@ -12,8 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     usuarioId: DataTypes.INTEGER,
   }, {});
     alertas.associate = function(models) {
- 
    
+      alertas.belongsTo(models.usuarios,{
+        as:'usuario',
+      })
   };
   return alertas;
 };
