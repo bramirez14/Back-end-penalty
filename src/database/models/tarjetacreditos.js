@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) => {
       nombre: DataTypes.STRING,
       apellido: DataTypes.STRING,
       archivo: DataTypes.STRING,
+      importe: DataTypes.DECIMAL,
+      tarjeta: DataTypes.STRING,
+      nota: DataTypes.STRING,
     },
     {}
   );

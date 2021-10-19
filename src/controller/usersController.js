@@ -97,7 +97,7 @@ fileDelete: async (req, res) => {
   allusers: async (req, res) => {
     try {
       let result = await DB.usuarios.findAll({
-        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro","gerente","alerta"],
+        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro","gerente",],
       });
       res.send(result);
     } catch (error) {
@@ -108,8 +108,9 @@ fileDelete: async (req, res) => {
     try {
       // id del producto
       const { id } = req.params;
+      console.log(`me estas llamando soy el usuario ${id}`);
       let usuario = await DB.usuarios.findByPk(id, {
-        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro","gerente","alerta"],
+        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro","gerente"],
       });
       res.send(usuario);
     } catch (error) {
@@ -453,32 +454,7 @@ fileDelete: async (req, res) => {
       res.send(error);
     }
   },
-  gastos: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const data = req.body;
-      console.log(data, "**************data*******************");
-      console.log(id);
-      const { gastoId, total } = data;
 
-      await DB.rendiciones.update(data, {
-        where: {
-          id: id,
-        },
-      });
-      await DB.gastos.update(
-        { importerendido: total },
-        {
-          where: {
-            id: gastoId,
-          },
-        }
-      );
-      res.send("ok");
-    } catch (error) {
-      res.send(error);
-    }
-  },
   gastoRechazado: async (req, res) => {
     const { id } = req.params;
 
@@ -608,7 +584,9 @@ fileDelete: async (req, res) => {
     }
   },
 
-  crearGasto: async (req, res) => {///// verificar si anda bien.
+
+  crearGasto: async (req, res) => {
+
     try {
       const file = req.file;
       const data = req.body;
@@ -631,16 +609,27 @@ fileDelete: async (req, res) => {
       res.send(error);
     }
   },
-  crearImg: async (req, res) => {
+  editarGasto: async (req, res) => {
     try {
       const { id } = req.params;
       const file = req.file;
-      const extension= file?.mimetype.split('/')
-    console.log(file,'soyu file');
+      const data = req.body
+      const { gastoId, total } = data;
+      const extension= file?.mimetype.split('/');
+      await DB.gastos.update(
+        { importerendido: total },
+        {
+          where: {
+            id: gastoId,
+          },
+        }
+      );
+      
+      console.log(file,'soy file');
       if(file !== undefined){
         if(extension[1]==='pdf'){
           await DB.rendiciones.update(
-             { archivo: file.originalname},
+             {...data, archivo: file.originalname},
                 {
                   where: {
                     id: id,
@@ -651,8 +640,8 @@ fileDelete: async (req, res) => {
          const imgPath = file.path;
               let imagenURL = await cloudinary.uploader.upload(imgPath);
 
-              let imgCreada = await DB.rendiciones.update(
-                { archivo: imagenURL.secure_url },
+               await DB.rendiciones.update(
+                { ...data, archivo: imagenURL.secure_url },
                 {
                   where: {
                     id: id,
@@ -661,6 +650,12 @@ fileDelete: async (req, res) => {
               );
       }
        
+      }else{
+          await DB.rendiciones.update(data, {
+        where: {
+          id: id,
+        },
+      });
       }
       
       res.send({msg:'ok', status:200});
@@ -1169,7 +1164,7 @@ try {
 /*tarjet de credito*/
  todasTJ:async (req, res) => {
   try {
-    res.send(await DB.tarjetacredito.findAll()) 
+    res.send(await DB.tarjetacreditos.findAll()) 
   } catch (e) {
     res.send(e)    
   }
@@ -1178,6 +1173,7 @@ try {
    try {
     const file = req.file;
     const data = req.body;
+    console.log(data);
  const  fileFormat = file.mimetype.split('/');
  const filePath= file.path;
  const fileURL = await cloudinary.uploader.upload(filePath);
