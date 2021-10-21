@@ -826,7 +826,7 @@ fileDelete: async (req, res) => {
     }
   },
   pd: async (req, res) => {
-    console.log(path.join(__dirname)); //me trae hasta el controller ojo!! recorda que el public esta cubierto con ruta estatica
+    console.log(path.join(__dirname));
     res.sendFile(path.join(__dirname, "../../result.pdf"));
   },
 
@@ -1197,6 +1197,38 @@ PDF: async (req, res) => {
     res.send(e);
   }
 },
+
+/** Generador de pdf recibos provisorios */
+generadorPdfRecibo: async (req, res) => {
+const data= req.body;
+
+/* console.log(data,'soy data ');
+console.log(data[0].ingresos,'ingresos');
+console.log(data[1].cliente,'cliente');
+console.log(data[2].facturacion,'fact'); */
+res.render(
+    "recibo",
+    { ingresos: data[0].ingresos,cliente:data[1].cliente,fact:data[2].facturacion},
+    function (err, html) {
+      pdf.create(html).toFile("recibo.pdf", function (err, result) {
+        if (err) {
+          return console.log(err, "error");
+        } else {
+          console.log(res, "respuesta");
+          var datafile = fs.readFileSync("recibo.pdf");
+          res.header("content-type", "application/pdf");
+          res.send({msg:datafile,status:200});
+        }
+      });
+    }
+  );
+ 
+},
+pdfRecibo: async (req, res) => {
+  console.log(path.join(__dirname));
+  res.sendFile(path.join(__dirname, "../../recibo.pdf"));
+},
+
 };
 
 module.exports = usersController;

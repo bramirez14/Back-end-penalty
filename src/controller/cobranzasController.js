@@ -15,7 +15,6 @@ const cobranzasController = {
   postRecibo: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data, "linea 15");
       for (const d of data.newIngresos) {
         const a = await DB.recibosingresos.create(d);
       }

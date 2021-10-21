@@ -127,7 +127,7 @@ router.delete('/delete/rendicion/gasto/:id',usersController.deleterendicion);
 
 /**PDF */
 /**Generando el pdf de la lista por anticipo */
-router.post('/generar/pdf',usersController.generadorPdf)  
+router.post('/generar/pdf',usersController.generadorPdf);
 router.post('/create-pdf',usersController.pdfCreate);
 /* router.get('/pd/df',usersController.pdf); */
 router.get('/peticion/pdf',usersController.pd);
@@ -151,6 +151,7 @@ router.put('/km/rechazado/:id',usersController.kmRechazado)
 router.post('/km/pdf/:id',uploadpdf.single('file'),usersController.kmPdf);//norden y pdf 
 router.put('/pago/km/:id',uploadpdf.single('file'),usersController.pagoPDF);
 router.put('/pagofinal/kilometros/:id',uploadpdf.single('file'),usersController.pagokmfinal);//pdf final
+//router.post('/generar/pdf/km',usersController.generadorPdf)  /*************************************** */
 
 router.delete('/km/borrar/:id',usersController.kmborrar)
 router.post('/sueldo/pdf/:id',uploadpdf.single('file'),usersController.sueldoPdf);//norden y pdf
@@ -176,6 +177,9 @@ router.get('/tarjeta/credito',usersController.todasTJ);
 router.post('/tarjeta/credito',upload.single("file"),usersController.TJ);
 /*Descarga de pdf */
 router.get('/descarga/pdf',usersController.PDF);
+/** Pdf provisorio */
+router.post('/generar/pdf/recibo',usersController.generadorPdfRecibo);
+router.get('/peticion/pdf/recibo',usersController.pdfRecibo);
 
 
 router.delete('/borrar/rendicionKm/:id',usersController.DeletekmRendicion);

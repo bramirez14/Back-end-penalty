@@ -1,0 +1,262 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <title>Penalty PDF</title>
+    <style>
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+            font-size: 16px;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica';
+            color: #555;
+        }
+
+        .margin-top {
+            margin-top: 50px;
+        }
+
+        .justify-center {
+            text-align: end;
+            margin-right: 50px;
+        }
+
+        .invoice-box table {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+        }
+
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .invoice-box table tr td:nth-child(2) {
+            text-align: right;
+        }
+
+        .invoice-box table tr.top table td {
+            padding-bottom: 20px;
+        }
+
+        .invoice-box table tr.top table td.title {
+            font-size: 45px;
+            line-height: 45px;
+            color: #333;
+        }
+
+        .contenedor-table {
+            padding: 40px;
+        }
+
+        .encabezado {
+            background-color: #ddd;
+        }
+
+        .h1 {
+            background-color: #ddd;
+            height: 45px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .invoice-box table tr.top table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+
+        }
+
+        .contenedor-table {
+            padding: 40px;
+        }
+
+        .encabezado {
+            background-color: #ddd;
+        }
+
+        .h1 {
+            background-color: #ddd;
+            height: 45px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+
+            <table>
+                <tr>
+                    <td>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Penalty_2011.png"
+                            style="width:200px; border:none;">
+                    </td>
+                    <td>
+                        <div style='margin-right:20px'>
+                            <span>
+                                <p><b> E-mail:</b> info@penalty.com.ar</p>
+                                <p><b>Telefono:</b>+54112120-0200</p>
+                                <p> <b>Web:</b> www.penalty.com.ar</p>
+
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span>
+                                <p><b>Dirección:</b> Av.Libertador 6680 CABA</p>
+                                <p> <b>Penalty Argentina S.A</b></p>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </table>
+
+    </div>
+    <div class="invoice-box">
+        <h3>Cliente</h3>
+        <table cellpadding="0" cellspacing="0">
+
+            <table>
+                <tr>
+                    <td>
+                        <div>
+                            <span>
+                                <p><b>Razon Social:</b>
+                                    <%= cliente.razonsoc %>
+                                </p>
+                                <p><b> N° Vendedor:</b>
+                                    <%= cliente.vendedor %>
+                                </p>
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style='margin-right: 100px;'>
+                            <span>
+
+                                <p> <b>Domicilio:</b>
+                                    <%=cliente.direccion %>
+                                </p>
+                                <p><b> N° Cliente:</b>
+                                    <%= cliente.numctacte %>
+                                </p>
+
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span>
+                                <p> <b>Provincia:</b>
+                                    <%= cliente.provincia %>
+                                </p>
+                                <p><b>Localidad:</b>
+                                    <%= cliente.localidad %>
+                                </p>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </table>
+
+    </div>
+
+    <div class="contenedor-table">
+        <h3>Ingresos</h3>
+        <table class="table">
+            <thead class="encabezado">
+                <tr>
+                    <th scope="col">Medio de pago</th>
+                    <th scope="col">Fecha </th>
+                    <th scope="col">Cheque</th>
+                    <th scope="col">Importe</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% ingresos.forEach(ingreso=> { %>
+                    <tr>
+                        <td>
+                            <%= ingreso.mpago %>
+                        </td>
+                        <td>
+                            <%= ingreso.fecha %>
+                        </td>
+                        <td>
+                            <%= ingreso.cheque %>
+                        </td>
+                        <td> $<%= ingreso.importe%>
+                        </td>
+                    </tr>
+                    <% }); %>
+
+            </tbody>
+        </table>
+    </div>
+
+    <br />
+    <div class="contenedor-table">
+        <h3> Facturacion  </h3>
+       
+        <table class="table">
+            <thead class="encabezado">
+                <tr>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Factura</th>
+                    <th scope="col">Codigo</th>
+                    <th scope="col">Importe</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% fact.forEach(f=> { %>
+                    <tr>
+                        <td>
+                            <%= f.fecemision?.split('T')[0] %>
+                        </td>
+                        <td>
+                            <%= f.cabeza %>
+                        </td>
+                        <td>
+                            <%= f.codcabeza %>
+                        </td>
+                        <td> $<%= f.saldoml%>
+                        </td>
+                    </tr>
+                    <% }); %>
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+
+
+</body>
+
+</html>
