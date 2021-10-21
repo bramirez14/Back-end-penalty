@@ -23,9 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     anticipos.belongsTo(models.usuarios,{
       as:'usuario',
     })
-
    
- 
   }
   return anticipos;
 };

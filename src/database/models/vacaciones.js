@@ -17,9 +17,6 @@ module.exports = (sequelize, DataTypes) => {
   vacaciones.belongsTo(models.usuarios,{
     as:'usuario'
   })
-      
-
-
 
 }
   return vacaciones;

@@ -584,7 +584,9 @@ fileDelete: async (req, res) => {
     }
   },
 
+
   crearGasto: async (req, res) => {
+
     try {
       const file = req.file;
       const data = req.body;
