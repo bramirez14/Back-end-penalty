@@ -1201,11 +1201,6 @@ PDF: async (req, res) => {
 /** Generador de pdf recibos provisorios */
 generadorPdfRecibo: async (req, res) => {
 const data= req.body;
-
-/* console.log(data,'soy data ');
-console.log(data[0].ingresos,'ingresos');
-console.log(data[1].cliente,'cliente');
-console.log(data[2].facturacion,'fact'); */
 res.render(
     "recibo",
     { ingresos: data[0].ingresos,cliente:data[1].cliente,fact:data[2].facturacion},
