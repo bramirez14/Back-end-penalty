@@ -2,10 +2,10 @@ let DB = require("../../database/models");
 //cloudinary
 var cloudinary = require("cloudinary").v2;
 //config cloudinary
-cloudinary.config({
-  cloud_name: 'dtabhpdet',
-  api_key: '177248816949724',
-  api_secret:'wpeSwtO3MOHwwM58RFNf2BgYA9M',
+cloudinary.config({ 
+  cloud_name: 'df4req0l6', 
+  api_key: '498166613444865', 
+  api_secret: 'm0ZSmpGX6GgcQHOjdfZP6Pffzr0' 
 });
 // funcion crea  y busca el rendicion del gasto
 exports.crearRendicion = async (files) => {
