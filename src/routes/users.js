@@ -121,7 +121,7 @@ router.get('/gastos/:id',usersController.gastoPK);
 /**buscar rendicion por id */
 router.get('/rendicion/:id',usersController.rendicionPK);
 /**Crear el anticipo gasto y guardarlo en la rendicion  */
-router.post('/gasto/rendicion',upload.single('file'),usersController.gr);
+router.post('/gasto/rendicion/sinanticipo',upload.single('file'),usersController.gr);
 router.delete('/delete/rendicion/gasto/:id',usersController.deleterendicion);
 
 

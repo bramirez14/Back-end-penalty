@@ -663,14 +663,16 @@ fileDelete: async (req, res) => {
       res.send(error);
     }
   },
+
   gr: async (req, res) => {
     try {
       const data = req.body;
       const file = req.file;
 
       const { id } = await DB.gastos.create(data);
+      let rendicionCreada;
       if (file === undefined) {
-        await DB.rendiciones.create({
+        rendicionCreada = await DB.rendiciones.create({
           ...data,
           gastoId: id,
         });
@@ -681,21 +683,21 @@ fileDelete: async (req, res) => {
         const imgPath = file.path;
         let imagenURL = await cloudinary.uploader.upload(imgPath);
       
-        await DB.rendiciones.create({
+        rendicionCreada = await DB.rendiciones.create({
           ...data,
           gastoId: id,
           archivo: imagenURL.secure_url,
         });
       
       }else{
-        await DB.rendiciones.create({
+        rendicionCreada = await DB.rendiciones.create({
           ...data,
           gastoId: id,
           archivo: file.originalname,
         });
       }
     }
-      res.send({msg:"ok",status:200});
+      res.send({data:rendicionCreada, msg:"ok",status:200});
     } catch (e) {
       res.send(e);
     }
@@ -1185,7 +1187,7 @@ try {
     }else{
       var result = await DB.tarjetacreditos.create({...data,archivo:file.originalname})
     }
-     res.send({msg:'creado con exito', status:200})
+     res.send({result,msg:'creado con exito', status:200})
   } catch (e) {
     res.send(e)     
    }
