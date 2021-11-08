@@ -1185,7 +1185,7 @@ try {
     }else{
       var result = await DB.tarjetacreditos.create({...data,archivo:file.originalname})
     }
-     res.send({msg:'creado con exito', status:200})
+     res.send({result,msg:'creado con exito', status:200})
   } catch (e) {
     res.send(e)     
    }
