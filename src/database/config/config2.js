@@ -4,7 +4,7 @@ module.exports = {
        "password": "Cambuci14",
         "port":3306,
        "database": "wbt8",
-       "host": "190.19.91.89",
+       "host": "181.45.252.13",
        "dialect": "mysql",
        "define":{
         "paranoid": true,

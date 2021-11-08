@@ -3,7 +3,7 @@ module.exports = {
     "username": "root",
      "password": "Cambuci14",
      "database": "intranetpenalty",
-     "host": "190.19.91.89",
+     "host": "181.45.252.13",
      "dialect": "mysql",
      "define": {
        "paranoid": true,
