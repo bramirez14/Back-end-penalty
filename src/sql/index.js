@@ -11,7 +11,9 @@ var Connection = require('tedious').Connection;
         options: {
             // If you are on Microsoft Azure, you need encryption:
             encrypt: true,
-            database: 'WBT11_TEMP'  //update me
+            database: 'WBT11_TEMP', //update me
+            encrypt: true, // for azure
+            trustServerCertificate: true// change to true for local dev / self-signed certs
         }
     };  
     var connection = new Connection(config);  
@@ -21,3 +23,6 @@ var Connection = require('tedious').Connection;
     });
     
     connection.connect();
+    module.exports={
+      connection
+    }

@@ -6,5 +6,9 @@ var router = express.Router();
 const zsccController = require('../controller/zsccController');
 
 router.get('/todas',zsccController.todasZSCC);
+//router.get('/agenda',zsccController.sequelize);
+router.get('/conexion',zsccController.conexion);
+
+
 
 module.exports = router;
