@@ -23,7 +23,7 @@ idZSCC: async (req, res) => {
         const result = await pool
         .request()
         .input("id", req.params.id)
-        .query("SELECT * FROM Products Where Id = @Id");
+        .query("SELECT * FROM [WBT11_TEMP].[dbo].[Z_SCC] Where Id = @Id");
         console.log(result);
             if (result.rowsAffected[0] === 0) return res.sendStatus(404);
         
