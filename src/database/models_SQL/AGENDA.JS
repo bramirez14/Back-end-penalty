@@ -1,8 +1,8 @@
+'use strict';
 module.exports = (sequelize, DataTypes) => {
 
-  const Z_SCC = sequelize.define('Z_SCC', {
-    FECEMISION: DataTypes.STRING,
-    NROSCC: DataTypes.INTEGER,
+  const AGENDA = sequelize.define('AGENDA', {
+    IDAGENDA: DataTypes.INTEGER,
    /*  email: DataTypes.STRING,
     password: DataTypes.STRING,
     tipousuario: DataTypes.STRING,
@@ -13,10 +13,11 @@ module.exports = (sequelize, DataTypes) => {
     cel:DataTypes.INTEGER,
     imagen:DataTypes.STRING,
     conectado:DataTypes.STRING, */
-  }, { freezeTableName: true});
-Z_SCC.associate = function(models) {
+  }, );
+AGENDA.associate = function(models) {
   
   
   };
-  return Z_SCC;
+  console.log(AGENDA,'line22 models');
+  return AGENDA;
 };
