@@ -159,7 +159,7 @@ fileDelete: async (req, res) => {
               await jwt.sign(
                 { user: user },
                 "penalty",
-                { expiresIn: 28800 },
+                { expiresIn: 14400 },
                 (err, token) => {
                   if (err) throw err;
                   res.json({
@@ -222,7 +222,7 @@ fileDelete: async (req, res) => {
         await jwt.sign(
           { user: user },
           "penalty",
-          { expiresIn: 28800 },
+          { expiresIn: 14400 },
           (err, token) => {
             if (err) throw err;
             res.json({

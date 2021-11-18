@@ -18,6 +18,6 @@ AGENDA.associate = function(models) {
   
   
   };
-  console.log(AGENDA,'line22 models');
+  AGENDA.removeAttribute('Id');
   return AGENDA;
 };

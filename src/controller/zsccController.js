@@ -10,7 +10,7 @@ const zsccController ={
 
             const result = await pool.request().query('SELECT * FROM [WBT11_TEMP].[dbo].[Z_SCC]' );
      
-          res.json(result.recordsets);
+          res.send(result.recordsets);
 
         } catch (e) {
             res.send(e)
@@ -19,19 +19,31 @@ const zsccController ={
     },
 idZSCC: async (req, res) => {
     try {
+        const {id}= req.params
         const pool= await getConnection();
         const result = await pool
         .request()
-        .input("id", req.params.id)
-        .query("SELECT * FROM [WBT11_TEMP].[dbo].[Z_SCC] Where Id = @Id");
-        console.log(result);
-            if (result.rowsAffected[0] === 0) return res.sendStatus(404);
+        .query(`SELECT * FROM  [WBT11_TEMP].[dbo].[Z_SCC]  Where NROSCC = ${id}`);
+      if (result.rowsAffected[0] === 0) return res.send(404);
+      return res.send(result.recordset);
+    } catch (e) {
+        res.send(e)
+    }
+},
+artZSCC:async (req, res) => {
+    try {
+        const pool= await getConnection();
         
-      return res.sendStatus(204);
+        const result = await pool.request().query('SELECT NUMERO,CODTALLE FROM [WBT11_TEMP].[dbo].[ARTICULO]');
+     
+          res.send(result.recordsets);
+
     } catch (e) {
         res.send(e)
     }
 }
+
+
 
 /*     guardarVacacion: async (req, res) => {},
     editarVacacion: async (req, res) => {},

@@ -4,14 +4,18 @@ module.exports = {
       "username": "sa",
        "password": "Cambuci2018",
        "dialect": "mssql",
-       "params":{
-         "storage":"WBT11_TEMP-db.mssql",
-         "define":{
-           "underscore":true
-         },
-         operatorsAliases:false
-       }
-      
+       "host": "192.168.1.15",
+       "options": {
+        "trustServerCertificate" : false, // change to true for local dev / self-signed certs
+         "trustedconnection":false,
+        " enableArithAbort": true,
+         "encrypt": false,
+       }, 
+       "define": {
+        "paranoid": true,
+        "freezeTableName ":false
+      }
+  
         // If you are on Microsoft Azure, you need encryption:
       /*   
         "options": {
