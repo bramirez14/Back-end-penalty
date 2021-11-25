@@ -62,9 +62,58 @@ const zsccController = {
       res.send(e);
     }
   },
+  editZSCC: async (req, res) => {
+        const {id}= req.params;
+        const {  
+      CANTPEDT00,
+      CANTPEDT01, 
+      CANTPEDT02 ,
+      CANTPEDT03 ,
+      CANTPEDT04 ,
+      CANTPEDT05 ,
+      CANTPEDT06,
+      CANTPEDT08,
+      CANTPEDT09,
+      CANTPEDT10,
+      CANTPEDT11,
+      CANTPEDT12,
+      CANTPEDT13,
+      CANTPEDT14,
+      PRECIO,
+      Descrip
+    } = req.body;
 
-  /*     guardarVacacion: async (req, res) => {},
-    editarVacacion: async (req, res) => {},
-    eliminarVacacion: async (req, res) => {} */
+    try {
+      const pool = await getConnection();
+      const result = await pool
+        .request()
+        .query(
+          `UPDATE [WBT11_TEMP].[dbo].[Z_SCC] SET   
+          CANTPEDT00 =${CANTPEDT00} , 
+          CANTPEDT01: ${CANTPEDT01},
+          CANTPEDT02: ${CANTPEDT02},
+          CANTPEDT03: ${CANTPEDT03},
+          CANTPEDT04: ${CANTPEDT04},
+          CANTPEDT05: ${CANTPEDT05},
+          CANTPEDT06:${CANTPEDT06},
+          CANTPEDT08:${CANTPEDT08},
+          CANTPEDT09:${CANTPEDT09},
+          CANTPEDT10:${CANTPEDT10},
+          CANTPEDT11:${CANTPEDT11},
+          CANTPEDT12:${CANTPEDT12},
+          CANTPEDT13:${CANTPEDT13},
+          CANTPEDT14: ${CANTPEDT14},
+          PRECIO:${PRECIO},
+          Descrip:${Descrip}  
+          WHERE Id = ${id}`
+        );
+
+          res.send(result)
+    } catch (e) {
+      res.send(e)
+    }
+  },
+
+
 };
 module.exports = zsccController;
