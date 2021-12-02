@@ -64,13 +64,14 @@ const zsccController = {
   },
   editZSCC: async (req, res) => {
         const {id}= req.params;
+     
         const {  
       CANTPEDT00,
       CANTPEDT01, 
-      CANTPEDT02 ,
-      CANTPEDT03 ,
-      CANTPEDT04 ,
-      CANTPEDT05 ,
+      CANTPEDT02,
+      CANTPEDT03,
+      CANTPEDT04,
+      CANTPEDT05,
       CANTPEDT06,
       CANTPEDT08,
       CANTPEDT09,
@@ -79,36 +80,31 @@ const zsccController = {
       CANTPEDT12,
       CANTPEDT13,
       CANTPEDT14,
+      CANTPED,
       PRECIO,
-      Descrip
+      COMENTARIO,
+   
     } = req.body;
-
-    try {
-      const pool = await getConnection();
+ 
+    console.log(req.body,'line 88');
+   try {
+     //UPDATE `palaciosmoda`.`products` SET `name` = 'remera' WHERE (`id` = '67');
+       const pool = await getConnection();
       const result = await pool
         .request()
-        .query(
-          `UPDATE [WBT11_TEMP].[dbo].[Z_SCC] SET   
-          CANTPEDT00 =${CANTPEDT00} , 
-          CANTPEDT01: ${CANTPEDT01},
-          CANTPEDT02: ${CANTPEDT02},
-          CANTPEDT03: ${CANTPEDT03},
-          CANTPEDT04: ${CANTPEDT04},
-          CANTPEDT05: ${CANTPEDT05},
-          CANTPEDT06:${CANTPEDT06},
-          CANTPEDT08:${CANTPEDT08},
-          CANTPEDT09:${CANTPEDT09},
-          CANTPEDT10:${CANTPEDT10},
-          CANTPEDT11:${CANTPEDT11},
-          CANTPEDT12:${CANTPEDT12},
-          CANTPEDT13:${CANTPEDT13},
-          CANTPEDT14: ${CANTPEDT14},
-          PRECIO:${PRECIO},
-          Descrip:${Descrip}  
-          WHERE Id = ${id}`
+        .query(`UPDATE [WBT11_TEMP].[dbo].[Z_SCC] SET 
+        CANTPED=${CANTPED}, 
+        CANTPEDT00=${CANTPEDT00==0? 0:CANTPEDT00} , 
+        CANTPEDT01= ${CANTPEDT01 ==0? 0:CANTPEDT01},
+        CANTPEDT02= ${req.body.CANTPEDT02},
+        COMENTARIO='${COMENTARIO ==null? '':COMENTARIO}',
+        PRECIO=${PRECIO}
+         WHERE NROSCC= ${id}`
         );
-
-          res.send(result)
+     /*    UPDATE [WBT11_TEMP].[dbo].[Z_SCC]
+        SET COMENTARIO='soy10'WHERE NROSCC=10 */
+        console.log(result);
+      res.send(result)
     } catch (e) {
       res.send(e)
     }
