@@ -4,6 +4,7 @@ module.exports = {
       "username": "sa",
        "password": "Cambuci2018",
        "dialect": "mssql",
+       "host": "192.168.1.15",
        "params":{
          "storage":"WBT11_TEMP-db.mssql",
          "define":{

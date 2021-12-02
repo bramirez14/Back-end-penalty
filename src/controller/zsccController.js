@@ -31,6 +31,14 @@ idZSCC: async (req, res) => {
     } catch (e) {
         res.send(e)
     }
+},
+agenda: async (req, res) => {
+    try {
+        const response= await DB.AGENDA.findAll()
+        res.send(response)
+    } catch (e) {
+        res.send(e)
+    }
 }
 
 /*     guardarVacacion: async (req, res) => {},

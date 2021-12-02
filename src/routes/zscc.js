@@ -7,6 +7,8 @@ const zsccController = require('../controller/zsccController');
 
 router.get('/todas',zsccController.todasZSCC);
 router.get('/:id',zsccController.idZSCC);
+router.get('/agenda',zsccController.agenda);
+
 
 
 module.exports = router;
