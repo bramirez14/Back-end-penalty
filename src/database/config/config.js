@@ -1,15 +1,15 @@
-module.exports = {
-  "development": {
-    "username": "root",
-     "password": "Cambuci14",
-     "database": "intranetpenalty",
-     "host": "181.45.252.13",
-     "dialect": "mysql",
-     "define": {
-       "paranoid": true,
-     }
- 
-   },
+module.exports = { 
+"development": {
+  "username": "root",
+   "password": "Cambuci14",
+   "database": "intranetpenalty",
+   "host": "181.45.252.13",
+   "dialect": "mysql",
+   "define": {
+     "paranoid": true,
+   }
+
+ },
    "test": {
      "username": "root",
      "password": null,

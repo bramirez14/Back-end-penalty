@@ -9,5 +9,6 @@ const config = {
     enableArithAbort: true,
     encrypt: false,
   },
+  
 };
 module.exports = config;
