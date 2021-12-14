@@ -1183,7 +1183,7 @@ try {
  
     if(fileFormat[1] !== 'pdf'){
       var result = await DB.tarjetacreditos.create({...data,archivo:fileSecure})
-      await fs.unlink(filePath)
+      await fs.unlink(filePath)// borrar img q se guardar e la carpeta 
     }else{
       var result = await DB.tarjetacreditos.create({...data,archivo:file.originalname})
     }
