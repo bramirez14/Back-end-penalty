@@ -45,15 +45,13 @@ const zsccController = {
       res.send(e);
     }
   },
-    talleZSCC: async (req, res) => {
+  talleZSCC: async (req, res) => {
     try {
       const pool = await getConnection();
 
       const result = await pool
         .request()
-        .query(
-          "SELECT * FROM [WBT11_TEMP].[dbo].[VW_TALLES]"
-        );
+        .query("SELECT * FROM [WBT11_TEMP].[dbo].[VW_TALLES]");
 
       res.send(result.recordsets);
     } catch (e) {
@@ -61,43 +59,46 @@ const zsccController = {
     }
   },
   editZSCC: async (req, res) => {
-        const {id}= req.params;
-    console.log(req.body,'line 88');
-   try {
-     //UPDATE `palaciosmoda`.`products` SET `name` = 'remera' WHERE (`id` = '67');
-       const pool = await getConnection();
-      const result = await pool
-        .request()
-        .query(`UPDATE [WBT11_TEMP].[dbo].[Z_SCC] SET 
+    const { id } = req.params;
+
+    console.log(req.body, "line 88");
+    try {
+      //UPDATE `palaciosmoda`.`products` SET `name` = 'remera' WHERE (`id` = '67');
+      const pool = await getConnection();
+      await pool.request().query(`UPDATE [WBT11_TEMP].[dbo].[Z_SCC] SET 
         CANTPED=${req.body.CANTPED}, 
-        CANTPEDT00=${req.body.CANTPEDT00} , 
+        PRECIO=${req.body.PRECIO},
+        COMENTARIO='${req.body.COMENTARIO}',
+        CANTPEDT00=${req.body.CANTPEDT00}, 
         CANTPEDT01= ${req.body.CANTPEDT01},
         CANTPEDT02= ${req.body.CANTPEDT02},
         CANTPEDT03= ${req.body.CANTPEDT03},
         CANTPEDT04= ${req.body.CANTPEDT04},
         CANTPEDT05= ${req.body.CANTPEDT05},
-        CANTPEDT06= ${req.body.CANTPEDT06},
-        CANTPEDT07= ${req.body.CANTPEDT07},
-        CANTPEDT08= ${req.body.CANTPEDT08},
-        CANTPEDT09= ${req.body.CANTPEDT09},
-        CANTPEDT10= ${req.body.CANTPEDT10},
-        CANTPEDT11= ${req.body.CANTPEDT11},
-        CANTPEDT12= ${req.body.CANTPEDT12},
-        CANTPEDT13= ${req.body.CANTPEDT13},
-        CANTPEDT14= ${req.body.CANTPEDT14},
-        COMENTARIO='${req.body.COMENTARIO}',
-        PRECIO=${req.body.PRECIO}
-         WHERE NROSCC= ${id}`
+        CANTPEDT06=${req.body.CANTPEDT06},
+        CANTPEDT07=${req.body.CANTPEDT07},
+        CANTPEDT08=${req.body.CANTPEDT08},
+        CANTPEDT09=${req.body.CANTPEDT09},
+        CANTPEDT10=${req.body.CANTPEDT10},
+        CANTPEDT11=${req.body.CANTPEDT11},
+        CANTPEDT12=${req.body.CANTPEDT12},
+        CANTPEDT13=${req.body.CANTPEDT13},
+        CANTPEDT14=${req.body.CANTPEDT14},
+        APROBDEP='${req.body.APROBDEP}',
+        APROBCRED='${req.body.APROBCRED}',
+        RECHAZADO='${req.body.RECHAZADO}'
+         WHERE NROSCC= ${id}`);
+      const resulte = await pool
+        .request()
+        .query(
+          `SELECT * FROM  [WBT11_TEMP].[dbo].[Z_SCC]  Where NROSCC = ${id}`
         );
-     /*    UPDATE [WBT11_TEMP].[dbo].[Z_SCC]
-        SET COMENTARIO='soy10'WHERE NROSCC=10 */
-        console.log(result);
-      res.send(result)
+
+      res.send({...resulte.recordsets[0][0],status:200});
     } catch (e) {
-      res.send(e)
+      res.send({msg:e,status:400});
     }
   },
-
-
 };
 module.exports = zsccController;
+
