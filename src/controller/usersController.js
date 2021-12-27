@@ -80,6 +80,9 @@ fileDelete: async (req, res) => {
     try {
       let result = await DB.gastos.findAll({
         include: ["formapago", "usuario", "rendicion"],
+        order: [
+          ['id', 'DESC'], 
+          ],
       });
       res.send(result);
     } catch (error) {
@@ -88,7 +91,9 @@ fileDelete: async (req, res) => {
   },
   todoAnt: async (req, res) => {
     try {
-      let result = await DB.anticipos.findAll({ include: ["usuario"] });
+      let result = await DB.anticipos.findAll({ include: ["usuario"],order: [
+        ['id', 'DESC'], 
+        ], });
       res.send(result);
     } catch (error) {
       res.send(error);
@@ -325,7 +330,9 @@ fileDelete: async (req, res) => {
       /* let result = await DB.usuarios.findAll({
     include:["anticipo"]
   });*/
-      let result = await DB.vacaciones.findAll({ include: ["usuario"] });
+      let result = await DB.vacaciones.findAll({ include: ["usuario"],order: [
+        ['id', 'DESC'], 
+        ], });
       res.send(result);
     } catch (error) {
       res.send(error);
@@ -851,7 +858,9 @@ fileDelete: async (req, res) => {
   },
   kilometros: async (req, res) => {
     try {
-      const resp = await DB.kilometros.findAll({ include: { all: true } });
+      const resp = await DB.kilometros.findAll({ include: { all: true },order: [
+        ['id', 'DESC'], 
+        ], });
       res.send(resp);
     } catch (e) {
       res.send(e);
@@ -1166,7 +1175,9 @@ try {
 /*tarjet de credito*/
  todasTJ:async (req, res) => {
   try {
-    res.send(await DB.tarjetacreditos.findAll()) 
+    res.send(await DB.tarjetacreditos.findAll({order: [
+      ['id', 'DESC'], 
+      ],})) 
   } catch (e) {
     res.send(e)    
   }

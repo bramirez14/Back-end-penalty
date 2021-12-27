@@ -11,12 +11,12 @@ const zsccController = {
       const result = await pool
         .request()
         .query("SELECT * FROM [WBT11_TEMP].[dbo].[Z_SCC]");
-
       res.send(result.recordsets);
     } catch (e) {
       res.send(e);
     }
   },
+
   idZSCC: async (req, res) => {
     try {
       const { id } = req.params;
@@ -62,8 +62,6 @@ const zsccController = {
   },
   editZSCC: async (req, res) => {
     const { id } = req.params;
-
-    console.log(req.body, "line 88");
     try {
       //UPDATE `palaciosmoda`.`products` SET `name` = 'remera' WHERE (`id` = '67');
       const pool = await getConnection();
@@ -96,10 +94,42 @@ const zsccController = {
           `SELECT * FROM  [WBT11_TEMP].[dbo].[Z_SCC]  Where NROSCC = ${id}`
         );
 
-      res.send({...resulte.recordsets[0][0],status:200});
+      res.send({ ...resulte.recordsets[0][0], status: 200 });
     } catch (e) {
-      res.send({msg:e,status:400});
+      res.send({ msg: e, status: 400 });
     }
   },
+  raproZSCC: async (req, res) => {
+    try {
+      const pool = await getConnection();
+      const result = await pool.request()
+        .query(` SELECT* FROM [WBT11_TEMP].[dbo].[Z_SCC]
+      WHERE  NROCOMP is null AND APROBCRED ='S' AND APROBDEP='S' `);
+      res.send(result.recordset);
+    } catch (e) {
+      res.send({ msg: e, status: 400 });
+    }
+  },
+  pdcabeza: async (req, res) => {
+    try {
+      const pool = await getConnection()
+      const result = await pool.request()
+      .query(`SELECT top 50 * FROM [WBT11_TEMP].[dbo].[PDCABEZA]`);
+ res.send(result.recordset)
+    } catch (e) {
+      res.send({ msg: e, status: 400 });
+    }
+  },
+delete: async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const pool = await getConnection()
+    const result = await pool.request()
+    .query(`DELETE FROM [WBT11_TEMP].[dbo].[PDCABEZA] WHERE NROPED = ${id}`);
+  } catch (e) {
+    res.send(e)
+  }
+}
 };
 module.exports = zsccController;
