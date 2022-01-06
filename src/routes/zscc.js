@@ -48,7 +48,7 @@ router.get("/numero/si09", async (req, res) => {
     res.send({ msg: e, status: 400 });
   }
 });
-/****AGREGAR PEDIDO****/
+/****AGREGAR PEDIDO****************************************************************/
 router.post("/agregar/newscc", async (req, res) => {
   try {
     const pool = await getConnection();
@@ -58,55 +58,58 @@ router.post("/agregar/newscc", async (req, res) => {
       .query(
         "SELECT * FROM [WBT11_TEMP].[dbo].[Z_SCC] where APROBCRED='S' and APROBDEP='S' and  NROCOMP IS NULL"
       );
+      // TE SOLO EL NUMERO DE CLIENTES
     const arrayApro = filtroAprobados.recordset.map((f) => f.CLIENTE);
     //TE DA UN ARRAY DE SOLO NUMERO DE CLIENTES
     const clientes = arrayApro.filter(function (ele, pos) {
       return arrayApro.indexOf(ele) == pos;
     });
+   
+ 
 
-    console.log(filtroAprobados,'line 67');
+
     //el numero de pedido
-    const result = await pool
+    const numeroPedido = await pool
       .request()
       .query(
         "SELECT CLAVE, FUNCION FROM [WBT11_TEMP].[dbo].[TABLASI09] where CLAVE = 'SI091PD0006X'"
       );
-    let date = new Date(); 
+    let date = new Date();
 
     //insertamos en la tabla PDCABEZA
 
-    /* for (let i = 0; i < clientes.length; i++) { */
-    // console.log(clientes[i],'soy cliente ');
+     for (let i = 0; i < clientes.length; i++) { 
+    console.log(clientes[i],'soy cliente ');
     // BONIFICA
-
-       let bonif = await pool
+      let buscarItemsClienes= filtroAprobados.recordset.find(c=> f.CLIENTE === clientes[i] )
+    let datosCliente = await pool
       .request()
       .query(
-        `SELECT * FROM [WBT11_TEMP].[dbo].[CLIENTES] WHERE NUMERO = '${clientes[2]}' `
+        `SELECT * FROM [WBT11_TEMP].[dbo].[CLIENTES] WHERE NUMERO = '${clientes[i]}' `
       );
     let entrega = await pool
       .request()
       .query(
-        `SELECT TRANSPORTE FROM [WBT11_TEMP].[dbo].[CLTESENTREGA] WHERE CLIENTE= '${clientes[2]}' `
+        `SELECT TRANSPORTE FROM [WBT11_TEMP].[dbo].[CLTESENTREGA] WHERE CLIENTE= '${clientes[i]}' `
       );
-/*      await pool.request()
+    await pool.request()
       .query(`INSERT INTO [WBT11_TEMP].[dbo].[PDCABEZA] VALUES(
 'P',
-${clientes[2]},
-${000 + result.recordset[0].FUNCION + 704},
+${clientes[i]},
+${000 + numeroPedido.recordset[0].FUNCION + 0},
 '2C',
 null,
 null,
 ${00},
 ${0},
-'${bonif.recordset[0].DESCUENTO}',
+'${datosCliente.recordset[0].DESCUENTO}',
 ${0},
 ${0},
-'${bonif.recordset[0].VENDEDOR}',
+'${datosCliente.recordset[0].VENDEDOR}',
 '${entrega.recordset[0].TRANSPORTE}',
 null,
 'S',
-'${bonif.recordset[0].DIRECCION}',
+'${datosCliente.recordset[0].DIRECCION}',
 'L',
 'L',
 '01',
@@ -115,7 +118,7 @@ null,
 null,
 null,
 null,
-'${bonif.recordset[0].RAZONSOC}',
+'${datosCliente.recordset[0].RAZONSOC}',
 null,
 null,
 null,
@@ -141,13 +144,13 @@ null,
 null,
 null,
 null,
-'${000 + result.recordset[0].FUNCION + 4}',
+'${000 + numeroPedido.recordset[0].FUNCION + 112}',
 '01',
 null,
 null,
 null,
 'I',
-null)`); */
+null)`);
     await pool.request().query(`INSERT INTO [WBT11_TEMP].[dbo].[PDITEMS] 
     (TIPO,
     CLIENTE,
@@ -264,32 +267,32 @@ null)`); */
      VALUES (
      'P', 
      ${clientes[2]},
-     ${000 + result.recordset[0].FUNCION + 709},
-      '${001}', 
-     '${filtroAprobados.recordset[0].ARTICULO}',
+     ${000 + numeroPedido.recordset[0].FUNCION + 112},
+      '${007}', 
+     '${buscarItemsClienes.ARTICULO}',
     null,
     '01',
     '01',
     ${0},
     ${0},
-    ${filtroAprobados.recordset[0].PRECIOLIST},
-'${filtroAprobados.recordset[0].CANTPED}',
-'${filtroAprobados.recordset[0].CANTPED}',
-'${filtroAprobados.recordset[0].CANTPEDT00}',
-'${filtroAprobados.recordset[0].CANTPEDT01}',
-'${filtroAprobados.recordset[0].CANTPEDT02 }',
-'${filtroAprobados.recordset[0].CANTPEDT03 }',
-'${filtroAprobados.recordset[0].CANTPEDT04 }',
-'${filtroAprobados.recordset[0].CANTPEDT05 }',
-'${filtroAprobados.recordset[0].CANTPEDT06 }',
-'${filtroAprobados.recordset[0].CANTPEDT07 }',
-'${filtroAprobados.recordset[0].CANTPEDT08 }',
-'${filtroAprobados.recordset[0].CANTPEDT09 }',
-'${filtroAprobados.recordset[0].CANTPEDT10 }',
-'${filtroAprobados.recordset[0].CANTPEDT11}',
-'${filtroAprobados.recordset[0].CANTPEDT12 }',
-'${filtroAprobados.recordset[0].CANTPEDT13 }',
-'${filtroAprobados.recordset[0].CANTPEDT14 }',
+    ${buscarItemsClienes.PRECIOLIST},
+'${buscarItemsClienes.CANTPED}',
+'${buscarItemsClienes.CANTPED}',
+'${buscarItemsClienes.CANTPEDT00}',
+'${buscarItemsClienes.CANTPEDT01}',
+'${buscarItemsClienes.CANTPEDT02}',
+'${buscarItemsClienes.CANTPEDT03}',
+'${buscarItemsClienes.CANTPEDT04}',
+'${buscarItemsClienes.CANTPEDT05}',
+'${buscarItemsClienes.CANTPEDT06}',
+'${buscarItemsClienes.CANTPEDT07}',
+'${buscarItemsClienes.CANTPEDT08}',
+'${buscarItemsClienes.CANTPEDT09}',
+'${buscarItemsClienes.CANTPEDT10}',
+'${buscarItemsClienes.CANTPEDT11}',
+'${buscarItemsClienes.CANTPEDT12}',
+'${buscarItemsClienes.CANTPEDT13}',
+'${buscarItemsClienes.CANTPEDT14}',
 ${0},
 ${0},
 ${0},
@@ -359,7 +362,7 @@ ${0},
 ${0},
 ${0},
 ${0},
-    'T3,
+    'T3',
     null,
     null,
     null,
@@ -373,8 +376,7 @@ ${0},
     null,
     null,
    'N')`);
-    
-
+}
     res.send("ok");
   } catch (e) {
     res.send(e);
