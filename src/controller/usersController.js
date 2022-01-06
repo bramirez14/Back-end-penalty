@@ -1166,7 +1166,9 @@ try {
 /*tarjet de credito*/
  todasTJ:async (req, res) => {
   try {
-    res.send(await DB.tarjetacreditos.findAll()) 
+    res.send(await DB.tarjetacreditos.findAll({order: [
+      ['id', 'DESC'], 
+      ],})) 
   } catch (e) {
     res.send(e)    
   }
