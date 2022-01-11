@@ -48,7 +48,9 @@ router.get("/numero/si09", async (req, res) => {
     res.send({ msg: e, status: 400 });
   }
 });
-/****AGREGAR PEDIDO****************************************************************/
+
+
+/****AGREGAR PEDIDO****/
 router.post("/agregar/newscc", async (req, res) => {
   try {
     const pool = await getConnection();
@@ -58,15 +60,11 @@ router.post("/agregar/newscc", async (req, res) => {
       .query(
         "SELECT * FROM [WBT11_TEMP].[dbo].[Z_SCC] where APROBCRED='S' and APROBDEP='S' and  NROCOMP IS NULL"
       );
-      // TE SOLO EL NUMERO DE CLIENTES
     const arrayApro = filtroAprobados.recordset.map((f) => f.CLIENTE);
     //TE DA UN ARRAY DE SOLO NUMERO DE CLIENTES
     const clientes = arrayApro.filter(function (ele, pos) {
       return arrayApro.indexOf(ele) == pos;
     });
-   
- 
-
 
     //el numero de pedido
     const numeroPedido = await pool
@@ -74,15 +72,18 @@ router.post("/agregar/newscc", async (req, res) => {
       .query(
         "SELECT CLAVE, FUNCION FROM [WBT11_TEMP].[dbo].[TABLASI09] where CLAVE = 'SI091PD0006X'"
       );
-    let date = new Date();
+    let date = new Date(); 
 
     //insertamos en la tabla PDCABEZA
-
+ let number= numeroPedido.recordset[0].FUNCION;
+console.log(number);
      for (let i = 0; i < clientes.length; i++) { 
     console.log(clientes[i],'soy cliente ');
-    // BONIFICA
-      let buscarItemsClienes= filtroAprobados.recordset.find(c=> f.CLIENTE === clientes[i] )
-    let datosCliente = await pool
+        number++; 
+    console.log(' soy number:'+ number);
+    let buscarItemsClientes= filtroAprobados.recordset.filter(f=> f.CLIENTE ===clientes[i] )
+
+      let bonif = await pool
       .request()
       .query(
         `SELECT * FROM [WBT11_TEMP].[dbo].[CLIENTES] WHERE NUMERO = '${clientes[i]}' `
@@ -96,20 +97,20 @@ router.post("/agregar/newscc", async (req, res) => {
       .query(`INSERT INTO [WBT11_TEMP].[dbo].[PDCABEZA] VALUES(
 'P',
 ${clientes[i]},
-${000 + numeroPedido.recordset[0].FUNCION + 0},
+${number},
 '2C',
 null,
 null,
 ${00},
 ${0},
-'${datosCliente.recordset[0].DESCUENTO}',
+'${bonif.recordset[0].DESCUENTO}',
 ${0},
 ${0},
-'${datosCliente.recordset[0].VENDEDOR}',
+'${bonif.recordset[0].VENDEDOR}',
 '${entrega.recordset[0].TRANSPORTE}',
 null,
 'S',
-'${datosCliente.recordset[0].DIRECCION}',
+'${bonif.recordset[0].DIRECCION}',
 'L',
 'L',
 '01',
@@ -118,7 +119,7 @@ null,
 null,
 null,
 null,
-'${datosCliente.recordset[0].RAZONSOC}',
+'${bonif.recordset[0].RAZONSOC}',
 null,
 null,
 null,
@@ -144,13 +145,17 @@ null,
 null,
 null,
 null,
-'${000 + numeroPedido.recordset[0].FUNCION + 112}',
+${number},
 '01',
 null,
 null,
 null,
 'I',
-null)`);
+null)`); 
+for (const c of buscarItemsClientes) {
+  if(buscarItemsClientes.length>1){
+    number++; 
+  }
     await pool.request().query(`INSERT INTO [WBT11_TEMP].[dbo].[PDITEMS] 
     (TIPO,
     CLIENTE,
@@ -266,33 +271,33 @@ null)`);
     )
      VALUES (
      'P', 
-     ${clientes[2]},
-     ${000 + numeroPedido.recordset[0].FUNCION + 112},
-      '${007}', 
-     '${buscarItemsClienes.ARTICULO}',
+     ${clientes[i]},
+${number},
+      '${001}', 
+     '${c.ARTICULO}',
     null,
     '01',
     '01',
     ${0},
     ${0},
-    ${buscarItemsClienes.PRECIOLIST},
-'${buscarItemsClienes.CANTPED}',
-'${buscarItemsClienes.CANTPED}',
-'${buscarItemsClienes.CANTPEDT00}',
-'${buscarItemsClienes.CANTPEDT01}',
-'${buscarItemsClienes.CANTPEDT02}',
-'${buscarItemsClienes.CANTPEDT03}',
-'${buscarItemsClienes.CANTPEDT04}',
-'${buscarItemsClienes.CANTPEDT05}',
-'${buscarItemsClienes.CANTPEDT06}',
-'${buscarItemsClienes.CANTPEDT07}',
-'${buscarItemsClienes.CANTPEDT08}',
-'${buscarItemsClienes.CANTPEDT09}',
-'${buscarItemsClienes.CANTPEDT10}',
-'${buscarItemsClienes.CANTPEDT11}',
-'${buscarItemsClienes.CANTPEDT12}',
-'${buscarItemsClienes.CANTPEDT13}',
-'${buscarItemsClienes.CANTPEDT14}',
+    ${c.PRECIOLIST},
+'${c.CANTPED}',
+'${c.CANTPED}',
+'${c.CANTPEDT00}',
+'${c.CANTPEDT01}',
+'${c.CANTPEDT02 }',
+'${c.CANTPEDT03 }',
+'${c.CANTPEDT04 }',
+'${c.CANTPEDT05 }',
+'${c.CANTPEDT06 }',
+'${c.CANTPEDT07 }',
+'${c.CANTPEDT08 }',
+'${c.CANTPEDT09 }',
+'${c.CANTPEDT10 }',
+'${c.CANTPEDT11}',
+'${c.CANTPEDT12 }',
+'${c.CANTPEDT13 }',
+'${c.CANTPEDT14 }',
 ${0},
 ${0},
 ${0},
@@ -375,8 +380,13 @@ ${0},
     null,
     null,
     null,
-   'N')`);
+   'N')`); 
+
 }
+
+     }  
+     await pool.request().query(`UPDATE [WBT11_TEMP].[dbo].[TABLASI09]  SET 
+FUNCION = 000+${number}  where CLAVE = 'SI091PD0006X'`);
     res.send("ok");
   } catch (e) {
     res.send(e);
@@ -424,5 +434,18 @@ router.get("/todos/items", async (req, res) => {
     res.send({ msg: e, status: 400 });
   }
 });
+router.put('/editar/pedido',async(req,res)=>{
+  try {
+    const pool = await getConnection();
+
+    await pool.request().query(`UPDATE [WBT11_TEMP].[dbo].[TABLASI09]  SET 
+    FUNCION = 000600  where CLAVE = 'SI091PD0006X'`);
+    res.send('ok')
+  } catch (e) {
+    res.send(e)
+  }
+  
+
+})
 
 module.exports = router;
