@@ -63,7 +63,7 @@ const zsccController = {
   editZSCC: async (req, res) => {
     const { id } = req.params;
     try {
-      //UPDATE `palaciosmoda`.`products` SET `name` = 'remera' WHERE (`id` = '67');
+      ;
       const pool = await getConnection();
       await pool.request().query(`UPDATE [WBT11_TEMP].[dbo].[Z_SCC] SET 
         CANTPED=${req.body.CANTPED}, 
