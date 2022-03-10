@@ -6,13 +6,13 @@ var logger = require('morgan');
 var cors = require('cors')
 const bodyParser = require('body-parser');
 
-
-
 var indexRouter = require('./routes/reportes');
 var usersRouter = require('./routes/users');
 var cobranzasRouter= require('./routes/cobranzas');
 var vacacionesRouter= require('./routes/vacaciones');
-var zsccSQLRouter= require('./routes/zscc')
+var zsccSQLRouter= require('./routes/zscc');
+var pedidosSQLRouter= require('./routes/pedidos');
+
 
 var app = express();
 
@@ -33,6 +33,8 @@ app.use('/api', usersRouter);
 app.use('/api/cobranzas', cobranzasRouter);
 app.use('/api/vacaciones', vacacionesRouter);
 app.use('/api/scc', zsccSQLRouter);
+app.use('/api/pedidos', pedidosSQLRouter);
+
 
 
 // catch 404 and forward to error handler

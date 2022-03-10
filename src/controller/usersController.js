@@ -16,9 +16,9 @@ const io = socketIo(server);// desp continuares desde el controller para scoket 
 var cloudinary = require("cloudinary").v2;
 //config cloudinary
 cloudinary.config({
-  cloud_name: "dtabhpdet",
-  api_key: "177248816949724",
-  api_secret: "wpeSwtO3MOHwwM58RFNf2BgYA9M",
+  cloud_name: "dxsyc4uog",
+  api_key: "156983626536718",
+  api_secret: "Oftadn9lC4ErCF5fNnOJRhe1zno",
 });
 
 //const { send } = require("process");
