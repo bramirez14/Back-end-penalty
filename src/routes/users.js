@@ -40,6 +40,10 @@ var upload = multer({ storage: storage }) */
 
 
 /*Toos los usuarios registrados*/
+router.get('/al',async(req,res,callback)=>{
+  res.json('Holaa')
+})
+
 router.get('/allusers',usersController.allusers)
 
 /** Todas las imagenes */
