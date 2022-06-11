@@ -632,7 +632,6 @@ fileDelete: async (req, res) => {
         }
       );
       
-      console.log(file,'soy file');
       if(file !== undefined){
         if(extension[1]==='pdf'){
           await DB.rendiciones.update(
@@ -857,6 +856,7 @@ fileDelete: async (req, res) => {
     }
   },
   kilometros: async (req, res) => {
+    console.log('estoy en kilometros');
     try {
       const resp = await DB.kilometros.findAll({ include: { all: true },order: [
         ['id', 'DESC'], 
