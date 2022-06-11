@@ -8,7 +8,7 @@ const zsccController = {
 
       const result = await pool
         .request()
-        .query("SELECT * FROM [WBT11_TEMP].[dbo].[Z_SCC]");
+        .query("SELECT * FROM [WBT11].[dbo].[SCCvista]");
       res.send(result.recordsets);
     } catch (e) {
       res.send(e);
@@ -22,7 +22,7 @@ const zsccController = {
       const result = await pool
         .request()
         .query(
-          `SELECT * FROM  [WBT11_TEMP].[dbo].[Z_SCC]  Where NROSCC = ${id}`
+          `SELECT * FROM  [WBT11].[dbo].[Z_SCC]  Where NROSCC = ${id}`
         );
       if (result.rowsAffected[0] === 0) return res.send(404);
       return res.send(result.recordset);
@@ -37,7 +37,7 @@ const zsccController = {
       const result = await pool
         .request()
         .query(
-          "SELECT NUMERO,CODTALLE,DESCRIP FROM [WBT11_TEMP].[dbo].[ARTICULO]"
+          "SELECT NUMERO,CODTALLE,DESCRIP FROM [WBT11].[dbo].[ARTICULO]"
         );
 
       res.send(result.recordsets);
@@ -51,7 +51,7 @@ const zsccController = {
 
       const result = await pool
         .request()
-        .query("SELECT * FROM [WBT11_TEMP].[dbo].[VW_TALLES]");
+        .query("SELECT * FROM [WBT11].[dbo].[VW_TALLES]");
 
       res.send(result.recordsets);
     } catch (e) {
@@ -63,7 +63,7 @@ const zsccController = {
     try {
       //UPDATE `palaciosmoda`.`products` SET `name` = 'remera' WHERE (`id` = '67');
       const pool = await getConnection();
-      await pool.request().query(`UPDATE [WBT11_TEMP].[dbo].[Z_SCC] SET 
+      await pool.request().query(`UPDATE [WBT11].[dbo].[Z_SCC] SET 
         CANTPED=${req.body.CANTPED}, 
         PRECIO=${req.body.PRECIO},
         COMENTARIO='${req.body.COMENTARIO}',
@@ -89,7 +89,7 @@ const zsccController = {
       const resulte = await pool
         .request()
         .query(
-          `SELECT * FROM  [WBT11_TEMP].[dbo].[Z_SCC]  Where NROSCC = ${id}`
+          `SELECT * FROM  [WBT11].[dbo].[Z_SCC]  Where NROSCC = ${id}`
         );
 
       res.send({ ...resulte.recordsets[0][0], status: 200 });
@@ -101,7 +101,7 @@ const zsccController = {
     try {
       const pool = await getConnection();
       const result = await pool.request()
-        .query(` SELECT* FROM [WBT11_TEMP].[dbo].[Z_SCC]
+        .query(` SELECT* FROM [WBT11].[dbo].[Z_SCC]
       WHERE  NROCOMP is null AND APROBCRED ='S' AND APROBDEP='S' `);
       res.send(result.recordset);
     } catch (e) {
@@ -112,7 +112,7 @@ const zsccController = {
     try {
       const pool = await getConnection()
       const result = await pool.request()
-      .query(`SELECT top 50 * FROM [WBT11_TEMP].[dbo].[PDCABEZA]`);
+      .query(`SELECT top 50 * FROM [WBT11].[dbo].[PDCABEZA]`);
  res.send(result.recordset)
     } catch (e) {
       res.send({ msg: e, status: 400 });
@@ -124,7 +124,7 @@ delete: async (req, res) => {
     console.log(id);
     const pool = await getConnection()
     const result = await pool.request()
-    .query(`DELETE FROM [WBT11_TEMP].[dbo].[PDCABEZA] WHERE NROPED = ${id}`);
+    .query(`DELETE FROM [WBT11].[dbo].[PDCABEZA] WHERE NROPED = ${id}`);
   } catch (e) {
     res.send(e)
   }
