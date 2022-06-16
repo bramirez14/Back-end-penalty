@@ -517,6 +517,7 @@ fileDelete: async (req, res) => {
     try {
       const { id } = req.params;
       const { listo,procesoFinalizado} = req.body;
+      console.log(req.body);
       await DB.gastos.update({ listo,procesoFinalizado }, { where: { id } });
 
       res.send("ok");
