@@ -184,7 +184,15 @@ router.get('/peticion/pdf/recibo',usersController.pdfRecibo);
 
 router.delete('/borrar/rendicionKm/:id',usersController.DeletekmRendicion);
 
+//ruta para editar los gastos de los pdf 
+//pdf
+router.post('/editar/pdf/gastos/:id',uploadpdf.single('file'),usersController.editarGastoPDF)
 
+//pdfinal
+router.post('/editar/pdfinal/gastos/:id',uploadpdf.single('file'),usersController.editarGastoPDFinal)
+
+//pdf Orden de pago final
+router.post('/editar/pdfpagofinal/gastos/:id',uploadpdf.single('file'),usersController.editarGastoPDFOpFinal)
 
 router.delete('/:id',usersController.borrar)
 module.exports = router;

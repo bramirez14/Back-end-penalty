@@ -29,6 +29,7 @@ const {
   tablaIntermedia,
 } = require("./helpers/funciones");
 const db = require("../database/models2");
+const { log } = require("console");
 
 const usersController = {
 files: async (req, res) => {
@@ -669,7 +670,6 @@ fileDelete: async (req, res) => {
       res.send(error);
     }
   },
-
   gr: async (req, res) => {
     try {
       const data = req.body;
@@ -1237,6 +1237,50 @@ res.render(
 pdfRecibo: async (req, res) => {
   console.log(path.join(__dirname));
   res.sendFile(path.join(__dirname, "../../recibo.pdf"));
+},
+//funcion para editar archivos de  pago/gasto
+//pdf gastos
+editarGastoPDF: async (req, res) => { 
+  try {
+    const { id } = req.params;
+    const file = req.file;
+    await DB.gastos.update({pdf:file.filename}
+      ,{where: {id:id}})
+    res.send({msg:'la modificacion fue un exito',status:200})
+    
+  } catch (error) {
+    res.send(error);
+  }
+
+},
+//pdfinal de gastos
+editarGastoPDFinal: async (req, res) => {
+  try {
+    const { id } = req.params;
+    const file = req.file;
+    await DB.gastos.update({pdfinal:file.filename}
+      ,{where: {id:id}})
+    res.send({msg:'la modificacion fue un exito',status:200})
+    
+  } catch (error) {
+    res.send(error);
+  }
+
+},
+
+// solo admite pdf Orden de  pago fianl
+editarGastoPDFOpFinal: async (req, res) => {
+  try {
+    const { id } = req.params;
+    const file = req.file;
+    console.log(file);
+    await DB.gastos.update({pdfpagoFinal:file.filename}
+      ,{where: {id:id}})
+    res.send({msg:'la modificacion fue un exito',status:200})
+    
+  } catch (error) {
+    res.send(error);
+  }
 },
 
 };
