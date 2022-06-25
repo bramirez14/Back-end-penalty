@@ -1,16 +1,15 @@
 const express = require("express");
 const path = require("path");
-const fs = require('fs-extra')
+const fs = require("fs-extra");
 const DB = require("../database/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const pdf = require("html-pdf");
-var app = require('../app');
-var http = require('http');
+var app = require("../app");
+var http = require("http");
 var server = http.createServer(app);
-var socketIo=require('socket.io');
-const io = socketIo(server);// desp continuares desde el controller para scoket io
-
+var socketIo = require("socket.io");
+const io = socketIo(server); // desp continuares desde el controller para scoket io
 
 //cloudinary
 var cloudinary = require("cloudinary").v2;
@@ -32,58 +31,56 @@ const db = require("../database/models2");
 const { log } = require("console");
 
 const usersController = {
-files: async (req, res) => {
-try {
-  const file = req.file;
- const  fileFormat = file.mimetype.split('/');
- if(fileFormat[1] !== 'pdf'){
-  const filePath= file.path;
-  const fileURL = await cloudinary.uploader.upload(filePath);
-  const fileSecure = fileURL.secure_url;
-  var result= await DB.imagenes.create({imagen:fileSecure})
-  await fs.unlink(filePath)
-
-}else{
-  var result = await DB.pdfs.create({pdf:file.originalname})
-}
-res.send({msg:'Archivo se cargo con exito',status:200,result:result})
-
-} catch (e) {
-  res.send({msg:e, status:500})
-}
-
-},
-fileDelete: async (req, res) => {
-
-  try {
-    const file = req.body;
-    const  fileFormat = file.type.split('/');
-    const { id } = req.params;
-
-    console.log(fileFormat,'line58');
-    if(fileFormat[1] !== 'pdf'){
-     await DB.imagenes.destroy({
-      where: { id },
-    })}else{
-      await DB.pdfs.destroy({
-        where: { id },
-      })
+  files: async (req, res) => {
+    try {
+      const file = req.file;
+      const fileFormat = file.mimetype.split("/");
+      if (fileFormat[1] !== "pdf") {
+        const filePath = file.path;
+        const fileURL = await cloudinary.uploader.upload(filePath);
+        const fileSecure = fileURL.secure_url;
+        var result = await DB.imagenes.create({ imagen: fileSecure });
+        await fs.unlink(filePath);
+      } else {
+        var result = await DB.pdfs.create({ pdf: file.originalname });
+      }
+      res.send({
+        msg: "Archivo se cargo con exito",
+        status: 200,
+        result: result,
+      });
+    } catch (e) {
+      res.send({ msg: e, status: 500 });
     }
-    res.send({msg:'Archivo se elimino con exito', status:200})
-  } catch (e) {
-    res.send(e)
-  }
- 
-},
+  },
+  fileDelete: async (req, res) => {
+    try {
+      const file = req.body;
+      const fileFormat = file.type.split("/");
+      const { id } = req.params;
+
+      console.log(fileFormat, "line58");
+      if (fileFormat[1] !== "pdf") {
+        await DB.imagenes.destroy({
+          where: { id },
+        });
+      } else {
+        await DB.pdfs.destroy({
+          where: { id },
+        });
+      }
+      res.send({ msg: "Archivo se elimino con exito", status: 200 });
+    } catch (e) {
+      res.send(e);
+    }
+  },
 
   /**Lista de todos los usuarios*/
   todosGastos: async (req, res) => {
     try {
       let result = await DB.gastos.findAll({
         include: ["formapago", "usuario", "rendicion"],
-        order: [
-          ['id', 'DESC'], 
-          ],
+        order: [["id", "DESC"]],
       });
       res.send(result);
     } catch (error) {
@@ -92,9 +89,10 @@ fileDelete: async (req, res) => {
   },
   todoAnt: async (req, res) => {
     try {
-      let result = await DB.anticipos.findAll({ include: ["usuario"],order: [
-        ['id', 'DESC'], 
-        ], });
+      let result = await DB.anticipos.findAll({
+        include: ["usuario"],
+        order: [["id", "DESC"]],
+      });
       res.send(result);
     } catch (error) {
       res.send(error);
@@ -103,7 +101,14 @@ fileDelete: async (req, res) => {
   allusers: async (req, res) => {
     try {
       let result = await DB.usuarios.findAll({
-        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro","gerente",],
+        include: [
+          "anticipo",
+          "vacacion",
+          "gasto",
+          "departamento",
+          "kilometro",
+          "gerente",
+        ],
       });
       res.send(result);
     } catch (error) {
@@ -116,7 +121,14 @@ fileDelete: async (req, res) => {
       const { id } = req.params;
       console.log(`me estas llamando soy el usuario ${id}`);
       let usuario = await DB.usuarios.findByPk(id, {
-        include: ["anticipo", "vacacion", "gasto", "departamento","kilometro","gerente"],
+        include: [
+          "anticipo",
+          "vacacion",
+          "gasto",
+          "departamento",
+          "kilometro",
+          "gerente",
+        ],
       });
       res.send(usuario);
     } catch (error) {
@@ -253,7 +265,7 @@ fileDelete: async (req, res) => {
         },
       }
     );
-    res.send({msg:'ok', status:200});
+    res.send({ msg: "ok", status: 200 });
   },
   check: async (req, res) => {
     const token = req.header("token");
@@ -273,10 +285,10 @@ fileDelete: async (req, res) => {
   anticipo: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data,'line 212');
-      
-         anticipoCreado = await DB.anticipos.create(data);
-       
+      console.log(data, "line 212");
+
+      anticipoCreado = await DB.anticipos.create(data);
+
       res.send(anticipoCreado);
     } catch (e) {
       res.send(e);
@@ -288,13 +300,10 @@ fileDelete: async (req, res) => {
 
     const data = req.body;
     console.log(data);
-    try{
-      await DB.anticipos.update(
-         data ,
-        {
-          where: { id: id },
-        }
-      );
+    try {
+      await DB.anticipos.update(data, {
+        where: { id: id },
+      });
       res.send("ok");
     } catch (e) {
       res.send(e);
@@ -303,7 +312,7 @@ fileDelete: async (req, res) => {
   anticipoAprobado: async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    console.log(data,'line 249');
+    console.log(data, "line 249");
     try {
       await DB.anticipos.update(data, {
         where: { id: id },
@@ -331,9 +340,10 @@ fileDelete: async (req, res) => {
       /* let result = await DB.usuarios.findAll({
     include:["anticipo"]
   });*/
-      let result = await DB.vacaciones.findAll({ include: ["usuario"],order: [
-        ['id', 'DESC'], 
-        ], });
+      let result = await DB.vacaciones.findAll({
+        include: ["usuario"],
+        order: [["id", "DESC"]],
+      });
       res.send(result);
     } catch (error) {
       res.send(error);
@@ -402,11 +412,11 @@ fileDelete: async (req, res) => {
     try {
       const file = req.file;
       const data = req.body;
-      const extension= file?.mimetype.split('/');
+      const extension = file?.mimetype.split("/");
       const { gastoId, total } = data;
       console.log(data);
-      console.log(file,'line 341');
-    
+      console.log(file, "line 341");
+
       await DB.gastos.update(
         {
           importerendido: total,
@@ -417,20 +427,23 @@ fileDelete: async (req, res) => {
           },
         }
       );
-      if(file === undefined) {
+      if (file === undefined) {
         await DB.rendiciones.create(data);
-      }else{
-        if(extension[1]==='pdf'){
-       await DB.rendiciones.create({ ...data, archivo: file.originalname });
       } else {
-        //guardamos imagen en cloudinary y DB
-        const imgPath = file.path;
-        const imagenURL = await cloudinary.uploader.upload(imgPath);
-        const imagenSecure = imagenURL.secure_url;
-        await DB.rendiciones.create({ ...data, archivo: imagenSecure });
+        if (extension[1] === "pdf") {
+          await DB.rendiciones.create({ ...data, archivo: file.originalname });
+        } else {
+          //guardamos imagen en cloudinary y DB
+          const imgPath = file.path;
+          const imagenURL = await cloudinary.uploader.upload(imgPath);
+          const imagenSecure = imagenURL.secure_url;
+          await DB.rendiciones.create({ ...data, archivo: imagenSecure });
+        }
       }
-      }
-      res.send({msg:"Rendicion e imagen creadas satifactoriamente",status:200});
+      res.send({
+        msg: "Rendicion e imagen creadas satifactoriamente",
+        status: 200,
+      });
     } catch (error) {
       res.send(error);
     }
@@ -493,8 +506,8 @@ fileDelete: async (req, res) => {
     try {
       const { id } = req.params;
       await DB.rendiciones.destroy({
-        where:{gastoId:id}
-      })
+        where: { gastoId: id },
+      });
       await DB.gastos.destroy({
         where: { id },
       });
@@ -517,9 +530,9 @@ fileDelete: async (req, res) => {
   gastoFinalizados: async (req, res) => {
     try {
       const { id } = req.params;
-      const { listo,procesoFinalizado} = req.body;
+      const { listo, procesoFinalizado } = req.body;
       console.log(req.body);
-      await DB.gastos.update({ listo,procesoFinalizado }, { where: { id } });
+      await DB.gastos.update({ listo, procesoFinalizado }, { where: { id } });
 
       res.send("ok");
     } catch (e) {
@@ -536,7 +549,7 @@ fileDelete: async (req, res) => {
       res.send(e);
     }
   },
- 
+
   agregarImgUsuario: async (req, res) => {
     try {
       const { id } = req.params;
@@ -592,27 +605,24 @@ fileDelete: async (req, res) => {
     }
   },
 
-
   crearGasto: async (req, res) => {
-
     try {
       const file = req.file;
       const data = req.body;
-      
+
       console.log(file, "soy file*****************************");
-     
-     
+
       console.log(data, "soy data *******************");
-    
+
       if (file === undefined) {
         await DB.gastos.create(data);
-      }else{
+      } else {
         const imgPath = file.path;
         const imagenURL = await cloudinary.uploader.upload(imgPath);
         const imagenSecure = imagenURL.secure_url;
         await DB.gastos.create({ ...data, imagen: imagenSecure });
       }
-      res.send({msg:'ok', status:200});
+      res.send({ msg: "ok", status: 200 });
     } catch (error) {
       res.send(error);
     }
@@ -621,9 +631,9 @@ fileDelete: async (req, res) => {
     try {
       const { id } = req.params;
       const file = req.file;
-      const data = req.body
+      const data = req.body;
       const { gastoId, total } = data;
-      const extension= file?.mimetype.split('/');
+      const extension = file?.mimetype.split("/");
       await DB.gastos.update(
         { importerendido: total },
         {
@@ -632,40 +642,39 @@ fileDelete: async (req, res) => {
           },
         }
       );
-      
-      if(file !== undefined){
-        if(extension[1]==='pdf'){
-          await DB.rendiciones.update(
-             {...data, archivo: file.originalname},
-                {
-                  where: {
-                    id: id,
-                  },
-                }
-          )
-      }else{
-         const imgPath = file.path;
-              let imagenURL = await cloudinary.uploader.upload(imgPath);
 
-               await DB.rendiciones.update(
-                { ...data, archivo: imagenURL.secure_url },
-                {
-                  where: {
-                    id: id,
-                  },
-                }
-              );
+      if (file !== undefined) {
+        if (extension[1] === "pdf") {
+          await DB.rendiciones.update(
+            { ...data, archivo: file.originalname },
+            {
+              where: {
+                id: id,
+              },
+            }
+          );
+        } else {
+          const imgPath = file.path;
+          let imagenURL = await cloudinary.uploader.upload(imgPath);
+
+          await DB.rendiciones.update(
+            { ...data, archivo: imagenURL.secure_url },
+            {
+              where: {
+                id: id,
+              },
+            }
+          );
+        }
+      } else {
+        await DB.rendiciones.update(data, {
+          where: {
+            id: id,
+          },
+        });
       }
-       
-      }else{
-          await DB.rendiciones.update(data, {
-        where: {
-          id: id,
-        },
-      });
-      }
-      
-      res.send({msg:'ok', status:200});
+
+      res.send({ msg: "ok", status: 200 });
     } catch (error) {
       res.send(error);
     }
@@ -682,28 +691,26 @@ fileDelete: async (req, res) => {
           ...data,
           gastoId: id,
         });
-      }else{
-      const extension= file.mimetype.split('/')[1]
-      if(extension !== 'pdf'){
-        
-        const imgPath = file.path;
-        let imagenURL = await cloudinary.uploader.upload(imgPath);
-      
-        rendicionCreada = await DB.rendiciones.create({
-          ...data,
-          gastoId: id,
-          archivo: imagenURL.secure_url,
-        });
-      
-      }else{
-        rendicionCreada = await DB.rendiciones.create({
-          ...data,
-          gastoId: id,
-          archivo: file.originalname,
-        });
+      } else {
+        const extension = file.mimetype.split("/")[1];
+        if (extension !== "pdf") {
+          const imgPath = file.path;
+          let imagenURL = await cloudinary.uploader.upload(imgPath);
+
+          rendicionCreada = await DB.rendiciones.create({
+            ...data,
+            gastoId: id,
+            archivo: imagenURL.secure_url,
+          });
+        } else {
+          rendicionCreada = await DB.rendiciones.create({
+            ...data,
+            gastoId: id,
+            archivo: file.originalname,
+          });
+        }
       }
-    }
-      res.send({data:rendicionCreada, msg:"ok",status:200});
+      res.send({ data: rendicionCreada, msg: "ok", status: 200 });
     } catch (e) {
       res.send(e);
     }
@@ -711,14 +718,14 @@ fileDelete: async (req, res) => {
   deleterendicion: async (req, res) => {
     const { id } = req.params;
     console.log(id);
-  try {
-    await DB.rendiciones.destroy({
-      where:{id}
-    })
-    res.send('ok')
-  } catch (e) {
-  res.send(e)
-}
+    try {
+      await DB.rendiciones.destroy({
+        where: { id },
+      });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
   },
 
   finalizar: async (req, res) => {
@@ -758,13 +765,10 @@ fileDelete: async (req, res) => {
       const { filename } = req.file;
       console.log(id);
       console.log(filename);
-      await DB.gastos.update(
-        { pdfpagoFinal: filename },
-        { where: { id } }
-      );
+      await DB.gastos.update({ pdfpagoFinal: filename }, { where: { id } });
       res.send("ok");
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
   },
 
@@ -774,7 +778,7 @@ fileDelete: async (req, res) => {
       const { pagoRealizado } = req.body;
       console.log(req.body);
       await DB.gastos.update({ pagoRealizado }, { where: { id } });
-      res.send('ok')
+      res.send("ok");
     } catch (e) {
       res.send;
     }
@@ -856,11 +860,12 @@ fileDelete: async (req, res) => {
     }
   },
   kilometros: async (req, res) => {
-    console.log('estoy en kilometros');
+    console.log("estoy en kilometros");
     try {
-      const resp = await DB.kilometros.findAll({ include: { all: true },order: [
-        ['id', 'DESC'], 
-        ], });
+      const resp = await DB.kilometros.findAll({
+        include: { all: true },
+        order: [["id", "DESC"]],
+      });
       res.send(resp);
     } catch (e) {
       res.send(e);
@@ -894,16 +899,16 @@ fileDelete: async (req, res) => {
       console.log(img);
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
-      const { importeTotal, kmTotal, usuarioId,alertaId } = data;
+      const { importeTotal, kmTotal, usuarioId, alertaId } = data;
       const km = await DB.kilometros.create({
         importeTotal,
         kmTotal,
         usuarioId,
         imagen: imagenURL.secure_url,
         listo: "Si",
-        estado:'pendiente',
-        estadoFinal:'pendiente',
-        alertaId
+        estado: "pendiente",
+        estadoFinal: "pendiente",
+        alertaId,
       });
       if (verificacion === true) {
         for (const d of data.id) {
@@ -927,7 +932,7 @@ fileDelete: async (req, res) => {
         );
       }
 
-      res.send({msg:'completado', status:200});
+      res.send({ msg: "completado", status: 200 });
     } catch (e) {
       res.send(e);
     }
@@ -944,7 +949,7 @@ fileDelete: async (req, res) => {
   kmAprobado: async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    console.log(req.body,'line 863');
+    console.log(req.body, "line 863");
     try {
       await DB.kilometros.update(data, {
         where: { id: id },
@@ -959,9 +964,9 @@ fileDelete: async (req, res) => {
     console.log(id);
 
     const data = req.body;
-    console.log(data,'line 878');
+    console.log(data, "line 878");
     try {
-       await DB.kilometros.update(data, {
+      await DB.kilometros.update(data, {
         where: { id: id },
       });
       res.send("ok");
@@ -969,7 +974,7 @@ fileDelete: async (req, res) => {
       res.send(e);
     }
   },
-  kmPdf:async (req, res) => {
+  kmPdf: async (req, res) => {
     try {
       console.log("estoy aca");
       const { id } = req.params;
@@ -988,7 +993,7 @@ fileDelete: async (req, res) => {
     try {
       const { id } = req.params;
       //const busquedaId= await DB.rendicionesKms.findAll( )
-     // const filtradoId= busquedaId.filter(d=>d.kilometroId !== id  )
+      // const filtradoId= busquedaId.filter(d=>d.kilometroId !== id  )
 
       /* for (const d of filtradoId) {
         console.log(d.id,'line921');
@@ -1001,8 +1006,8 @@ fileDelete: async (req, res) => {
       }); */
 
       await DB.rendicionesKms.destroy({
-        where:{kilometroId:id}
-      })
+        where: { kilometroId: id },
+      });
       await DB.kilometros.destroy({
         where: { id },
       });
@@ -1030,21 +1035,17 @@ fileDelete: async (req, res) => {
     }
   },
   pagokmfinal: async (req, res) => {
- try {
-  const { id } = req.params;
-  const { filename } = req.file;
-  console.log(id);
-  console.log(filename);
-  await DB.kilometros.update(
-    { pdfpagoFinal: filename },
-    { where: { id } }
-  );
-  res.send("ok");
- } catch (e) {
-   res.send(e);
- }
-
-},
+    try {
+      const { id } = req.params;
+      const { filename } = req.file;
+      console.log(id);
+      console.log(filename);
+      await DB.kilometros.update({ pdfpagoFinal: filename }, { where: { id } });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
+  },
   DeletekmRendicion: async (req, res) => {
     try {
       const { id } = req.params;
@@ -1058,7 +1059,7 @@ fileDelete: async (req, res) => {
       res.send(e);
     }
   },
-  sueldoPdf:async (req, res) => {
+  sueldoPdf: async (req, res) => {
     try {
       console.log("estoy aca");
       const { id } = req.params;
@@ -1097,73 +1098,67 @@ fileDelete: async (req, res) => {
       const { filename } = req.file;
       console.log(id);
       console.log(filename);
-      await DB.anticipos.update(
-        { pdfpagoFinal: filename },
-        { where: { id } }
-      );
+      await DB.anticipos.update({ pdfpagoFinal: filename }, { where: { id } });
       res.send("ok");
     } catch (e) {
-      res.send(e)
-      }
+      res.send(e);
+    }
   },
   //alertas
   alertaanticipo: async (req, res) => {
     try {
-      const {id}= req.params;
-      const {notificacion} = req.body;
-      await DB.anticipos.update({notificacion }, { where: { id }})
-      res.send('ok')
+      const { id } = req.params;
+      const { notificacion } = req.body;
+      await DB.anticipos.update({ notificacion }, { where: { id } });
+      res.send("ok");
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
   },
   alertagasto: async (req, res) => {
     try {
-      
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
   },
   alertavacaciones: async (req, res) => {
     try {
-      
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
   },
   alertakm: async (req, res) => {
     try {
-      
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
   },
   preciokm: async (req, res) => {
-try {
-  const {precio} = req.body;
-  await DB.preciokms.update({precio},{where:{id:1}})
-  res.send('ok')
-} catch (e) {
-  res.send(e)
-}
+    try {
+      const { precio } = req.body;
+      await DB.preciokms.update({ precio }, { where: { id: 1 } });
+      res.send("ok");
+    } catch (e) {
+      res.send(e);
+    }
   },
   precioactualkm: async (req, res) => {
-try {
-  const resul= await DB.preciokms.findAll();
-  res.send(resul)
-} catch (e) {
-  res.send(e)
-}
+    try {
+      const resul = await DB.preciokms.findAll();
+      res.send(resul);
+    } catch (e) {
+      res.send(e);
+    }
   },
 
   alerta: async (req, res) => {
     try {
-        const resut= await DB.gastos.findAll();
-        res.send(result)
+      const resut = await DB.gastos.findAll();
+      res.send(result);
     } catch (e) {
-        res.send(e)
+      res.send(e);
     }
-},
+  },
 
   borrar: async (req, res) => {
     /* await DB.vacaciones.destroy({
@@ -1172,117 +1167,141 @@ try {
       },
     }); */
   },
-/*tarjet de credito*/
- todasTJ:async (req, res) => {
-  try {
-    res.send(await DB.tarjetacreditos.findAll({order: [
-      ['id', 'DESC'], 
-      ],})) 
-  } catch (e) {
-    res.send(e)    
-  }
- },
- TJ:async (req, res) => {
-   try {
-    const file = req.file;
+  /*tarjet de credito*/
+  todasTJ: async (req, res) => {
+    try {
+      res.send(await DB.tarjetacreditos.findAll({ order: [["id", "DESC"]] }));
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  TJ: async (req, res) => {
+    try {
+      const file = req.file;
+      const data = req.body;
+      console.log(data);
+      const fileFormat = file.mimetype.split("/");
+      const filePath = file.path;
+      const fileURL = await cloudinary.uploader.upload(filePath);
+      const fileSecure = fileURL.secure_url;
+
+      if (fileFormat[1] !== "pdf") {
+        var result = await DB.tarjetacreditos.create({
+          ...data,
+          archivo: fileSecure,
+        });
+        await fs.unlink(filePath); // borrar img q se guardar e la carpeta
+      } else {
+        var result = await DB.tarjetacreditos.create({
+          ...data,
+          archivo: file.originalname,
+        });
+      }
+      res.send({ result, msg: "creado con exito", status: 200 });
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  //descarga de pdf
+  PDF: async (req, res) => {
+    try {
+      const header = req.header("archivo");
+      res.sendFile(path.join(__dirname, `../../public/upload/${header}`));
+    } catch (error) {
+      res.send(e);
+    }
+  },
+
+  /** Generador de pdf recibos provisorios */
+  generadorPdfRecibo: async (req, res) => {
     const data = req.body;
-    console.log(data);
- const  fileFormat = file.mimetype.split('/');
- const filePath= file.path;
- const fileURL = await cloudinary.uploader.upload(filePath);
- const fileSecure = fileURL.secure_url;
- 
-    if(fileFormat[1] !== 'pdf'){
-      var result = await DB.tarjetacreditos.create({...data,archivo:fileSecure})
-      await fs.unlink(filePath)// borrar img q se guardar e la carpeta 
-    }else{
-      var result = await DB.tarjetacreditos.create({...data,archivo:file.originalname})
+    res.render(
+      "recibo",
+      {
+        ingresos: data[0].ingresos,
+        cliente: data[1].cliente,
+        fact: data[2].facturacion,
+      },
+      function (err, html) {
+        pdf.create(html).toFile("recibo.pdf", function (err, result) {
+          if (err) {
+            return console.log(err, "error");
+          } else {
+            console.log(res, "respuesta");
+            var datafile = fs.readFileSync("recibo.pdf");
+            res.header("content-type", "application/pdf");
+            res.send({ msg: datafile, status: 200 });
+          }
+        });
+      }
+    );
+  },
+  pdfRecibo: async (req, res) => {
+    console.log(path.join(__dirname));
+    res.sendFile(path.join(__dirname, "../../recibo.pdf"));
+  },
+  //funcion para editar archivos de  pago/gasto
+  //pdf gastos
+  editarGastoPDF: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const file = req.file;
+      await DB.gastos.update({ pdf: file.filename }, { where: { id: id } });
+      res.send({ msg: "la modificacion fue un exito", status: 200 });
+    } catch (error) {
+      res.send(error);
     }
-     res.send({result,msg:'creado con exito', status:200})
-  } catch (e) {
-    res.send(e)     
-   }
-},
-//descarga de pdf
-PDF: async (req, res) => {
-  try {
-    const header = req.header("archivo");
-    res.sendFile(path.join(__dirname, `../../public/upload/${header}`));
-  } catch (error) {
-    res.send(e);
-  }
-},
-
-/** Generador de pdf recibos provisorios */
-generadorPdfRecibo: async (req, res) => {
-const data= req.body;
-res.render(
-    "recibo",
-    { ingresos: data[0].ingresos,cliente:data[1].cliente,fact:data[2].facturacion},
-    function (err, html) {
-      pdf.create(html).toFile("recibo.pdf", function (err, result) {
-        if (err) {
-          return console.log(err, "error");
-        } else {
-          console.log(res, "respuesta");
-          var datafile = fs.readFileSync("recibo.pdf");
-          res.header("content-type", "application/pdf");
-          res.send({msg:datafile,status:200});
-        }
-      });
+  },
+  //pdfinal de gastos
+  editarGastoPDFinal: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const file = req.file;
+      await DB.gastos.update({ pdfinal: file.filename }, { where: { id: id } });
+      res.send({ msg: "la modificacion fue un exito", status: 200 });
+    } catch (error) {
+      res.send(error);
     }
-  );
- 
-},
-pdfRecibo: async (req, res) => {
-  console.log(path.join(__dirname));
-  res.sendFile(path.join(__dirname, "../../recibo.pdf"));
-},
-//funcion para editar archivos de  pago/gasto
-//pdf gastos
-editarGastoPDF: async (req, res) => { 
-  try {
-    const { id } = req.params;
-    const file = req.file;
-    await DB.gastos.update({pdf:file.filename}
-      ,{where: {id:id}})
-    res.send({msg:'la modificacion fue un exito',status:200})
-    
-  } catch (error) {
-    res.send(error);
-  }
+  },
 
-},
-//pdfinal de gastos
-editarGastoPDFinal: async (req, res) => {
-  try {
-    const { id } = req.params;
-    const file = req.file;
-    await DB.gastos.update({pdfinal:file.filename}
-      ,{where: {id:id}})
-    res.send({msg:'la modificacion fue un exito',status:200})
-    
-  } catch (error) {
-    res.send(error);
-  }
+  // solo admite pdf Orden de  pago final
+  editarGastoPDFOpFinal: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const file = req.file;
+      await DB.gastos.update(
+        { pdfpagoFinal: file.filename },
+        { where: { id: id } }
+      );
+      res.send({ msg: "la modificacion fue un exito", status: 200 });
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  //editar usuario
+  editarUsuario: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = req.body;
+      if (!data.epassword) {
+        await DB.usuarios.update({ ...data }, { where: { id: id } });
+        res.send({ message: "Editamos el usuario", status: 200, result: user });
+      } else if (data.epassword === data.epassword2) {
+        encryptedKey = bcrypt.hashSync(data.epassword, 10);
+        //Editamos el usuario
+        const user = await DB.usuarios.update(
+          { ...data, password: encryptedKey },
+          { where: { id: id } }
+        );
 
-},
-
-// solo admite pdf Orden de  pago fianl
-editarGastoPDFOpFinal: async (req, res) => {
-  try {
-    const { id } = req.params;
-    const file = req.file;
-    console.log(file);
-    await DB.gastos.update({pdfpagoFinal:file.filename}
-      ,{where: {id:id}})
-    res.send({msg:'la modificacion fue un exito',status:200})
-    
-  } catch (error) {
-    res.send(error);
-  }
-},
-
+        res.send({ message: "Editamos el usuario", status: 200, result: user });
+      } else {
+        res.send("Las contraseñas no son iguales");
+      }
+    } catch (error) {
+      res.send(error);
+    }
+  },
 };
 
 module.exports = usersController;
