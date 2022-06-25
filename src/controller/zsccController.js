@@ -1,5 +1,3 @@
-const path = require("path");
-const fs = require("fs-extra");
 const { getConnection } = require("../sql/conexion");
 const zsccController = {
   todasZSCC: async (req, res) => {
@@ -61,7 +59,6 @@ const zsccController = {
   editZSCC: async (req, res) => {
     const { id } = req.params;
     try {
-      //UPDATE `palaciosmoda`.`products` SET `name` = 'remera' WHERE (`id` = '67');
       const pool = await getConnection();
       await pool.request().query(`UPDATE [WBT11].[dbo].[Z_SCC] SET 
         CANTPED=${req.body.CANTPED}, 

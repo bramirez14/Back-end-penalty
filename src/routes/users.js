@@ -55,7 +55,8 @@ router.post('/register',[
     check('email').isEmail().withMessage('ingrese un email'),
     check('password').isLength({min:3}).withMessage('ingrese una contraseña')
 ],validationUser,usersController.register);
-
+/*Editamos el usuario registrado */
+router.put('/editar/usuario/:id',usersController.editarUsuario) 
 /* Log In */
 router.post('/login',[
   check('email','El campo requiere un E-mail').isEmail().isLength(),
@@ -184,7 +185,16 @@ router.get('/peticion/pdf/recibo',usersController.pdfRecibo);
 
 router.delete('/borrar/rendicionKm/:id',usersController.DeletekmRendicion);
 
+//ruta para editar los gastos de los pdf 
+//pdf
+router.post('/editar/pdf/gastos/:id',uploadpdf.single('file'),usersController.editarGastoPDF)
 
+//pdfinal
+router.post('/editar/pdfinal/gastos/:id',uploadpdf.single('file'),usersController.editarGastoPDFinal)
+
+//pdf Orden de pago final
+router.post('/editar/pdfpagofinal/gastos/:id',uploadpdf.single('file'),usersController.editarGastoPDFOpFinal)
 
 router.delete('/:id',usersController.borrar)
+
 module.exports = router;

@@ -312,7 +312,6 @@ router.post("/agregar/newscc", async (req, res) => {
       null,
       null,
       'N')`);
-      console.log(respuesta, "line298");
 
       }
       
@@ -383,15 +382,27 @@ router.put("/editar/pedido", async (req, res) => {
   }
 });
 
-router.put('/editar/fecha',async(req, res)=> {
+router.put("/editar/fecha", async (req, res) => {
   try {
     const pool = await getConnection();
 
     await pool.request().query(`UPDATE [WBT11].[dbo].[PDCABEZA] SET 
-    FECRECEP= '2022-01-17'  WHERE NROPED ='705' `)
-    res.send('fecha edita')
+    FECRECEP= '2022-01-17'  WHERE NROPED ='705' `);
+    res.send("fecha edita");
   } catch (e) {
-    res.send(e)
+    res.send(e);
   }
-})
+});
+router.get("/todos/clientes", async (req, res) => {
+  try {
+    const pool = await getConnection();
+
+    const result = await pool
+      .request()
+      .query("SELECT * FROM [WBT11].[dbo].[CLIENTES]");
+    res.send(result.recordsets);
+  } catch (e) {
+    res.send(e);
+  }
+});
 module.exports = router;

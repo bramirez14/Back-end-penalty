@@ -1,8 +1,8 @@
 "use strict";
 
 module.exports = (sequelize, DataTypes) => {
-  const rendicionesKms = sequelize.define(
-    "rendicionesKms",
+  const rendicioneskms = sequelize.define(
+    "rendicioneskms",
     {
       fechaSelect: DataTypes.STRING,
       importe: DataTypes.DECIMAL,
@@ -15,11 +15,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  rendicionesKms.associate = function (models) {
-    rendicionesKms.belongsTo(models.kilometros, {
+  rendicioneskms.associate = function (models) {
+    rendicioneskms.belongsTo(models.kilometros, {
       as: "kilometro",
     });
    
   };
-  return rendicionesKms;
+  return rendicioneskms;
 };
