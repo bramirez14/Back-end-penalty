@@ -36,7 +36,7 @@ app.use('/api/cobranzas', cobranzasRouter);
 app.use('/api/vacaciones', vacacionesRouter);
 app.use('/api/scc', zsccSQLRouter);
 app.use('/api/pedidos', pedidosSQLRouter);
-app.use('/api', altasMediosPagosRouter);
+app.use('/api/alta', altasMediosPagosRouter);
 
 
 

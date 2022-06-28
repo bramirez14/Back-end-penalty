@@ -873,7 +873,9 @@ const usersController = {
   },
   kmRendicion: async (req, res) => {
     try {
-      const resp = await DB.rendicionesKms.findAll();
+      
+      const resp = await DB.rendicioneskms.findAll();
+      console.log(resp);
       res.send(resp);
     } catch (e) {
       res.send(e);
@@ -884,7 +886,7 @@ const usersController = {
     try {
       const data = req.body;
       console.log(data);
-      const result = await DB.rendicionesKms.create(data);
+      const result = await DB.rendicioneskms.create(data);
       res.send(result);
     } catch (e) {
       res.send(e);
@@ -912,7 +914,7 @@ const usersController = {
       });
       if (verificacion === true) {
         for (const d of data.id) {
-          let v = await DB.rendicionesKms.update(
+          let v = await DB.rendicioneskms.update(
             {
               kilometroId: km.id,
             },
@@ -922,7 +924,7 @@ const usersController = {
           );
         }
       } else {
-        let v = await DB.rendicionesKms.update(
+        let v = await DB.rendicioneskms.update(
           {
             kilometroId: km.id,
           },
@@ -992,12 +994,12 @@ const usersController = {
   kmborrar: async (req, res) => {
     try {
       const { id } = req.params;
-      //const busquedaId= await DB.rendicionesKms.findAll( )
+      //const busquedaId= await DB.rendicioneskms.findAll( )
       // const filtradoId= busquedaId.filter(d=>d.kilometroId !== id  )
 
       /* for (const d of filtradoId) {
         console.log(d.id,'line921');
-        await DB.rendicionesKms.destroy({
+        await DB.rendicioneskms.destroy({
           where:{ id:d.id}
         })
       }
@@ -1005,7 +1007,7 @@ const usersController = {
         where: {id} ,
       }); */
 
-      await DB.rendicionesKms.destroy({
+      await DB.rendicioneskms.destroy({
         where: { kilometroId: id },
       });
       await DB.kilometros.destroy({
@@ -1049,7 +1051,7 @@ const usersController = {
   DeletekmRendicion: async (req, res) => {
     try {
       const { id } = req.params;
-      await DB.rendicionesKms.destroy({
+      await DB.rendicioneskms.destroy({
         where: {
           id,
         },
