@@ -176,6 +176,8 @@ router.delete('/msg/alerta/:id',alertaController.borraralerta);
 /* tarjeta de credito */
 router.get('/tarjeta/credito',usersController.todasTJ);
 router.post('/tarjeta/credito',upload.single("file"),usersController.TJ);
+//router.get('/tarjeta/credito',usersController.todasTJ);
+router.post('/agregar/tc',usersController.addCreditCard);
 /*Descarga de pdf */
 router.get('/descarga/pdf',usersController.PDF);
 /** Pdf provisorio */

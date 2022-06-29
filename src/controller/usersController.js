@@ -1169,7 +1169,7 @@ const usersController = {
       },
     }); */
   },
-  /*tarjet de credito*/
+  /*tarjet de credito y otros mediios de pago*/
   todasTJ: async (req, res) => {
     try {
       res.send(await DB.tarjetacreditos.findAll({ order: [["id", "DESC"]] }));
@@ -1181,7 +1181,6 @@ const usersController = {
     try {
       const file = req.file;
       const data = req.body;
-      console.log(data);
       const fileFormat = file.mimetype.split("/");
       const filePath = file.path;
       const fileURL = await cloudinary.uploader.upload(filePath);
@@ -1204,6 +1203,17 @@ const usersController = {
       res.send(e);
     }
   },
+  addCreditCard:async(req,res) => { 
+    try {
+      const data = req.body;
+      console.log(data);
+      result = await DB.formaspagoscreditos.create(data);
+      res.send({ data:result, msg: "creado con exito", status:200})
+    } catch (e) {
+      res.send(e);
+    }
+  },
+
   //descarga de pdf
   PDF: async (req, res) => {
     try {
