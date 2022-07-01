@@ -176,6 +176,9 @@ router.delete('/msg/alerta/:id',alertaController.borraralerta);
 /* tarjeta de credito */
 router.get('/tarjeta/credito',usersController.todasTJ);
 router.post('/tarjeta/credito',upload.single("file"),usersController.TJ);
+router.get('/medios/pagos/tarjeta/credito',usersController.allCrediCard);
+router.post('/alta/medios/pagos',usersController.addPaymentMethod);
+router.post('/agregar/tc',usersController.addCreditCard);
 /*Descarga de pdf */
 router.get('/descarga/pdf',usersController.PDF);
 /** Pdf provisorio */
@@ -194,6 +197,18 @@ router.post('/editar/pdfinal/gastos/:id',uploadpdf.single('file'),usersControlle
 
 //pdf Orden de pago final
 router.post('/editar/pdfpagofinal/gastos/:id',uploadpdf.single('file'),usersController.editarGastoPDFOpFinal)
+
+
+
+//ruta para editar los km pdf
+//pdf
+router.post('/editar/pdf/km/:id',uploadpdf.single('file'),usersController.editarKmPDFproveedores)
+
+//pdfinal
+router.post('/editar/pdfinal/km/:id',uploadpdf.single('file'),usersController.editarKmPDFpago)
+
+//pdf Orden de pago final
+router.post('/editar/pdfpagofinal/km/:id',uploadpdf.single('file'),usersController.editarKmPDFOpFinal)
 
 router.delete('/:id',usersController.borrar)
 

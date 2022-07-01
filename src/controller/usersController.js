@@ -829,6 +829,7 @@ const usersController = {
       }
     );
   },
+  //se usar apa todos los pfd fataria cambiar el nombre 
   gastoPDF: async (req, res) => {
     try {
       const header = req.header("archivo");
@@ -1169,7 +1170,7 @@ const usersController = {
       },
     }); */
   },
-  /*tarjet de credito*/
+  /*tarjet de credito y otros mediios de pago*/
   todasTJ: async (req, res) => {
     try {
       res.send(await DB.tarjetacreditos.findAll({ order: [["id", "DESC"]] }));
@@ -1181,7 +1182,6 @@ const usersController = {
     try {
       const file = req.file;
       const data = req.body;
-      console.log(data);
       const fileFormat = file.mimetype.split("/");
       const filePath = file.path;
       const fileURL = await cloudinary.uploader.upload(filePath);
@@ -1204,6 +1204,33 @@ const usersController = {
       res.send(e);
     }
   },
+  addCreditCard:async(req,res) => { 
+    try {
+      const {tarjeta} = req.body;
+      let result=await DB.formaspagoscreditos.create({tarjeta});
+      res.send({  result, msg: "creado con exito", status:200})
+    } catch (e) {
+      res.send(e);
+    }
+  },
+    addPaymentMethod: async (req, res) => {
+    try {
+     const {tarjeta} = req.body;
+     await DB.formapagos.create({pago:tarjeta});
+     res.send({msg:'Se creo con exito',status:200});
+    } catch (e) {
+      res.send({ msg: e, status: 400 });
+    }
+  },
+  allCrediCard: async (req, res) => { 
+    try {
+      const resp=await DB.formaspagoscreditos.findAll();
+      res.send(resp)
+    } catch (e) {
+      res.send(e)
+    }
+  },
+
   //descarga de pdf
   PDF: async (req, res) => {
     try {
@@ -1302,6 +1329,37 @@ const usersController = {
       }
     } catch (error) {
       res.send(error);
+    }
+  },
+  //ediatmos pdf de kilometros
+  editarKmPDFproveedores: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const file = req.file;
+      await DB.kilometros.update({ pdf: file.filename }, { where: { id: id } });
+      res.send({ msg: "la modificacion fue un exito", status: 200 });
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  editarKmPDFpago :async (req, res) => {
+    try {
+      const { id } = req.params;
+      const file = req.file;
+      await DB.kilometros.update({ pdfinal: file.filename }, { where: { id: id } });
+      res.send({ msg: "la modificacion fue un exito", status: 200 });
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  editarKmPDFOpFinal: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const file = req.file;
+      await DB.kilometros.update({ pdfpagoFinal: file.filename }, { where: { id: id } });
+      res.send({ msg: "la modificacion fue un exito", status: 200 });
+    } catch (e) {
+      res.send(e);
     }
   },
 };
