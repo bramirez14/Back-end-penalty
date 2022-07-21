@@ -12,6 +12,9 @@ var cobranzasRouter= require('./routes/cobranzas');
 var vacacionesRouter= require('./routes/vacaciones');
 var zsccSQLRouter= require('./routes/zscc');
 var pedidosSQLRouter= require('./routes/pedidos');
+var reportesGestionSQLRouter= require('./routes/reportesGestionSQL');
+
+
 
 
 
@@ -35,6 +38,9 @@ app.use('/api/cobranzas', cobranzasRouter);
 app.use('/api/vacaciones', vacacionesRouter);
 app.use('/api/scc', zsccSQLRouter);
 app.use('/api/pedidos', pedidosSQLRouter);
+app.use('/api/sql', reportesGestionSQLRouter);
+
+
 
 
 
