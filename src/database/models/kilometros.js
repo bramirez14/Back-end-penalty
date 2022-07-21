@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     kilometros.belongsTo(models.usuarios, {
       as: "usuario",
     });
-    kilometros.hasMany(models.rendicionesKms, {
+    kilometros.hasMany(models.rendicioneskms, {
       as: "rendicionKm",
     foreignKey:'kilometroId'
     });
