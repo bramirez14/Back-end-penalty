@@ -46,3 +46,16 @@ for (const imagen of imagenes) {
   })
 }
 };
+//funcion para agregar ceros a la izquierda
+exports.zeroFill=(number,numbertotal)=>{
+  let lengthNumber=number.toString().length;
+  let lengthNumberTotal=numbertotal.toString();
+  let subtraction = lengthNumberTotal-lengthNumber;
+  let zero='0'
+  if(lengthNumber<lengthNumberTotal){
+  return `0026${zero.repeat(subtraction)}${number.toString()}`
+  }else{
+    return number.toString();
+  }
+  };
+  

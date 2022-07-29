@@ -4,6 +4,9 @@ const fs = require("fs");
 const DB = require("../database/models2");
 const pdf = require("html-pdf");
 const { getreportes } = require("./helpers/funcionesReportes");
+const XLSX = require("xlsx");
+const { zeroFill } = require("./helpers/funciones");
+const regex = /^[0-9]*$/;
 
 const reportesController = {
 remito:async (req, res) => {
@@ -44,7 +47,37 @@ remito:async (req, res) => {
   agrupadocliente:async(req,res) => { await getreportes(res,DB.pendcli)},//ok
   futurosingresos:async(req,res) => {await getreportes(res,DB.ingresos)},//ok
   stock:async(req,res) => { await getreportes(res,DB.stocks2)},
-  w_scc: async (req, res) => {await getreportes(res,DB.w_scc)}
+  w_scc: async (req, res) => {await getreportes(res,DB.w_scc)},
+  fileExcel:async(req,res) => {
+    try {
+      const file = req.file;
+const response = await DB.remitos.findAll();
+
+       const workbook = XLSX.readFile(file.path);
+      const workbookSheets = workbook.SheetNames;
+      const sheet =workbookSheets[0];
+      const dataExcel= XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+      const filterRemito= dataExcel.filter(d=> regex.test(d.ClienteDestino) !== false);
+      const newArrayExcel= filterRemito.map(f=> ({
+        ...f,
+        REMITO: zeroFill( f.Delivery,8)
+
+      }))
+const findwithRemito = response.find(r => r.REMITO===newArrayExcel[0].REMITO);
+console.log(findwithRemito.id,'line68');
+      //console.log(regex.test(dataExcel[0].ClienteDestino),'line62'); 
+
+     /*  for (const iterator of dataExcel) {
+        console.log(`${iterator.Cliente.Destino}`,'linea 59');
+      } */
+      /* await DB.kilometros.update({ pdfpagoFinal: file.filename }, { where: { id: id } });
+      res.send({ msg: "la modificacion fue un exito", status: 200 });*/
+      res.send(response);
+    } catch (e) {
+      res.send(e);
+    }
+  }
+
 
 }
 module.exports = reportesController;
