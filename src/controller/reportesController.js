@@ -48,31 +48,48 @@ remito:async (req, res) => {
   futurosingresos:async(req,res) => {await getreportes(res,DB.ingresos)},//ok
   stock:async(req,res) => { await getreportes(res,DB.stocks2)},
   w_scc: async (req, res) => {await getreportes(res,DB.w_scc)},
+
   fileExcel:async(req,res) => {
     try {
       const file = req.file;
-const response = await DB.remitos.findAll();
-
-       const workbook = XLSX.readFile(file.path);
+      const workbook = XLSX.readFile(file.path);
       const workbookSheets = workbook.SheetNames;
       const sheet =workbookSheets[0];
       const dataExcel= XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
       const filterRemito= dataExcel.filter(d=> regex.test(d.ClienteDestino) !== false);
       const newArrayExcel= filterRemito.map(f=> ({
         ...f,
-        REMITO: zeroFill( f.Delivery,8)
-
+        REMITO: zeroFill( f.Delivery,8),
+        fechafin:new Date((f.FechaPCC-(25567+2))*86400*1000), 
       }))
-const findwithRemito = response.find(r => r.REMITO===newArrayExcel[0].REMITO);
-console.log(findwithRemito.id,'line68');
+      //aca iniciamos la iteracion con un ciclo for
+      /* console.log(iterator.Estado === 'CAR');
+      console.log(iterator.fechafin);
+      console.log(iterator.REMITO); */
+
+
+      
+        await DB.remitos.update({
+           // ESTADO:'DESPACHADO',
+            fechafin:'ddd'
+            
+           },{
+          where: {
+            REMITO:'002600001178',
+          },
+        })
+        
+
+       
+//const findwithRemito = response.find(r => r.REMITO===newArrayExcel[0].REMITO);
+
       //console.log(regex.test(dataExcel[0].ClienteDestino),'line62'); 
 
      /*  for (const iterator of dataExcel) {
         console.log(`${iterator.Cliente.Destino}`,'linea 59');
       } */
-      /* await DB.kilometros.update({ pdfpagoFinal: file.filename }, { where: { id: id } });
-      res.send({ msg: "la modificacion fue un exito", status: 200 });*/
-      res.send(response);
+     // res.send({ msg: "la modificacion fue un exito", status: 200 });*/
+      res.send('ok');
     } catch (e) {
       res.send(e);
     }

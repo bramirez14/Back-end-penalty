@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     REMITO:DataTypes.STRING,
     ESTADO: DataTypes.STRING,
     pdf:DataTypes.STRING,
+    fechafin: DataTypes.STRING,
   }, {timestamps:false});
   remitos.associate = function(models) {
   }
