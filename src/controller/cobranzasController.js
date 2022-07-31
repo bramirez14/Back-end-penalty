@@ -60,9 +60,7 @@ const cobranzasController = {
   reciboComprobante: async (req, res) => {
     try {
       const { id}= req.params;
-      console.log(id,'line64');
       const {ncomprobante} = req.body;
-      console.log(ncomprobante,'line66');
        await DB.recibosliquidaciones.update({ncomprobante},{where: {numerorecibo:id }})
        await DB.recibosingresos.update({ncomprobante},{where: {numerorecibo:id }})
        res.send({msg:'Comprobante agregado',status:200})

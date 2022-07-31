@@ -21,13 +21,11 @@ const reportesController = {
   },
   remitoPdf: async (req, res) => {
     const header = req.header("archivo");
-    console.log(header);
     res.sendFile(`C:/xampp/htdocs/intranet/archivos/REMITOVACLOG/${header}`);
   },
 
   pdfComprobantes: async (req, res) => {
     const header = req.header("archivo");
-    console.log(header);
     res.sendFile(
       `C:/xampp/htdocs/intranet/archivos/COMPROBANTES/${header}.pdf`
     );

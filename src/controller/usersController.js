@@ -59,7 +59,6 @@ const usersController = {
       const fileFormat = file.type.split("/");
       const { id } = req.params;
 
-      console.log(fileFormat, "line58");
       if (fileFormat[1] !== "pdf") {
         await DB.imagenes.destroy({
           where: { id },
@@ -119,7 +118,6 @@ const usersController = {
     try {
       // id del producto
       const { id } = req.params;
-      console.log(`me estas llamando soy el usuario ${id}`);
       let usuario = await DB.usuarios.findByPk(id, {
         include: [
           "anticipo",
@@ -269,14 +267,12 @@ const usersController = {
   },
   check: async (req, res) => {
     const token = req.header("token");
-    console.log();
     if (!token) return res.send("No hay token");
     try {
       const decoded = jwt.verify(token, "penalty");
       user = decoded.user; // este user viene del login linea 102
       res.send(user);
     } catch (e) {
-      console.log(e);
       res.send("Token invalido");
     }
   },
@@ -296,10 +292,8 @@ const usersController = {
   },
   anticipoRechazado: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
 
     const data = req.body;
-    console.log(data);
     try {
       await DB.anticipos.update(data, {
         where: { id: id },
@@ -312,7 +306,6 @@ const usersController = {
   anticipoAprobado: async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    console.log(data, "line 249");
     try {
       await DB.anticipos.update(data, {
         where: { id: id },
@@ -325,7 +318,6 @@ const usersController = {
 
   borrarAnticipo: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
     try {
       await DB.anticipos.destroy({
         where: { id },
@@ -361,10 +353,8 @@ const usersController = {
   },
   vacacionesRechazado: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
 
     const data = req.body;
-    console.log(data);
     try {
       let antEditado = await DB.vacaciones.update(data, {
         where: { id: id },
@@ -377,7 +367,6 @@ const usersController = {
   vacacionesAprobado: async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    console.log(req.body);
     try {
       let antEditado = await DB.vacaciones.update(data, {
         where: { id: id },
@@ -390,7 +379,6 @@ const usersController = {
   borrarVacacion: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
       await DB.vacaciones.destroy({
         where: { id },
       });
@@ -414,8 +402,6 @@ const usersController = {
       const data = req.body;
       const extension = file?.mimetype.split("/");
       const { gastoId, total } = data;
-      console.log(data);
-      console.log(file, "line 341");
 
       await DB.gastos.update(
         {
@@ -468,7 +454,6 @@ const usersController = {
   antpagos: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data, "208");
       await DB.gastos.create({ ...data, importerendido: data.importe });
       res.send("se creo correctamente");
     } catch (error) {
@@ -531,7 +516,6 @@ const usersController = {
     try {
       const { id } = req.params;
       const { listo, procesoFinalizado } = req.body;
-      console.log(req.body);
       await DB.gastos.update({ listo, procesoFinalizado }, { where: { id } });
 
       res.send("ok");
@@ -553,12 +537,9 @@ const usersController = {
   agregarImgUsuario: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
       const img = req.file;
-      console.log(img);
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
-      console.log(imagenURL);
       let imgCreada = await DB.usuarios.update(
         { imagen: imagenURL.secure_url },
         {
@@ -596,9 +577,7 @@ const usersController = {
   rendicionPK: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
       let a = await DB.rendiciones.findByPk(id, { all: true });
-      console.log(a, "okkkkkkk");
       res.send(a);
     } catch (e) {
       res.send(e);
@@ -609,10 +588,6 @@ const usersController = {
     try {
       const file = req.file;
       const data = req.body;
-
-      console.log(file, "soy file*****************************");
-
-      console.log(data, "soy data *******************");
 
       if (file === undefined) {
         await DB.gastos.create(data);
