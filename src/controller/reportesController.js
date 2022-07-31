@@ -12,7 +12,7 @@ const regex = /^[0-9]*$/;
 const reportesController = {
   remito: async (req, res) => {
     try {
-      let ress = await DB.w_remitos.findAll();
+      let ress = await DB.remitos.findAll();
 
       res.send(ress);
     } catch (error) {
@@ -99,27 +99,38 @@ const reportesController = {
         cliente: zeroFill(removeCharacters(f.ClienteDestino), 5),
       }));
       //aca iniciamos la iteracion con un ciclo for
-      connection.connect();
       for (let i = 0; i < newArrayExcel.length; i++) {
         const element = newArrayExcel[i];
-        if (element.Estado === "CAR") {
-          let sql = `UPDATE wbt8_temp.w_remitos
-       SET cliente=?, 
-       ESTADO = ?
-       WHERE  REMITO= ?`;
+        console.log(element.fechafin,'line104');
+       
+        let sql = `UPDATE wbt8_temp.w_remitos
+        SET cliente=?,
+        ESTADO = ?,
+         fechafin=?
+        WHERE  REMITO = ?`;
 
-          let data = [element.cliente, "DESPACHADO", element.REMITO];
+        if (element.Estado === "CAR") {
+          let data = [element.cliente,"DESP",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
             if (error) return res.send(error.message);
 
-            res.send("ok");
           });
-        } else {
-          console.log("nop");
+        } else if(element.Estado === 'PRE'){
+          let data = [element.cliente,"PREPARADO",element.fechafin, element.REMITO];
+          await connection.query(sql, data, (error, results, fields) => {
+            if (error) return res.send(error.message);
+
+          });
+        }else{
+          let data = [element.cliente,"A PREPARAR",element.fechafin, element.REMITO];
+          await connection.query(sql, data, (error, results, fields) => {
+            if (error) return res.send(error.message);
+
+          });
         }
       }
+      res.send("ok");
 
-      connection.end();
     } catch (e) {
       res.send(e);
     }
