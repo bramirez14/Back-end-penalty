@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const remitos = sequelize.define('remitos', {
-    cliente: DataTypes.INTEGER,
+  const w_remitos = sequelize.define('w_remitos', {
+    cliente: DataTypes.STRING,
     razonsoc: DataTypes.STRING,
     vendedor: DataTypes.INTEGER,
     PEDIDO: DataTypes.STRING,
@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     REMITO:DataTypes.STRING,
     ESTADO: DataTypes.STRING,
     pdf:DataTypes.STRING,
-    fechafin: DataTypes.STRING,
+    //fechafin: DataTypes.STRING,
   }, {timestamps:false});
   remitos.associate = function(models) {
   }
-  return remitos;
+  return w_remitos;
 };
