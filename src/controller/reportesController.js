@@ -12,7 +12,7 @@ const regex = /^[0-9]*$/;
 const reportesController = {
   remito: async (req, res) => {
     try {
-      let ress = await DB.w_remitos.findAll();
+      let ress = await DB.remitos.findAll();
 
       res.send(ress);
     } catch (error) {
@@ -98,8 +98,9 @@ const reportesController = {
         fechafin: new Date((f.FechaPCC - (25567 + 2)) * 86400 * 1000),
         cliente: zeroFill(removeCharacters(f.ClienteDestino), 5),
       }));
+      await DB.remitos.update({ cliente:'006165'},{where:{REMITO:'002600009793'}})
       //aca iniciamos la iteracion con un ciclo for
-      connection.connect();
+   /*    connection.connect();
       for (let i = 0; i < newArrayExcel.length; i++) {
         const element = newArrayExcel[i];
         if (element.Estado === "CAR") {
@@ -112,14 +113,15 @@ const reportesController = {
           await connection.query(sql, data, (error, results, fields) => {
             if (error) return res.send(error.message);
 
-            res.send("ok");
           });
         } else {
           console.log("nop");
         }
       }
 
-      connection.end();
+      connection.end(); */
+      res.send("ok");
+
     } catch (e) {
       res.send(e);
     }
