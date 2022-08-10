@@ -1,12 +1,12 @@
 module.exports = {
   "development": {
-      "database": "WBT11",
+      "database": "WBT12",
       "username": "sa",
        "password": "Cambuci2018",
        "dialect": "mssql",
        "host": "192.168.1.15",
        "params":{
-         "storage":"WBT11-db.mssql",
+         "storage":"WBT12-db.mssql",
          "define":{
            "underscore":true
          },
