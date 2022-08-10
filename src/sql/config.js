@@ -2,7 +2,7 @@ const config = {
   user: "sa",
   password: "Cambuci2018",
   server: "192.168.1.15",
-  database: "WBT11",
+  database: "WBT12",
   options: {
     trustServerCertificate: true, 
     trustedconnection: false,

@@ -94,7 +94,7 @@ const reportesController = {
       );
       const newArrayExcel = filterRemito.map((f) => ({
         ...f,
-        REMITO: zeroFill(f.Delivery, 8, "0026"),
+        REMITO: zeroFill(f.Delivery, 8, "00026"),
         fechafin: new Date((f.FechaPCC - (25567 + 2)) * 86400 * 1000),
         cliente: zeroFill(removeCharacters(f.ClienteDestino), 5),
       }));
