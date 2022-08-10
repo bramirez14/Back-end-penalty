@@ -6,7 +6,7 @@ ctacte: async (req, res) => {
       const pool = await getConnection();
       const result = await pool
         .request()
-        .query("SELECT * FROM [WBT11].[dbo].[VW_CTACTE]");
+        .query("SELECT * FROM [WBT12].[dbo].[VW_CTACTE]");
       res.send(result.recordset);
     } catch (e) {
       res.send({ msg: e, status: 400 });
@@ -17,7 +17,7 @@ ctacte: async (req, res) => {
       const pool = await getConnection();
       const result = await pool
         .request()
-        .query("SELECT  * FROM [WBT11].[dbo].[VW_CTAPRO]");
+        .query("SELECT  * FROM [].[dbo].[VW_CTAPRO]");
       res.send(result.recordset);
     } catch (e) {
       res.send({ msg: e, status: 400 });
