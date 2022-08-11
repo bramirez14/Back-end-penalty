@@ -97,7 +97,7 @@ router.post("/agregar/newscc", async (req, res) => {
     const filtroAprobados = await pool
       .request()
       .query(
-        "SELECT * FROM [WBT12].[dbo].[Z_SCC] where APROBCRED='S' and APROBDEP='S' and  NROCOMP IS NULL"
+        "SELECT * FROM [WBT12-TEMP].[dbo].[Z_SCC] where APROBCRED='S' and APROBDEP='S' and  NROCOMP IS NULL"
       );
     const arrayApro = filtroAprobados.recordset.map((f) => f.CLIENTE);
     //TE DA UN ARRAY DE SOLO NUMERO DE CLIENTES
@@ -108,7 +108,7 @@ router.post("/agregar/newscc", async (req, res) => {
     const numeroPedido = await pool
       .request()
       .query(
-        "SELECT CLAVE, FUNCION FROM [WBT12].[dbo].[TABLASI09]  where CLAVE = 'SI091PD0006X' "
+        "SELECT CLAVE, FUNCION FROM [WBT12-TEMP].[dbo].[TABLASI09]  where CLAVE = 'SI091PD0006X' "
       );
 
     //insertamos en la tabla PDCABEZA
@@ -122,12 +122,12 @@ router.post("/agregar/newscc", async (req, res) => {
       let clienteActual = await pool
         .request()
         .query(
-          `SELECT * FROM [WBT12].[dbo].[CLIENTES] WHERE NUMERO = '${clientes[i]}'`
+          `SELECT * FROM [WBT12-TEMP].[dbo].[CLIENTES] WHERE NUMERO = '${clientes[i]}'`
         );
       let entrega = await pool
         .request()
         .query(
-          `SELECT TRANSPORTE FROM [WBT12].[dbo].[CLTESENTREGA] WHERE CLIENTE= '${clientes[i]}' `
+          `SELECT TRANSPORTE FROM [WBT12-TEMP].[dbo].[CLTESENTREGA] WHERE CLIENTE= '${clientes[i]}' `
         );
       let codigo = await cantidadDeDigitos(number);
 
@@ -202,7 +202,7 @@ router.post("/agregar/newscc", async (req, res) => {
       console.log(clientes[i])
       let digito = await cantidadDeNUmeros([j + 1]);
 
-       const respuesta = await pool.request().query(`INSERT INTO [WBT12].[dbo].[PDITEMS] 
+       const respuesta = await pool.request().query(`INSERT INTO [WBT12-TEMP].[dbo].[PDITEMS] 
      VALUES (
       'P', 
       '${clientes[i]}',
