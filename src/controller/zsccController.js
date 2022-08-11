@@ -6,7 +6,7 @@ const zsccController = {
 
       const result = await pool
         .request()
-        .query("SELECT * FROM [].[dbo].[SCCvista]");
+        .query("SELECT * FROM [WBT12].[dbo].[SCCvista]");
       res.send(result.recordsets);
     } catch (e) {
       res.send(e);
@@ -20,7 +20,7 @@ const zsccController = {
       const result = await pool
         .request()
         .query(
-          `SELECT * FROM  [].[dbo].[Z_SCC]  Where NROSCC = ${id}`
+          `SELECT * FROM  [WBT12].[dbo].[Z_SCC]  Where NROSCC = ${id}`
         );
       if (result.rowsAffected[0] === 0) return res.send(404);
       return res.send(result.recordset);
@@ -35,7 +35,7 @@ const zsccController = {
       const result = await pool
         .request()
         .query(
-          "SELECT NUMERO,CODTALLE,DESCRIP FROM [].[dbo].[ARTICULO]"
+          "SELECT NUMERO,CODTALLE,DESCRIP FROM [WBT12].[dbo].[ARTICULO]"
         );
 
       res.send(result.recordsets);
@@ -49,7 +49,7 @@ const zsccController = {
 
       const result = await pool
         .request()
-        .query("SELECT * FROM [].[dbo].[VW_TALLES]");
+        .query("SELECT * FROM [WBT12].[dbo].[VW_TALLES]");
 
       res.send(result.recordsets);
     } catch (e) {
