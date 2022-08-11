@@ -6,7 +6,7 @@ pasePedidos: async (req, res) => {
       const pool = await getConnection();
       const result = await pool
         .request()
-        .query("SELECT * FROM [WBT12].[dbo].[VW_APROBACION_PEDIDOS_FINAL]");
+        .query("SELECT * FROM [WBT11_TEMP].[dbo].[VW_APROBACION_PEDIDOS_FINAL]");
       res.send(result.recordset);
     } catch (e) {
       res.send({ msg: e, status: 400 });
