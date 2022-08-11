@@ -58,9 +58,10 @@ const zsccController = {
   },
   editZSCC: async (req, res) => {
     const { id } = req.params;
+    console.log(id);
     try {
       const pool = await getConnection();
-      await pool.request().query(`UPDATE [WBT12-TEMP].[dbo].[Z_SCC] SET 
+      await pool.request().query(`UPDATE [WBT12].[dbo].[Z_SCC] SET 
         CANTPED=${req.body.CANTPED}, 
         PRECIO=${req.body.PRECIO},
         COMENTARIO='${req.body.COMENTARIO}',
@@ -121,7 +122,7 @@ delete: async (req, res) => {
     console.log(id);
     const pool = await getConnection()
     const result = await pool.request()
-    .query(`DELETE FROM [WBT12-TEMP].[dbo].[PDCABEZA] WHERE NROPED = ${id}`);
+    .query(`DELETE FROM [WBT12].[dbo].[PDCABEZA] WHERE NROPED = ${id}`);
   } catch (e) {
     res.send(e)
   }
