@@ -17,7 +17,7 @@ ctacte: async (req, res) => {
       const pool = await getConnection();
       const result = await pool
         .request()
-        .query("SELECT  * FROM [WBT12-TEMP].[dbo].[VW_CTAPRO]");
+        .query("SELECT  * FROM [WBT12-TEMP].[dbo].[CTAPRO]");
       res.send(result.recordset);
     } catch (e) {
       res.send({ msg: e, status: 400 });
