@@ -104,14 +104,14 @@ const reportesController = {
         const element = newArrayExcel[i];
         console.log(element.fechafin,'line104');
        
-        let sql = `UPDATE wbt8_temp.w_remitos
+        let sql = `UPDATE wbt8.w_remitos
         SET cliente=?,
         ESTADO = ?,
          fechafin=?
         WHERE  REMITO = ?`;
 
         if (element.Estado === "CAR") {
-          let data = [element.cliente,"DESP",element.fechafin, element.REMITO];
+          let data = [element.cliente,"DESPACHADO",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
             if (error) return res.send(error.message);
 
@@ -123,7 +123,7 @@ const reportesController = {
 
           });
         }else{
-          let data = [element.cliente,"A PREPARAR",element.fechafin, element.REMITO];
+          let data = [element.cliente,"EN PREPARACION",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
             if (error) return res.send(error.message);
 

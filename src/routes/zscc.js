@@ -18,7 +18,7 @@ router.get("/todos/pedidos", async (req, res) => {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .query("SELECT top 10 * FROM [WBT11_TEMP].[dbo].[VW_PEDIDOS]");
+      .query("SELECT top 10 * FROM [WBT12-TEMP].[dbo].[VW_PEDIDOS]");
     res.send(result.recordset);
   } catch (e) {
     res.send({ msg: e, status: 400 });
@@ -29,7 +29,7 @@ router.get("/todos/pruebit", async (req, res) => {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .query("SELECT * FROM [WBT11_TEMP].[dbo].[PRUEBITA]");
+      .query("SELECT * FROM [WBT12-TEMP].[dbo].[PRUEBITA]");
     res.send(result.recordset);
   } catch (e) {
     res.send({ msg: e, status: 400 });
@@ -41,7 +41,7 @@ router.get("/numero/si09", async (req, res) => {
     const result = await pool
       .request()
       .query(
-        "SELECT CLAVE, FUNCION FROM [WBT11_TEMP].[dbo].[TABLASI09] where CLAVE = 'SI091PD0006X'"
+        "SELECT CLAVE, FUNCION FROM [WBT12-TEMP].[dbo].[TABLASI09] where CLAVE = 'SI091PD0006X'"
       );
     res.send(result.recordset);
   } catch (e) {
@@ -51,6 +51,7 @@ router.get("/numero/si09", async (req, res) => {
 
 /****AGREGAR PEDIDO****/
 router.post("/agregar/newscc", async (req, res) => {
+  console.log('pase a pedidos');
   try {
     let date = new Date();
     let day = date.getDate();
@@ -97,7 +98,7 @@ router.post("/agregar/newscc", async (req, res) => {
     const filtroAprobados = await pool
       .request()
       .query(
-        "SELECT * FROM [WBT11_TEMP].[dbo].[Z_SCC] where APROBCRED='S' and APROBDEP='S' and  NROCOMP IS NULL"
+        "SELECT * FROM [WBT12-TEMP].[dbo].[Z_SCC] where APROBCRED='S' and APROBDEP='S' and  NROCOMP IS NULL"
       );
     const arrayApro = filtroAprobados.recordset.map((f) => f.CLIENTE);
     //TE DA UN ARRAY DE SOLO NUMERO DE CLIENTES
@@ -108,7 +109,7 @@ router.post("/agregar/newscc", async (req, res) => {
     const numeroPedido = await pool
       .request()
       .query(
-        "SELECT CLAVE, FUNCION FROM [WBT11_TEMP].[dbo].[TABLASI09]  where CLAVE = 'SI091PD0006X' "
+        "SELECT CLAVE, FUNCION FROM [WBT12-TEMP].[dbo].[TABLASI09]  where CLAVE = 'SI091PD00006X' "
       );
 
     //insertamos en la tabla PDCABEZA
@@ -122,91 +123,88 @@ router.post("/agregar/newscc", async (req, res) => {
       let clienteActual = await pool
         .request()
         .query(
-          `SELECT * FROM [WBT11_TEMP].[dbo].[CLIENTES] WHERE NUMERO = '${clientes[i]}'`
+          `SELECT * FROM [WBT12-TEMP].[dbo].[CLIENTES] WHERE NUMERO = '${clientes[i]}'`
         );
       let entrega = await pool
         .request()
         .query(
-          `SELECT TRANSPORTE FROM [WBT11_TEMP].[dbo].[CLTESENTREGA] WHERE CLIENTE= '${clientes[i]}' `
+          `SELECT TRANSPORTE FROM [WBT12-TEMP].[dbo].[CLTESENTREGA] WHERE CLIENTE= '${clientes[i]}' `
         );
       let codigo = await cantidadDeDigitos(number);
 
       console.log(codigo, "line codigo");
-      pool.request().query(`INSERT INTO [WBT11_TEMP].[dbo].[PDCABEZA] VALUES(
-          'P',
-          '${clientes[i]}',
-          '00006${codigo}',
-          '2C',
-          '${fecha}', 
-          '${fecha}', 
-          '00',
-          ${0},
-          '${clienteActual.recordset[0].DESCUENTO}',
-          ${0},
-          ${0},
-          '${clienteActual.recordset[0].VENDEDOR}',
-          '${entrega.recordset[0].TRANSPORTE}',
-          null,
-          'S',
-          '${clienteActual.recordset[0].DIRECCION}',
-          'L',
-          'L',
-          '01',
-          null,
-          '01',
-          null,
-          null,
-          null,
-          '${clienteActual.recordset[0].RAZONSOC}',
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          'N',
-          ${0},
-          null,
-          '${fecha}',
-          '${clienteActual.recordset[0].USUARIO}',
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          '0006${codigo}',
-          '01',
-          null,
-          null,
-          null,
-          'I',
-          null,
-          '1',
-          null)`);
+      pool.request().query(`INSERT INTO [WBT12-TEMP].[dbo].[PDCABEZA] VALUES(
+        'P',
+        '${clientes[i]}',
+        '00006${codigo}',
+        '2C',
+        '${fecha}', 
+        '${fecha}', 
+        '00',
+        ${0},
+        '${clienteActual.recordset[0].DESCUENTO}',
+        ${0},
+        ${0},
+        '${clienteActual.recordset[0].VENDEDOR}',
+        '${entrega.recordset[0].TRANSPORTE}',
+        null,
+        'S',
+        '${clienteActual.recordset[0].DIRECCION}',
+        'L',
+        'L',
+        '01',
+        null,
+        '01',
+        null,
+        null,
+        null,
+        '${clienteActual.recordset[0].RAZONSOC}',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        'N',
+        ${0},
+        null,
+        '${fecha}',
+        '${clienteActual.recordset[0].USUARIO}',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        '00006${codigo}',
+        '01',
+        null,
+        null,
+        null,
+        'I',
+        null,
+        '1',
+        null)`);
       console.log(buscarItemsClientes, "line181");
 
       for (let j = 0; j < buscarItemsClientes.length; j++) {
-        
-      console.log(buscarItemsClientes[j],'line 182');
-      console.log(clientes[i])
+      
       let digito = await cantidadDeNUmeros([j + 1]);
 
-       const respuesta = await pool.request().query(`INSERT INTO [WBT11_TEMP].[dbo].[PDITEMS] 
+       await pool.request().query(`INSERT INTO [WBT12-TEMP].[dbo].[PDITEMS] 
      VALUES (
       'P', 
       '${clientes[i]}',
-      '0006${codigo}',
+      '00006${codigo}',
        '${digito}', 
       '${buscarItemsClientes[j].ARTICULO}',
       null,
@@ -317,15 +315,15 @@ router.post("/agregar/newscc", async (req, res) => {
       'N')`);
 
       }
-      
+
       for (const item of buscarItemsClientes) {
-        await pool.request().query(`UPDATE [WBT11_TEMP].[dbo].[Z_SCC]  SET 
-      NROCOMP='0006${codigo}'  where NROSCC=${item.NROSCC}`);
+        await pool.request().query(`UPDATE [WBT12-TEMP].[dbo].[Z_SCC]  SET 
+      NROCOMP='00006${codigo}'  where NROSCC=${item.NROSCC}`);
       }
     }
 
-    await pool.request().query(`UPDATE [WBT11_TEMP].[dbo].[TABLASI09]  SET 
-FUNCION = '${number}'  where CLAVE = 'SI091PD0006X'`);
+    await pool.request().query(`UPDATE [WBT12-TEMP].[dbo].[TABLASI09]  SET 
+    FUNCION = '${number}'  where CLAVE = 'SI091PD00006X'`);
     res.send("scc comppletada");
   } catch (e) {
     res.send(e);
@@ -339,7 +337,7 @@ router.post("/agregar/pruebita", async (req, res) => {
     const result = await pool
       .request()
       .query(
-        `INSERT INTO [WBT11_TEMP].[dbo].[PRUEBITA] VALUES ('${req.body.TIPO}','${req.body.CLIENTE}','${req.body.NROPED}',NULL,'${req.body.NUMERO}','${req.body.REAL}') `
+        `INSERT INTO [WBT12-TEMP].[dbo].[PRUEBITA] VALUES ('${req.body.TIPO}','${req.body.CLIENTE}','${req.body.NROPED}',NULL,'${req.body.NUMERO}','${req.body.REAL}') `
       );
     res.send(result);
   } catch (e) {
@@ -353,7 +351,7 @@ router.get("/filtrando/aprobados", async (req, res) => {
     const filtroAprobados = await pool
       .request()
       .query(
-        "SELECT * FROM [WBT11_TEMP].[dbo].[Z_SCC] where APROBCRED='S' and APROBDEP='S' and  NROCOMP IS NULL"
+        "SELECT * FROM [WBT12-TEMP].[dbo].[Z_SCC] where APROBCRED='S' and APROBDEP='S' and  NROCOMP IS NULL"
       );
     res.send(filtroAprobados.recordset);
   } catch (e) {
@@ -367,7 +365,7 @@ router.get("/todos/items", async (req, res) => {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .query("SELECT TOP 10 * FROM [WBT11_TEMP].[dbo].[PDITEMS]");
+      .query("SELECT TOP 10 * FROM [WBT12-TEMP].[dbo].[PDITEMS]");
     res.send(result.recordset);
   } catch (e) {
     res.send({ msg: e, status: 400 });
@@ -377,7 +375,7 @@ router.put("/editar/pedido", async (req, res) => {
   try {
     const pool = await getConnection();
 
-    await pool.request().query(`UPDATE [WBT11_TEMP].[dbo].[TABLASI09]  SET 
+    await pool.request().query(`UPDATE [WBT12-TEMP].[dbo].[TABLASI09]  SET 
     FUNCION ='000760' where CLAVE = 'SI091PD0006X'`);
     res.send("ok");
   } catch (e) {
@@ -389,7 +387,7 @@ router.put("/editar/fecha", async (req, res) => {
   try {
     const pool = await getConnection();
 
-    await pool.request().query(`UPDATE [WBT11_TEMP].[dbo].[PDCABEZA] SET 
+    await pool.request().query(`UPDATE [WBT12-TEMP].[dbo].[PDCABEZA] SET 
     FECRECEP= '2022-01-17'  WHERE NROPED ='705' `);
     res.send("fecha edita");
   } catch (e) {
@@ -402,7 +400,7 @@ router.get("/todos/clientes", async (req, res) => {
 
     const result = await pool
       .request()
-      .query("SELECT * FROM [WBT11_TEMP].[dbo].[CLIENTES]");
+      .query("SELECT * FROM [WBT12-TEMP].[dbo].[CLIENTES]");
     res.send(result.recordsets);
   } catch (e) {
     res.send(e);
