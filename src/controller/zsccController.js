@@ -58,7 +58,6 @@ const zsccController = {
   },
   editZSCC: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
     try {
       const pool = await getConnection();
       await pool.request().query(`UPDATE [WBT12-TEMP].[dbo].[Z_SCC] SET 
@@ -119,7 +118,6 @@ const zsccController = {
 delete: async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const pool = await getConnection()
     const result = await pool.request()
     .query(`DELETE FROM [WBT12-TEMP].[dbo].[PDCABEZA] WHERE NROPED = ${id}`);

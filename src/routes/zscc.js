@@ -51,7 +51,6 @@ router.get("/numero/si09", async (req, res) => {
 
 /****AGREGAR PEDIDO****/
 router.post("/agregar/newscc", async (req, res) => {
-  console.log('pase a pedidos');
   try {
     let date = new Date();
     let day = date.getDate();
@@ -114,7 +113,6 @@ router.post("/agregar/newscc", async (req, res) => {
 
     //insertamos en la tabla PDCABEZA
     let number = numeroPedido.recordset[0].FUNCION;
-    console.log(number, "numero de pedido");
     for (let i = 0; i < clientes.length; i++) {
       number++;
       let buscarItemsClientes = filtroAprobados.recordset.filter(
@@ -132,7 +130,6 @@ router.post("/agregar/newscc", async (req, res) => {
         );
       let codigo = await cantidadDeDigitos(number);
 
-      console.log(codigo, "line codigo");
       pool.request().query(`INSERT INTO [WBT12-TEMP].[dbo].[PDCABEZA] VALUES(
         'P',
         '${clientes[i]}',
@@ -194,7 +191,6 @@ router.post("/agregar/newscc", async (req, res) => {
         null,
         '1',
         null)`);
-      console.log(buscarItemsClientes, "line181");
 
       for (let j = 0; j < buscarItemsClientes.length; j++) {
       
@@ -324,14 +320,14 @@ router.post("/agregar/newscc", async (req, res) => {
 
     await pool.request().query(`UPDATE [WBT12-TEMP].[dbo].[TABLASI09]  SET 
     FUNCION = '${number}'  where CLAVE = 'SI091PD00006X'`);
-    res.send("scc comppletada");
+    res.send({msg:"scc comppletada",status:200});
   } catch (e) {
     res.send(e);
   }
 });
 
 router.post("/agregar/pruebita", async (req, res) => {
-  console.log(req.body);
+
   try {
     const pool = await getConnection();
     const result = await pool

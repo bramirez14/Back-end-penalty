@@ -59,7 +59,6 @@ const usersController = {
       const fileFormat = file.type.split("/");
       const { id } = req.params;
 
-      console.log(fileFormat, "line58");
       if (fileFormat[1] !== "pdf") {
         await DB.imagenes.destroy({
           where: { id },
@@ -119,7 +118,6 @@ const usersController = {
     try {
       // id del producto
       const { id } = req.params;
-      console.log(`me estas llamando soy el usuario ${id}`);
       let usuario = await DB.usuarios.findByPk(id, {
         include: [
           "anticipo",
@@ -269,14 +267,12 @@ const usersController = {
   },
   check: async (req, res) => {
     const token = req.header("token");
-    console.log();
     if (!token) return res.send("No hay token");
     try {
       const decoded = jwt.verify(token, "penalty");
       user = decoded.user; // este user viene del login linea 102
       res.send(user);
     } catch (e) {
-      console.log(e);
       res.send("Token invalido");
     }
   },
@@ -285,7 +281,6 @@ const usersController = {
   anticipo: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data, "line 212");
 
       anticipoCreado = await DB.anticipos.create(data);
 
@@ -296,10 +291,8 @@ const usersController = {
   },
   anticipoRechazado: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
 
     const data = req.body;
-    console.log(data);
     try {
       await DB.anticipos.update(data, {
         where: { id: id },
@@ -312,7 +305,6 @@ const usersController = {
   anticipoAprobado: async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    console.log(data, "line 249");
     try {
       await DB.anticipos.update(data, {
         where: { id: id },
@@ -325,7 +317,6 @@ const usersController = {
 
   borrarAnticipo: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
     try {
       await DB.anticipos.destroy({
         where: { id },
@@ -352,7 +343,6 @@ const usersController = {
   vacaciones: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data);
       await DB.vacaciones.create(data);
       res.send({ msg: "vacacion solicitada" });
     } catch (error) {
@@ -361,10 +351,8 @@ const usersController = {
   },
   vacacionesRechazado: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
 
     const data = req.body;
-    console.log(data);
     try {
       let antEditado = await DB.vacaciones.update(data, {
         where: { id: id },
@@ -377,7 +365,6 @@ const usersController = {
   vacacionesAprobado: async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    console.log(req.body);
     try {
       let antEditado = await DB.vacaciones.update(data, {
         where: { id: id },
@@ -390,7 +377,6 @@ const usersController = {
   borrarVacacion: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
       await DB.vacaciones.destroy({
         where: { id },
       });
@@ -414,8 +400,6 @@ const usersController = {
       const data = req.body;
       const extension = file?.mimetype.split("/");
       const { gastoId, total } = data;
-      console.log(data);
-      console.log(file, "line 341");
 
       await DB.gastos.update(
         {
@@ -468,7 +452,7 @@ const usersController = {
   antpagos: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data, "208");
+
       await DB.gastos.create({ ...data, importerendido: data.importe });
       res.send("se creo correctamente");
     } catch (error) {
@@ -492,7 +476,6 @@ const usersController = {
   gastoAprobado: async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    console.log(req.body);
     try {
       let antEditado = await DB.gastos.update(data, {
         where: { id: id },
@@ -531,7 +514,6 @@ const usersController = {
     try {
       const { id } = req.params;
       const { listo, procesoFinalizado } = req.body;
-      console.log(req.body);
       await DB.gastos.update({ listo, procesoFinalizado }, { where: { id } });
 
       res.send("ok");
@@ -553,12 +535,9 @@ const usersController = {
   agregarImgUsuario: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
       const img = req.file;
-      console.log(img);
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
-      console.log(imagenURL);
       let imgCreada = await DB.usuarios.update(
         { imagen: imagenURL.secure_url },
         {
@@ -596,9 +575,7 @@ const usersController = {
   rendicionPK: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
       let a = await DB.rendiciones.findByPk(id, { all: true });
-      console.log(a, "okkkkkkk");
       res.send(a);
     } catch (e) {
       res.send(e);
@@ -609,10 +586,6 @@ const usersController = {
     try {
       const file = req.file;
       const data = req.body;
-
-      console.log(file, "soy file*****************************");
-
-      console.log(data, "soy data *******************");
 
       if (file === undefined) {
         await DB.gastos.create(data);
@@ -717,7 +690,7 @@ const usersController = {
   },
   deleterendicion: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
+
     try {
       await DB.rendiciones.destroy({
         where: { id },
@@ -763,8 +736,7 @@ const usersController = {
     try {
       const { id } = req.params;
       const { filename } = req.file;
-      console.log(id);
-      console.log(filename);
+
       await DB.gastos.update({ pdfpagoFinal: filename }, { where: { id } });
       res.send("ok");
     } catch (e) {
@@ -776,7 +748,6 @@ const usersController = {
     try {
       const { id } = req.params;
       const { pagoRealizado } = req.body;
-      console.log(req.body);
       await DB.gastos.update({ pagoRealizado }, { where: { id } });
       res.send("ok");
     } catch (e) {
@@ -786,7 +757,6 @@ const usersController = {
 
   pdfCreate: async (req, res) => {
     try {
-      console.log(req.body);
       pdf.create(pdfTemplate(req.body), {}).toFile("result.pdf", (err, r) => {
         if (err) {
           res.send(Promise.reject());
@@ -810,7 +780,6 @@ const usersController = {
     const { departamento, gerenteId } = deptos;
     const gerente = await DB.gerentes.findByPk(gerenteId);
     const { nombre, apellido, email } = gerente;
-    console.log(data);
 
     res.render(
       "pdf",
@@ -820,7 +789,6 @@ const usersController = {
           if (err) {
             return console.log(err, "error");
           } else {
-            console.log(res, "respuesta");
             var datafile = fs.readFileSync("result.pdf");
             res.header("content-type", "application/pdf");
             res.send(datafile);
@@ -833,21 +801,17 @@ const usersController = {
   gastoPDF: async (req, res) => {
     try {
       const header = req.header("archivo");
-      console.log(header);
-
       res.sendFile(path.join(__dirname, `../file/public/${header}`));
     } catch (error) {
       res.send(e);
     }
   },
   pd: async (req, res) => {
-    console.log(path.join(__dirname));
     res.sendFile(path.join(__dirname, "../../result.pdf"));
   },
 
   archivoPdf: async (req, res) => {
     try {
-      console.log("estoy aca");
       const { id } = req.params;
       const { norden, procesoFinalizado } = req.body;
       const { filename } = req.file;
@@ -861,7 +825,6 @@ const usersController = {
     }
   },
   kilometros: async (req, res) => {
-    console.log("estoy en kilometros");
     try {
       const resp = await DB.kilometros.findAll({
         include: { all: true },
@@ -876,7 +839,6 @@ const usersController = {
     try {
       
       const resp = await DB.rendicioneskms.findAll();
-      console.log(resp);
       res.send(resp);
     } catch (e) {
       res.send(e);
@@ -886,7 +848,6 @@ const usersController = {
   Km: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data);
       const result = await DB.rendicioneskms.create(data);
       res.send(result);
     } catch (e) {
@@ -896,10 +857,8 @@ const usersController = {
   Kms: async (req, res) => {
     try {
       const data = req.body;
-      console.log(data, "791");
       const verificacion = Array.isArray(data.id);
       const img = req.file;
-      console.log(img);
       const imgPath = img.path;
       let imagenURL = await cloudinary.uploader.upload(imgPath);
       const { importeTotal, kmTotal, usuarioId, alertaId } = data;
@@ -952,7 +911,6 @@ const usersController = {
   kmAprobado: async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    console.log(req.body, "line 863");
     try {
       await DB.kilometros.update(data, {
         where: { id: id },
@@ -964,10 +922,9 @@ const usersController = {
   },
   kmRechazado: async (req, res) => {
     const { id } = req.params;
-    console.log(id);
 
     const data = req.body;
-    console.log(data, "line 878");
+
     try {
       await DB.kilometros.update(data, {
         where: { id: id },
@@ -979,7 +936,6 @@ const usersController = {
   },
   kmPdf: async (req, res) => {
     try {
-      console.log("estoy aca");
       const { id } = req.params;
       const { norden, procesoFinalizado } = req.body;
       const { filename } = req.file;
@@ -1022,11 +978,10 @@ const usersController = {
   pagoPDF: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
+
       const { filename } = req.file;
-      console.log(filename);
+
       const { procesoPagar } = req.body;
-      console.log(procesoPagar);
 
       await DB.kilometros.update(
         { procesoPagar, pdfinal: filename },
@@ -1041,8 +996,7 @@ const usersController = {
     try {
       const { id } = req.params;
       const { filename } = req.file;
-      console.log(id);
-      console.log(filename);
+    
       await DB.kilometros.update({ pdfpagoFinal: filename }, { where: { id } });
       res.send("ok");
     } catch (e) {
@@ -1064,7 +1018,6 @@ const usersController = {
   },
   sueldoPdf: async (req, res) => {
     try {
-      console.log("estoy aca");
       const { id } = req.params;
       const { norden, procesoFinalizado } = req.body;
       const { filename } = req.file;
@@ -1080,11 +1033,8 @@ const usersController = {
   sueldoPDF: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
       const { filename } = req.file;
-      console.log(filename);
       const { pagoRealizado } = req.body;
-      console.log(pagoRealizado);
 
       await DB.anticipos.update(
         { pagoRealizado, pdfinal: filename },
@@ -1099,8 +1049,6 @@ const usersController = {
     try {
       const { id } = req.params;
       const { filename } = req.file;
-      console.log(id);
-      console.log(filename);
       await DB.anticipos.update({ pdfpagoFinal: filename }, { where: { id } });
       res.send("ok");
     } catch (e) {
@@ -1256,7 +1204,6 @@ const usersController = {
           if (err) {
             return console.log(err, "error");
           } else {
-            console.log(res, "respuesta");
             var datafile = fs.readFileSync("recibo.pdf");
             res.header("content-type", "application/pdf");
             res.send({ msg: datafile, status: 200 });
@@ -1266,7 +1213,6 @@ const usersController = {
     );
   },
   pdfRecibo: async (req, res) => {
-    console.log(path.join(__dirname));
     res.sendFile(path.join(__dirname, "../../recibo.pdf"));
   },
   //funcion para editar archivos de  pago/gasto

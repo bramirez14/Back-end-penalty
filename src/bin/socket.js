@@ -38,7 +38,6 @@ const inicioSocket = (server) => {
     io.emit("todas-alertas", await alertas());
 
     socket.on('alerta-nueva', async(alerta) => {
-      console.log(alerta,'line41');
       const result = await guardarAlerta(alerta)
       io.emit( 'todas-alertas', await alertas());
   })

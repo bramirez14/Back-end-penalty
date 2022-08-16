@@ -21,13 +21,11 @@ const reportesController = {
   },
   remitoPdf: async (req, res) => {
     const header = req.header("archivo");
-    console.log(header);
     res.sendFile(`C:/xampp/htdocs/intranet/archivos/REMITOVACLOG/${header}`);
   },
 
   pdfComprobantes: async (req, res) => {
     const header = req.header("archivo");
-    console.log(header);
     res.sendFile(
       `C:/xampp/htdocs/intranet/archivos/COMPROBANTES/${header}.pdf`
     );
@@ -102,7 +100,6 @@ const reportesController = {
       //aca iniciamos la iteracion con un ciclo for
       for (let i = 0; i < newArrayExcel.length; i++) {
         const element = newArrayExcel[i];
-        console.log(element.fechafin,'line104');
        
         let sql = `UPDATE wbt8.w_remitos
         SET cliente=?,
