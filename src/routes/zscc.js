@@ -163,6 +163,7 @@ router.post("/agregar/newscc", async (req, res) => {
         null,
         null,
         null,
+        null,
         'N',
         ${0},
         null,

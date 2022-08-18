@@ -63,6 +63,8 @@
 
 
 
+
+
       codigocuit: null
  	codanulacion: null
  	tipofacturacion: 1 {string }
