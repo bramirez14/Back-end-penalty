@@ -18,7 +18,7 @@ exports.crearRendicion = async (files) => {
   };
 //funcion donde recibimos el path  para convertirlo a una img https y guardar a cloudinary
 exports.clo = async (archivos) => {
-  let array = [WBT12-TEMP];
+  let array = [WBT12];
   for (const archivo of archivos) {
     let result = await cloudinary.uploader.upload(archivo);
     array.push(result.secure_url);
@@ -27,7 +27,7 @@ exports.clo = async (archivos) => {
 }
 //Guardamos la img https a la DB que viene de clounary
 exports.guardarImagen = async (archivos) => {
-  let arrayImagen = [WBT12-TEMP];
+  let arrayImagen = [WBT12];
 
   for (const archivo of archivos) {
     let imagenCreada= await DB.imagenes.create({
