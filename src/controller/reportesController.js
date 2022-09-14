@@ -112,11 +112,7 @@ const reportesController = {
           let data = [element.cliente,"DESPACHADO",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
             //if (error) return res.send(error.message);
-            /* console.log({
-              error,
-              results,
-              fields
-            }); */
+            
             
           });
         }  
@@ -124,22 +120,14 @@ const reportesController = {
           let data = [element.cliente,"PREPARADO",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
             //if (error) return res.send(error.message);
-            /* console.log({
-              error,
-              results,
-              fields
-            }); */
+            
           });
         }
         if(element.Estado === 'ACT'|| element.Estado === 'ACO'){
           let data = [element.cliente,"EN PREPARACION",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
           //  if (error) return res.send(error.message);
-          /* console.log({
-            error,
-            results,
-            fields
-          }); */
+         
           });
         } 
       }

@@ -155,7 +155,7 @@ const usersController = {
         },
       });
       if (!!verify) {
-        res.send({ message: "Ya estas registrado/a", status: 500 });
+        res.send({ message: "Ya estas registrado/a", status: 400 });
       } else {
         //verificamos las contraseñas
         if (password === password2) {
@@ -165,6 +165,7 @@ const usersController = {
             ...data,
             password: encryptedKey,
             email: e,
+            gerenteId
           });
           let token;
           !user
@@ -787,7 +788,7 @@ const usersController = {
       function (err, html) {
         pdf.create(html).toFile("result.pdf", function (err, result) {
           if (err) {
-            return console.log(err, "error");
+            return (err, "error");
           } else {
             var datafile = fs.readFileSync("result.pdf");
             res.header("content-type", "application/pdf");
@@ -955,7 +956,6 @@ const usersController = {
       // const filtradoId= busquedaId.filter(d=>d.kilometroId !== id  )
 
       /* for (const d of filtradoId) {
-        console.log(d.id,'line921');
         await DB.rendicioneskms.destroy({
           where:{ id:d.id}
         })
@@ -1202,7 +1202,7 @@ const usersController = {
       function (err, html) {
         pdf.create(html).toFile("recibo.pdf", function (err, result) {
           if (err) {
-            return console.log(err, "error");
+            return (err, "error");
           } else {
             var datafile = fs.readFileSync("recibo.pdf");
             res.header("content-type", "application/pdf");
@@ -1258,21 +1258,20 @@ const usersController = {
     try {
       const { id } = req.params;
       const data = req.body;
-      if (!data.epassword) {
+      if (data.epassword===undefined) {
         await DB.usuarios.update({ ...data }, { where: { id: id } });
-        res.send({ message: "Editamos el usuario", status: 200, result: user });
-      } else if (data.epassword === data.epassword2) {
-        encryptedKey = bcrypt.hashSync(data.epassword, 10);
+        res.send({ message: "Editamos el usuario", status: 200 });
+      }else{
+        if (data.epassword === data.epassword2) {
         //Editamos el usuario
         const user = await DB.usuarios.update(
-          { ...data, password: encryptedKey },
+          { ...data, password: bcrypt.hashSync(data.epassword, 10) },
           { where: { id: id } }
         );
-
-        res.send({ message: "Editamos el usuario", status: 200, result: user });
-      } else {
-        res.send("Las contraseñas no son iguales");
-      }
+        res.send({ message: "Editamos el usuario y cambiamos contrasena", status: 200, result: user });
+        throw Exception('Las contraseñas no son iguales');
+      } 
+      } 
     } catch (error) {
       res.send(error);
     }
