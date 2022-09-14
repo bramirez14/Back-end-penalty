@@ -108,12 +108,11 @@ router.post("/agregar/newscc", async (req, res) => {
     const numeroPedido = await pool
       .request()
       .query(
-        "SELECT CLAVE, FUNCION FROM [WBT12].[dbo].[TABLASI09]  where CLAVE = 'SI091PD0006X' "
+        "SELECT CLAVE, FUNCION FROM [WBT12].[dbo].[TABLASI09]  where CLAVE = 'SI091PD00006X' "
       );
 
     //insertamos en la tabla PDCABEZA
     let number = numeroPedido.recordset[0].FUNCION;
-    console.log(number, "numero de pedido");
     for (let i = 0; i < clientes.length; i++) {
       number++;
       let buscarItemsClientes = filtroAprobados.recordset.filter(
@@ -131,82 +130,78 @@ router.post("/agregar/newscc", async (req, res) => {
         );
       let codigo = await cantidadDeDigitos(number);
 
-      console.log(codigo, "line codigo");
-      pool.request().query(`INSERT INTO [WBT12-TEMP].[dbo].[PDCABEZA] VALUES(
-          'P',
-          '${clientes[i]}',
-          '00006${codigo}',
-          '2C',
-          '${fecha}', 
-          '${fecha}', 
-          '00',
-          ${0},
-          '${clienteActual.recordset[0].DESCUENTO}',
-          ${0},
-          ${0},
-          '${clienteActual.recordset[0].VENDEDOR}',
-          '${entrega.recordset[0].TRANSPORTE}',
-          null,
-          'S',
-          '${clienteActual.recordset[0].DIRECCION}',
-          'L',
-          'L',
-          '01',
-          null,
-          '01',
-          null,
-          null,
-          null,
-          '${clienteActual.recordset[0].RAZONSOC}',
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          'N',
-          ${0},
-          null,
-          '${fecha}',
-          '${clienteActual.recordset[0].USUARIO}',
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          '0006${codigo}',
-          '01',
-          null,
-          null,
-          null,
-          'I',
-          null,
-          '1',
-          null)`);
-      console.log(buscarItemsClientes, "line181");
+      pool.request().query(`INSERT INTO [WBT12].[dbo].[PDCABEZA] VALUES(
+        'P',
+        '${clientes[i]}',
+        '00006${codigo}',
+        '2C',
+        '${fecha}', 
+        '${fecha}', 
+        '00',
+        ${0},
+        '${clienteActual.recordset[0].DESCUENTO}',
+        ${0},
+        ${0},
+        '${clienteActual.recordset[0].VENDEDOR}',
+        '${entrega.recordset[0].TRANSPORTE}',
+        null,
+        'S',
+        '${clienteActual.recordset[0].DIRECCION}',
+        'L',
+        'L',
+        '01',
+        null,
+        '01',
+        null,
+        null,
+        null,
+        '${clienteActual.recordset[0].RAZONSOC}',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        'N',
+        ${0},
+        null,
+        '${fecha}',
+        '${clienteActual.recordset[0].USUARIO}',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        '00006${codigo}',
+        '01',
+        null,
+        null,
+        null,
+        'I',
+        null,
+        '1',
+        null)`);
 
       for (let j = 0; j < buscarItemsClientes.length; j++) {
-        
-      console.log(buscarItemsClientes[j],'line 182');
-      console.log(clientes[i])
+      
       let digito = await cantidadDeNUmeros([j + 1]);
 
-       const respuesta = await pool.request().query(`INSERT INTO [WBT12].[dbo].[PDITEMS] 
+       await pool.request().query(`INSERT INTO [WBT12].[dbo].[PDITEMS] 
      VALUES (
       'P', 
       '${clientes[i]}',
-      '0006${codigo}',
+      '00006${codigo}',
        '${digito}', 
       '${buscarItemsClientes[j].ARTICULO}',
       null,
@@ -317,23 +312,23 @@ router.post("/agregar/newscc", async (req, res) => {
       'N')`);
 
       }
-      
+
       for (const item of buscarItemsClientes) {
         await pool.request().query(`UPDATE [WBT12].[dbo].[Z_SCC]  SET 
-      NROCOMP='0006${codigo}'  where NROSCC=${item.NROSCC}`);
+      NROCOMP='00006${codigo}'  where NROSCC=${item.NROSCC}`);
       }
     }
 
     await pool.request().query(`UPDATE [WBT12].[dbo].[TABLASI09]  SET 
-FUNCION = '${number}'  where CLAVE = 'SI091PD0006X'`);
-    res.send("scc comppletada");
+    FUNCION = '${number}'  where CLAVE = 'SI091PD00006X'`);
+    res.send({msg:"scc comppletada",status:200});
   } catch (e) {
     res.send(e);
   }
 });
 
 router.post("/agregar/pruebita", async (req, res) => {
-  console.log(req.body);
+
   try {
     const pool = await getConnection();
     const result = await pool

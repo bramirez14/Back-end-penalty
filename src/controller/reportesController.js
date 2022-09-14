@@ -21,13 +21,11 @@ const reportesController = {
   },
   remitoPdf: async (req, res) => {
     const header = req.header("archivo");
-    console.log(header);
     res.sendFile(`C:/xampp/htdocs/intranet/archivos/REMITOVACLOG/${header}`);
   },
 
   pdfComprobantes: async (req, res) => {
     const header = req.header("archivo");
-    console.log(header);
     res.sendFile(
       `C:/xampp/htdocs/intranet/archivos/COMPROBANTES/${header}.pdf`
     );
@@ -102,33 +100,36 @@ const reportesController = {
       //aca iniciamos la iteracion con un ciclo for
       for (let i = 0; i < newArrayExcel.length; i++) {
         const element = newArrayExcel[i];
-        console.log(element.fechafin,'line104');
        
-        let sql = `UPDATE wbt8_temp.w_remitos
+        let sql = `UPDATE wbt8.w_remitos
         SET cliente=?,
         ESTADO = ?,
          fechafin=?
         WHERE  REMITO = ?`;
 
         if (element.Estado === "CAR") {
-          let data = [element.cliente,"DESP",element.fechafin, element.REMITO];
+          console.log;
+          let data = [element.cliente,"DESPACHADO",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
-            if (error) return res.send(error.message);
-
+            //if (error) return res.send(error.message);
+            
+            
           });
-        } else if(element.Estado === 'PRE'){
+        }  
+         if(element.Estado === 'PRE'){
           let data = [element.cliente,"PREPARADO",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
-            if (error) return res.send(error.message);
-
-          });
-        }else{
-          let data = [element.cliente,"A PREPARAR",element.fechafin, element.REMITO];
-          await connection.query(sql, data, (error, results, fields) => {
-            if (error) return res.send(error.message);
-
+            //if (error) return res.send(error.message);
+            
           });
         }
+        if(element.Estado === 'ACT'|| element.Estado === 'ACO'){
+          let data = [element.cliente,"EN PREPARACION",element.fechafin, element.REMITO];
+          await connection.query(sql, data, (error, results, fields) => {
+          //  if (error) return res.send(error.message);
+         
+          });
+        } 
       }
       res.send("ok");
 

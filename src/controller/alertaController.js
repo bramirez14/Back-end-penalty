@@ -15,7 +15,6 @@ const alertaController = {
    
     guardaralerta: async (req, res) => {
         const data=req.body;
-        console.log(data);
         try {
            const  result = await DB.alertas.create(data)
             res.send({msg:'la alerta se creo con exito!!',status:200,alertaCreada:result})

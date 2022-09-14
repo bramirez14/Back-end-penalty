@@ -3,7 +3,7 @@ module.exports = {
       "username": "root",
        "password": "Cambuci14",
         "port":3306,
-       "database": "wbt8_temp",
+       "database": "wbt8",
        "host": "181.45.252.13",
        "dialect": "mysql",
        "define":{

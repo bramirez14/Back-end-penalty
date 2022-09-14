@@ -17,15 +17,11 @@ const {
 const inicioSocket = (server) => {
   const io = socketIo(server);
 
-  io.on("connection", async (socket) => {
-    console.log("Un cliente se conecto");
+ /*  io.on("connection", async (socket) => {
     const [value, id] = comprobarJWT(socket.handshake.query["x-token"]);
-    console.log("cliente conectado", id);
-    /*  console.log(valido);
       if ( !valido ) {
-        console.log('socket no identificado');
         return socket.disconnect();
-    } */
+    } 
     await usuarioConectado(id);
     socket.join(id);
     io.emit("lista-usuarios", await usuariosConectados());
@@ -38,7 +34,6 @@ const inicioSocket = (server) => {
     io.emit("todas-alertas", await alertas());
 
     socket.on('alerta-nueva', async(alerta) => {
-      console.log(alerta,'line41');
       const result = await guardarAlerta(alerta)
       io.emit( 'todas-alertas', await alertas());
   })
@@ -49,12 +44,10 @@ const inicioSocket = (server) => {
     
 
     socket.on("disconnect", async () => {
-      console.log("cliente desconectado");
-      console.log(id);
       await usuarioDesconectado(id);
       io.emit("lista-usuarios", await usuariosConectados());
     });
-  });
+  }); */
 };
 module.exports = {
   inicioSocket,
