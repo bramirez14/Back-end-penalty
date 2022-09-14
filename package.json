@@ -1,6 +1,6 @@
 {
   "name": "back-end-penalty",
-  "version": "0.1.1",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "start": "nodemon ./src/bin/www"
