@@ -181,6 +181,7 @@ const usersController = {
                   res.json({
                     user: user,
                     token: token,
+                    status:200
                   });
                 }
               );
