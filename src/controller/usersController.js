@@ -1279,11 +1279,11 @@ const usersController = {
       res.send(error);
     }
   },
-  // Eliminamos un usuario
   deleteUser: async (req, res) => {
     try {
       const { id } = req.params;
-      let usuario = await DB.usuarios.findByPk(id, {
+      
+      let response = await DB.usuarios.findByPk(id, {
         include: [
           "anticipo",
           "vacacion",
@@ -1293,23 +1293,24 @@ const usersController = {
           "gerente",
         ],
       });
-      if (usuario.anticipo.length > 0) {
-        for (const ant of anticipo) {
+
+      if (response.anticipo.length > 0) {
+        for (const ant of response.anticipo) {
           await DB.anticipo.destroy({ where: { id: ant.id } });
         }
       }
-      if (usuario.vacacion.length > 0) {
-        for (const vaca of vacacion) {
+      if (response.vacacion.length > 0) {
+        for (const vaca of response.vacacion) {
           await DB.vacaciones.destroy({ where: { id: vaca.id } });
         }
       }
-      if (usuario.gasto.length > 0) {
-        for (const gas of gasto) {
+      if (response.gasto.length > 0) {
+        for (const gas of response.gasto) {
           await DB.gastos.destroy({ where: { id: gas.id } });
         }
       }
-      if (usuario.kilometro.length > 0) {
-        for (const km of kilometro) {
+      if (response.kilometro.length > 0) {
+        for (const km of response.kilometro) {
           await DB.kilometros.destroy({ where: { id: km.id } });
         }
       }
@@ -1318,19 +1319,6 @@ const usersController = {
         where: { id },
       });
       res.send({ msg: "usuario eliminado", status: 200 });
-    } catch (e) {
-      res.send(e);
-    }
-  },
-  //Eliminar Vacacinos
-  deleteVacacion: async (req, res) => {
-    try {
-      const { id } = req.params;
-      console.log(id);
-      await DB.vacaciones.destroy({
-        where: { usuarioId: id },
-      });
-      res.send({ msg: "vacaciones eliminadas", status: 200 });
     } catch (e) {
       res.send(e);
     }
