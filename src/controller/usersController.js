@@ -178,7 +178,7 @@ const usersController = {
                 { expiresIn: 14400 },
                 (err, token) => {
                   if (err) throw err;
-                  res.json({
+                  res.send({
                     user: user,
                     token: token,
                     status:200
