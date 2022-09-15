@@ -1276,6 +1276,32 @@ const usersController = {
       res.send(error);
     }
   },
+  // Eliminamos un usuario
+  deleteUser:async(req,res)=>{
+    try {
+      const { id } = req.params;
+      this.deleteVacacion()
+      await DB.usuarios.destroy({
+        where: { id },
+      });
+      res.send({msg:'usuario eliminado',status:200});
+    } catch (e) {
+      res.send(e);
+    }
+  },
+  //Eliminar Vacacinos
+  deleteVacacion:async(req,res)=>{
+    try {
+      const { id } = req.params;
+      console.log(id);
+      await DB.vacaciones.destroy({
+        where: { id },
+      })
+      res.send({msg:"vacaciones eliminadas",status:200});
+
+    } catch (e){res.send(e)}
+  },
+
   //ediatmos pdf de kilometros
   editarKmPDFproveedores: async (req, res) => {
     try {

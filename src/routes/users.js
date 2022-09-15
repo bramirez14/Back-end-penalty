@@ -64,6 +64,9 @@ router.post(
 );
 /*Editamos el usuario registrado */
 router.put("/editar/usuario/:id", usersController.editarUsuario);
+/* Eliminamos un usario */
+router.delete("/delete/user/:id", usersController.deleteUser);
+
 /* Log In */
 router.post(
   "/login",
