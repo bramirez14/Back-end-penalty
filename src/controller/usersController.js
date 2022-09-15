@@ -165,7 +165,6 @@ const usersController = {
             ...data,
             password: encryptedKey,
             email: e,
-            gerenteId,
           });
           let token;
           !user

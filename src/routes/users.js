@@ -59,7 +59,7 @@ router.post(
     check("password")
       .isLength({ min: 3 })
       .withMessage("ingrese una contraseña"),
-  ],
+  ],validationUser,
   usersController.register
 );
 /*Editamos el usuario registrado */
