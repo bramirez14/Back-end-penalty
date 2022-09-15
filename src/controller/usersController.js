@@ -165,7 +165,7 @@ const usersController = {
             ...data,
             password: encryptedKey,
             email: e,
-            gerenteId
+            gerenteId,
           });
           let token;
           !user
@@ -788,7 +788,7 @@ const usersController = {
       function (err, html) {
         pdf.create(html).toFile("result.pdf", function (err, result) {
           if (err) {
-            return (err, "error");
+            return err, "error";
           } else {
             var datafile = fs.readFileSync("result.pdf");
             res.header("content-type", "application/pdf");
@@ -798,7 +798,7 @@ const usersController = {
       }
     );
   },
-  //se usar apa todos los pfd fataria cambiar el nombre 
+  //se usar apa todos los pfd fataria cambiar el nombre
   gastoPDF: async (req, res) => {
     try {
       const header = req.header("archivo");
@@ -838,7 +838,6 @@ const usersController = {
   },
   kmRendicion: async (req, res) => {
     try {
-      
       const resp = await DB.rendicioneskms.findAll();
       res.send(resp);
     } catch (e) {
@@ -996,7 +995,7 @@ const usersController = {
     try {
       const { id } = req.params;
       const { filename } = req.file;
-    
+
       await DB.kilometros.update({ pdfpagoFinal: filename }, { where: { id } });
       res.send("ok");
     } catch (e) {
@@ -1152,30 +1151,30 @@ const usersController = {
       res.send(e);
     }
   },
-  addCreditCard:async(req,res) => { 
+  addCreditCard: async (req, res) => {
     try {
-      const {tarjeta} = req.body;
-      let result=await DB.formaspagoscreditos.create({tarjeta});
-      res.send({  result, msg: "creado con exito", status:200})
+      const { tarjeta } = req.body;
+      let result = await DB.formaspagoscreditos.create({ tarjeta });
+      res.send({ result, msg: "creado con exito", status: 200 });
     } catch (e) {
       res.send(e);
     }
   },
-    addPaymentMethod: async (req, res) => {
+  addPaymentMethod: async (req, res) => {
     try {
-     const {tarjeta} = req.body;
-     await DB.formapagos.create({pago:tarjeta});
-     res.send({msg:'Se creo con exito',status:200});
+      const { tarjeta } = req.body;
+      await DB.formapagos.create({ pago: tarjeta });
+      res.send({ msg: "Se creo con exito", status: 200 });
     } catch (e) {
       res.send({ msg: e, status: 400 });
     }
   },
-  allCrediCard: async (req, res) => { 
+  allCrediCard: async (req, res) => {
     try {
-      const resp=await DB.formaspagoscreditos.findAll();
-      res.send(resp)
+      const resp = await DB.formaspagoscreditos.findAll();
+      res.send(resp);
     } catch (e) {
-      res.send(e)
+      res.send(e);
     }
   },
 
@@ -1202,7 +1201,7 @@ const usersController = {
       function (err, html) {
         pdf.create(html).toFile("recibo.pdf", function (err, result) {
           if (err) {
-            return (err, "error");
+            return err, "error";
           } else {
             var datafile = fs.readFileSync("recibo.pdf");
             res.header("content-type", "application/pdf");
@@ -1258,48 +1257,83 @@ const usersController = {
     try {
       const { id } = req.params;
       const data = req.body;
-      if (data.epassword===undefined) {
+      if (data.epassword === undefined) {
         await DB.usuarios.update({ ...data }, { where: { id: id } });
         res.send({ message: "Editamos el usuario", status: 200 });
-      }else{
+      } else {
         if (data.epassword === data.epassword2) {
-        //Editamos el usuario
-        const user = await DB.usuarios.update(
-          { ...data, password: bcrypt.hashSync(data.epassword, 10) },
-          { where: { id: id } }
-        );
-        res.send({ message: "Editamos el usuario y cambiamos contrasena", status: 200, result: user });
-        throw Exception('Las contraseñas no son iguales');
-      } 
-      } 
+          //Editamos el usuario
+          const user = await DB.usuarios.update(
+            { ...data, password: bcrypt.hashSync(data.epassword, 10) },
+            { where: { id: id } }
+          );
+          res.send({
+            message: "Editamos el usuario y cambiamos contrasena",
+            status: 200,
+            result: user,
+          });
+          throw Exception("Las contraseñas no son iguales");
+        }
+      }
     } catch (error) {
       res.send(error);
     }
   },
   // Eliminamos un usuario
-  deleteUser:async(req,res)=>{
+  deleteUser: async (req, res) => {
     try {
       const { id } = req.params;
-      this.deleteVacacion()
+      let usuario = await DB.usuarios.findByPk(id, {
+        include: [
+          "anticipo",
+          "vacacion",
+          "gasto",
+          "departamento",
+          "kilometro",
+          "gerente",
+        ],
+      });
+      if (usuario.anticipo.length > 0) {
+        for (const ant of anticipo) {
+          await DB.anticipo.destroy({ where: { id: ant.id } });
+        }
+      }
+      if (usuario.vacacion.length > 0) {
+        for (const vaca of vacacion) {
+          await DB.vacaciones.destroy({ where: { id: vaca.id } });
+        }
+      }
+      if (usuario.gasto.length > 0) {
+        for (const gas of gasto) {
+          await DB.gastos.destroy({ where: { id: gas.id } });
+        }
+      }
+      if (usuario.kilometro.length > 0) {
+        for (const km of kilometro) {
+          await DB.kilometros.destroy({ where: { id: km.id } });
+        }
+      }
+
       await DB.usuarios.destroy({
         where: { id },
       });
-      res.send({msg:'usuario eliminado',status:200});
+      res.send({ msg: "usuario eliminado", status: 200 });
     } catch (e) {
       res.send(e);
     }
   },
   //Eliminar Vacacinos
-  deleteVacacion:async(req,res)=>{
+  deleteVacacion: async (req, res) => {
     try {
       const { id } = req.params;
       console.log(id);
       await DB.vacaciones.destroy({
-        where: { id },
-      })
-      res.send({msg:"vacaciones eliminadas",status:200});
-
-    } catch (e){res.send(e)}
+        where: { usuarioId: id },
+      });
+      res.send({ msg: "vacaciones eliminadas", status: 200 });
+    } catch (e) {
+      res.send(e);
+    }
   },
 
   //ediatmos pdf de kilometros
@@ -1313,11 +1347,14 @@ const usersController = {
       res.send(e);
     }
   },
-  editarKmPDFpago :async (req, res) => {
+  editarKmPDFpago: async (req, res) => {
     try {
       const { id } = req.params;
       const file = req.file;
-      await DB.kilometros.update({ pdfinal: file.filename }, { where: { id: id } });
+      await DB.kilometros.update(
+        { pdfinal: file.filename },
+        { where: { id: id } }
+      );
       res.send({ msg: "la modificacion fue un exito", status: 200 });
     } catch (e) {
       res.send(e);
@@ -1327,7 +1364,10 @@ const usersController = {
     try {
       const { id } = req.params;
       const file = req.file;
-      await DB.kilometros.update({ pdfpagoFinal: file.filename }, { where: { id: id } });
+      await DB.kilometros.update(
+        { pdfpagoFinal: file.filename },
+        { where: { id: id } }
+      );
       res.send({ msg: "la modificacion fue un exito", status: 200 });
     } catch (e) {
       res.send(e);
