@@ -7,6 +7,7 @@ const { getreportes } = require("./helpers/funcionesReportes");
 const XLSX = require("xlsx");
 const { zeroFill, removeCharacters } = require("./helpers/funciones");
 const connection = require("../sql/mysql/model");
+const { finished } = require("stream");
 const regex = /^[0-9]*$/;
 
 const reportesController = {
@@ -98,6 +99,7 @@ const reportesController = {
       }));
      // await DB.remitos.update({ cliente:'006165'},{where:{REMITO:'002600009793'}})
       //aca iniciamos la iteracion con un ciclo for
+      let isEnd=false
       for (let i = 0; i < newArrayExcel.length; i++) {
         const element = newArrayExcel[i];
        
@@ -108,7 +110,6 @@ const reportesController = {
         WHERE  REMITO = ?`;
 
         if (element.Estado === "CAR") {
-          console.log;
           let data = [element.cliente,"DESPACHADO",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
             //if (error) return res.send(error.message);
@@ -130,8 +131,10 @@ const reportesController = {
          
           });
         } 
+     
+       if(i === (newArrayExcel.length - 1))return res.send({msg:'ok',status:200});
+
       }
-      res.send("ok");
 
     } catch (e) {
       res.send(e);
