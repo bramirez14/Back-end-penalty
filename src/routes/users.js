@@ -54,12 +54,12 @@ router.post("/file/delete/:id", usersController.fileDelete);
 router.post(
   "/register",
   [
-    check("nombre").isLength({ min: 4 }).withMessage("ingrese su nombre"),
-    check("email").isEmail().withMessage("ingrese un email"),
+    check("nombre").isLength({ min: 4 }).withMessage("Ingrese un nombre mayor a 4 caracteres"),
+    check("email").isEmail().withMessage("ingrese un email valido"),
     check("password")
       .isLength({ min: 3 })
       .withMessage("ingrese una contraseña"),
-  ],
+  ],validationUser,
   usersController.register
 );
 /*Editamos el usuario registrado */

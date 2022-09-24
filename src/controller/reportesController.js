@@ -49,33 +49,8 @@ const reportesController = {
   facturaciondetallada: async (req, res) => {
     await getreportes(res, DB.factcomp);
   }, //ok
-  cuentacorriente: async (req, res) => {
-    await getreportes(res, DB.ctacte);
-  }, //ok
-  cobranzames: async (req, res) => {
-    await getreportes(res, DB.cobmes);
-  }, //ok
-  cobranzaanno: async (req, res) => {
-    await getreportes(res, DB.cobano);
-  }, //ok
-  clientesinhabilitados: async (req, res) => {
-    await getreportes(res, DB.inhab);
-  }, //ok
-  cargapedidos: async (req, res) => {
-    await getreportes(res, DB.cargped);
-  }, //ok
-  pendientedetallado: async (req, res) => {
-    await getreportes(res, DB.pendcomp);
-  }, //
-  agrupadocliente: async (req, res) => {
-    await getreportes(res, DB.pendcli);
-  }, //ok
-  futurosingresos: async (req, res) => {
-    await getreportes(res, DB.ingresos);
-  }, //ok
-  stock: async (req, res) => {
-    await getreportes(res, DB.stocks2);
-  },
+ 
+
   w_scc: async (req, res) => {
     await getreportes(res, DB.w_scc);
   },
@@ -98,9 +73,10 @@ const reportesController = {
       }));
       // await DB.remitos.update({ cliente:'006165'},{where:{REMITO:'002600009793'}})
       //aca iniciamos la iteracion con un ciclo for
+      let isEnd=false
       for (let i = 0; i < newArrayExcel.length; i++) {
         const element = newArrayExcel[i];
-
+          console.log(element);
         let sql = `UPDATE wbt8.w_remitos
         SET cliente=?,
         ESTADO = ?,
@@ -108,41 +84,31 @@ const reportesController = {
         WHERE  REMITO = ?`;
 
         if (element.Estado === "CAR") {
-          console.log;
-          let data = [
-            element.cliente,
-            "DESPACHADO",
-            element.fechafin,
-            element.REMITO,
-          ];
+          let data = [element.cliente,"DESPACHADO",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
             //if (error) return res.send(error.message);
+            
+            
           });
-        }
-        if (element.Estado === "PRE") {
-          let data = [
-            element.cliente,
-            "PREPARADO",
-            element.fechafin,
-            element.REMITO,
-          ];
+        }  
+         if(element.Estado === 'PRE'){
+          let data = [element.cliente,"PREPARADO",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
             //if (error) return res.send(error.message);
+            
           });
         }
-        if (element.Estado === "ACT" || element.Estado === "ACO") {
-          let data = [
-            element.cliente,
-            "EN PREPARACION",
-            element.fechafin,
-            element.REMITO,
-          ];
+        if(element.Estado === 'ACT'|| element.Estado === 'ACO'){
+          let data = [element.cliente,"EN PREPARACION",element.fechafin, element.REMITO];
           await connection.query(sql, data, (error, results, fields) => {
-            //  if (error) return res.send(error.message);
+          //  if (error) return res.send(error.message);
+         
           });
-        }
+        } 
+     
+       if(i === (newArrayExcel.length - 1))return res.send({msg:'ok',status:200});
+     
       }
-      res.send("ok");
     } catch (e) {
       res.send(e);
     }
