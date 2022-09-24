@@ -26,21 +26,21 @@ router.get('/facturacion/annogral',reportesController.annogral);
 
 router.get('/facturacion/detallada',reportesController.facturaciondetallada);
 
-router.get('/cuentacorriente',reportesController.cuentacorriente);
+//router.get('/cuentacorriente',reportesController.cuentacorriente);
 
-router.get('/cobranza/mes',reportesController.cobranzames);
-router.get('/cobranza/anno',reportesController.cobranzaanno);
+//router.get('/cobranza/mes',reportesController.cobranzames);
+//router.get('/cobranza/anno',reportesController.cobranzaanno);
 
-router.get('/clientes/inhabilitados',reportesController.clientesinhabilitados);
+//router.get('/clientes/inhabilitados',reportesController.clientesinhabilitados);
 
-router.get('/carga/pedidos',reportesController.cargapedidos);
-router.get('/pendiente/detallado',reportesController.pendientedetallado)
+//router.get('/carga/pedidos',reportesController.cargapedidos);
+//router.get('/pendiente/detallado',reportesController.pendientedetallado)
 
-router.get('/pendiente/agrupadocliente',reportesController.agrupadocliente);
+//router.get('/pendiente/agrupadocliente',reportesController.agrupadocliente);
 
-router.get('/futuros/ingresos',reportesController.futurosingresos);
+//router.get('/futuros/ingresos',reportesController.futurosingresos);
 
-router.get('/stock',reportesController.stock);
+//router.get('/stock',reportesController.stock);
 
 router.get('/scc',reportesController.w_scc);
 //ruta para subir a archivos excel.

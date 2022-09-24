@@ -49,33 +49,8 @@ const reportesController = {
   facturaciondetallada: async (req, res) => {
     await getreportes(res, DB.factcomp);
   }, //ok
-  cuentacorriente: async (req, res) => {
-    await getreportes(res, DB.ctacte);
-  }, //ok
-  cobranzames: async (req, res) => {
-    await getreportes(res, DB.cobmes);
-  }, //ok
-  cobranzaanno: async (req, res) => {
-    await getreportes(res, DB.cobano);
-  }, //ok
-  clientesinhabilitados: async (req, res) => {
-    await getreportes(res, DB.inhab);
-  }, //ok
-  cargapedidos: async (req, res) => {
-    await getreportes(res, DB.cargped);
-  }, //ok
-  pendientedetallado: async (req, res) => {
-    await getreportes(res, DB.pendcomp);
-  }, //
-  agrupadocliente: async (req, res) => {
-    await getreportes(res, DB.pendcli);
-  }, //ok
-  futurosingresos: async (req, res) => {
-    await getreportes(res, DB.ingresos);
-  }, //ok
-  stock: async (req, res) => {
-    await getreportes(res, DB.stocks2);
-  },
+ 
+
   w_scc: async (req, res) => {
     await getreportes(res, DB.w_scc);
   },
