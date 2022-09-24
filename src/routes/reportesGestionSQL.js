@@ -6,7 +6,7 @@ router.get("/ctacte", reportesGestionSQLController.ctacte);
 router.get("/ctacte/proveedores", reportesGestionSQLController.ctacteprov);
 router.get("/stock", reportesGestionSQLController.stock);
 router.get("/ingresos/vendedor", reportesGestionSQLController.ingresos);
-router.get("/pendientes", reportesGestionSQLController.pendientesDetallados);//group
+router.get("/pendientes", reportesGestionSQLController.pendientesDetallados);
 router.get("/pendientes/web", reportesGestionSQLController.pendientesAgrupados);//group
 //falta el q es sin group
 router.get(
