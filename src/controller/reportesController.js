@@ -79,7 +79,7 @@ const reportesController = {
           const result = await DB.remitos.update(
             {
               ESTADO: "PREPARADP",
-              fechafin: element.fechafin,
+              //fechafin: element.fechafin,
               REMITO: element.REMITO,
             },
             { where: { REMITO: element.REMITO } }
