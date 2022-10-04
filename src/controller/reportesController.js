@@ -85,7 +85,7 @@ const reportesController = {
             { where: { REMITO: element.REMITO } }
           );
         }
-        res.json("ok");
+        //if(i === (newArrayExcel.length - 1))return res.send({msg:'ok',status:200});
         /* let sql = `UPDATE wbt8.w_remitos
         SET cliente=?,
         ESTADO = ?,
@@ -117,6 +117,8 @@ const reportesController = {
      
        if(i === (newArrayExcel.length - 1))return res.send({msg:'ok',status:200}); */
       }
+      res.json("ok");
+
     } catch (e) {
       res.send(e);
     }
