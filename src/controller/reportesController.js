@@ -12,7 +12,7 @@ const regex = /^[0-9]*$/; //solo contenga numero
 const reportesController = {
   remito: async (req, res) => {
     try {
-      let ress = await DB.remitos.findAll();
+      let ress = await DB.w_remitos.findAll();
 
       res.send(ress);
     } catch (error) {
@@ -49,7 +49,6 @@ const reportesController = {
   facturaciondetallada: async (req, res) => {
     await getreportes(res, DB.factcomp);
   }, //ok
- 
 
   w_scc: async (req, res) => {
     await getreportes(res, DB.w_scc);
@@ -65,50 +64,57 @@ const reportesController = {
       const filterRemito = dataExcel.filter(
         (d) => regex.test(d.ClienteDestino) !== false
       );
-      const newArrayExcel = filterRemito.map((f) => ({
-        ...f,
-        REMITO: zeroFill(f.Delivery, 8, "00026"),
-        fechafin: new Date((f.FechaPCC - (25567 + 2)) * 86400 * 1000),
-        cliente: zeroFill(removeCharacters(f.ClienteDestino), 5),
-      }));
-      // await DB.remitos.update({ cliente:'006165'},{where:{REMITO:'002600009793'}})
-      //aca iniciamos la iteracion con un ciclo for
-      let isEnd=false
+      const pendingDeliveryFilter = filterRemito.filter(
+        (deliveryPending) => regex.test(deliveryPending.FechaPCC) !== false
+      );
+      const newArrayExcel = pendingDeliveryFilter.map((f) => {
+        return {
+          ...f,
+          REMITO: zeroFill(f.Delivery, 8, "00026"),
+         // fechafin: regex.test(f.FechaPCC)?new Date((f.FechaPCC - (25567 + 2)) * 86400 * 1000):null,
+          fechafin: new Date((f.FechaPCC - (25567 + 2)) * 86400 * 1000),
+          cliente: zeroFill(removeCharacters(f.ClienteDestino), 5),
+        };
+      });
       for (let i = 0; i < newArrayExcel.length; i++) {
         const element = newArrayExcel[i];
-          console.log(element);
-        let sql = `UPDATE wbt8.w_remitos
-        SET cliente=?,
-        ESTADO = ?,
-         fechafin=?
-        WHERE  REMITO = ?`;
-
         if (element.Estado === "CAR") {
-          let data = [element.cliente,"DESPACHADO",element.fechafin, element.REMITO];
-          await connection.query(sql, data, (error, results, fields) => {
-            //if (error) return res.send(error.message);
-            
-            
-          });
-        }  
-         if(element.Estado === 'PRE'){
-          let data = [element.cliente,"PREPARADO",element.fechafin, element.REMITO];
-          await connection.query(sql, data, (error, results, fields) => {
-            //if (error) return res.send(error.message);
-            
-          });
+          await DB.w_remitos.update(
+            {
+              ESTADO: "DESPACHADO",
+              fechafin: element.fechafin,
+              REMITO: element.REMITO,
+              cliente: element.cliente,
+            },
+            { where: { REMITO: element.REMITO } }
+          );
         }
-        if(element.Estado === 'ACT'|| element.Estado === 'ACO'){
-          let data = [element.cliente,"EN PREPARACION",element.fechafin, element.REMITO];
-          await connection.query(sql, data, (error, results, fields) => {
-          //  if (error) return res.send(error.message);
-         
-          });
-        } 
-     
-       if(i === (newArrayExcel.length - 1))return res.send({msg:'ok',status:200});
-     
+        if (element.Estado === "PRE") {
+          console.log(element);
+          await DB.w_remitos.update(
+            {
+              ESTADO: "PREPARADO",
+              fechafin: element.fechafin,
+              REMITO: element.REMITO,
+              cliente: element.cliente,
+            },
+            { where: { REMITO: element.REMITO } }
+          );
+        }
+
+        if (element.Estado === "ACT" || element.Estado === "ACO") {
+          await DB.w_remitos.update(
+            {
+              ESTADO: "EN PREPARACION",
+              fechafin: element.fechafin,
+              REMITO: element.REMITO,
+              cliente: element.cliente,
+            },
+            { where: { REMITO: element.REMITO } }
+          );
+        }
       }
+      res.json({msg:'se modifico con exito!!!',status:200});
     } catch (e) {
       res.send(e);
     }
