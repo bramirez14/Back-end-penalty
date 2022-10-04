@@ -7,7 +7,6 @@ const { getreportes } = require("./helpers/funcionesReportes");
 const XLSX = require("xlsx");
 const { zeroFill, removeCharacters } = require("./helpers/funciones");
 const connection = require("../sql/mysql/model");
-const { RESERVED_EVENTS } = require("socket.io/dist/socket");
 const regex = /^[0-9]*$/; //solo contenga numero
 
 const reportesController = {
@@ -50,7 +49,6 @@ const reportesController = {
   facturaciondetallada: async (req, res) => {
     await getreportes(res, DB.factcomp);
   }, //ok
- 
 
   w_scc: async (req, res) => {
     await getreportes(res, DB.w_scc);
@@ -72,16 +70,22 @@ const reportesController = {
         fechafin: new Date((f.FechaPCC - (25567 + 2)) * 86400 * 1000),
         cliente: zeroFill(removeCharacters(f.ClienteDestino), 5),
       }));
-      
+
       for (let i = 0; i < newArrayExcel.length; i++) {
         const element = newArrayExcel[i];
-          console.log(element);
-          if (element.Estado === "PRE") {
-            console.log(element.REMITO);
-          const result= await DB.remitos.update({ESTADO:'PREPARADP',fechafin:element.fechafin,REMITO:element.REMITO}
-          ,{where:{REMITO:element.REMITO}})
-          }
-            res.json('ok')
+        console.log(element);
+        if (element.Estado === "PRE") {
+          console.log(element.REMITO);
+          const result = await DB.remitos.update(
+            {
+              ESTADO: "PREPARADP",
+              fechafin: element.fechafin,
+              REMITO: element.REMITO,
+            },
+            { where: { REMITO: element.REMITO } }
+          );
+        }
+        res.json("ok");
         /* let sql = `UPDATE wbt8.w_remitos
         SET cliente=?,
         ESTADO = ?,
@@ -112,7 +116,6 @@ const reportesController = {
         } 
      
        if(i === (newArrayExcel.length - 1))return res.send({msg:'ok',status:200}); */
-     
       }
     } catch (e) {
       res.send(e);
