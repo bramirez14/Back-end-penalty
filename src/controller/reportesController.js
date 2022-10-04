@@ -67,20 +67,21 @@ const reportesController = {
       const newArrayExcel = filterRemito.map((f) => ({
         ...f,
         REMITO: zeroFill(f.Delivery, 8, "00026"),
-        fechafin: new Date((f.FechaPCC - (25567 + 2)) * 86400 * 1000),
+        fechafin: regex.test(f.FechaPCC)?new Date((f.FechaPCC - (25567 + 2)) * 86400 * 1000):null,
         cliente: zeroFill(removeCharacters(f.ClienteDestino), 5),
       }));
 
       for (let i = 0; i < newArrayExcel.length; i++) {
         const element = newArrayExcel[i];
         console.log(element);
-        if (element.Estado === "PRE") {
+        if (element.Estado === "CAR") {
           console.log(element.REMITO);
           const result = await DB.remitos.update(
             {
               ESTADO: "PREPARADP",
-              //fechafin: element.fechafin,
+              fechafin: element.fechafin,
               REMITO: element.REMITO,
+              cliente:element.cliente
             },
             { where: { REMITO: element.REMITO } }
           );
