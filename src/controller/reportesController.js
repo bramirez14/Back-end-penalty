@@ -77,6 +77,7 @@ const reportesController = {
         const element = newArrayExcel[i];
           console.log(element);
           if (element.Estado === "PRE") {
+            console.log(element.REMITO);
           const result= await DB.remitos.update({ESTADO:'PREPARADP',fechafin:element.fechafin,REMITO:element.REMITO}
           ,{where:{REMITO:element.REMITO}})
           }
