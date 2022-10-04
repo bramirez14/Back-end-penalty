@@ -7,6 +7,7 @@ const { getreportes } = require("./helpers/funcionesReportes");
 const XLSX = require("xlsx");
 const { zeroFill, removeCharacters } = require("./helpers/funciones");
 const connection = require("../sql/mysql/model");
+const { RESERVED_EVENTS } = require("socket.io/dist/socket");
 const regex = /^[0-9]*$/; //solo contenga numero
 
 const reportesController = {
@@ -71,13 +72,16 @@ const reportesController = {
         fechafin: new Date((f.FechaPCC - (25567 + 2)) * 86400 * 1000),
         cliente: zeroFill(removeCharacters(f.ClienteDestino), 5),
       }));
-      // await DB.remitos.update({ cliente:'006165'},{where:{REMITO:'002600009793'}})
-      //aca iniciamos la iteracion con un ciclo for
-      let isEnd=false
+      
       for (let i = 0; i < newArrayExcel.length; i++) {
         const element = newArrayExcel[i];
           console.log(element);
-        let sql = `UPDATE wbt8.w_remitos
+          if (element.Estado === "PRE") {
+          const result= await DB.remitos.update({ESTADO:'PREPARADP',fechafin:element.fechafin,REMITO:element.REMITO}
+          ,{where:{REMITO:element.REMITO}})
+          }
+            res.json('ok')
+        /* let sql = `UPDATE wbt8.w_remitos
         SET cliente=?,
         ESTADO = ?,
          fechafin=?
@@ -106,7 +110,7 @@ const reportesController = {
           });
         } 
      
-       if(i === (newArrayExcel.length - 1))return res.send({msg:'ok',status:200});
+       if(i === (newArrayExcel.length - 1))return res.send({msg:'ok',status:200}); */
      
       }
     } catch (e) {
