@@ -27,8 +27,6 @@ const {
   clo,
   tablaIntermedia,
 } = require("./helpers/funciones");
-const db = require("../database/models2");
-const { log } = require("console");
 
 const usersController = {
   files: async (req, res) => {

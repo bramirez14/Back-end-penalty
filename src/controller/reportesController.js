@@ -1,12 +1,7 @@
-const express = require("express");
-const path = require("path");
-const fs = require("fs");
 const DB = require("../database/models2");
-const pdf = require("html-pdf");
 const { getreportes } = require("./helpers/funcionesReportes");
 const XLSX = require("xlsx");
 const { zeroFill, removeCharacters } = require("./helpers/funciones");
-const connection = require("../sql/mysql/model");
 const regex = /^[0-9]*$/; //solo contenga numero
 
 const reportesController = {

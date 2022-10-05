@@ -4,7 +4,8 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
-const bodyParser = require("body-parser");
+//const bodyParser = require("body-parser");
+
 
 var indexRouter = require("./routes/reportes");
 var usersRouter = require("./routes/users");
@@ -13,6 +14,8 @@ var vacacionesRouter = require("./routes/vacaciones");
 var zsccSQLRouter = require("./routes/zscc");
 var pedidosSQLRouter = require("./routes/pedidos");
 var reportesGestionSQLRouter = require("./routes/reportesGestionSQL");
+var permissionsRouter= require("./routes/permissions");
+
 
 var app = express();
 
@@ -35,6 +38,8 @@ app.use("/api/vacaciones", vacacionesRouter);
 app.use("/api/scc", zsccSQLRouter);
 app.use("/api/pedidos", pedidosSQLRouter);
 app.use("/api/sql/reportes", reportesGestionSQLRouter);
+app.use("/api/permissions",permissionsRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
