@@ -105,6 +105,7 @@ const usersController = {
           "departamento",
           "kilometro",
           "gerente",
+          "permission"
         ],
       });
       res.send(result);

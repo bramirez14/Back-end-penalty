@@ -45,10 +45,10 @@ usuarios.associate = function(models) {
       as:'gerente'
     })
     usuarios.belongsToMany(models.permissions,{
-      as:'permissions',
+      as:'permission',
       through:'users_permissions',
-      foreignKey:'permissionId',
-      otherKey:'userId'
+      foreignKey:'userId',
+      otherKey:'permissionId'
   })
   };
   return usuarios;

@@ -6,7 +6,7 @@ const permissionsController = {
     //permisos 
     allPermissions: async (req, res) => { 
         try {
-          const response = await DB.permissions.findAll();
+          const response = await DB.permissions.findAll({include:['users']});//all: true, nested: true 
             res.json(response)
         } catch (error) {
           res.send(error);
