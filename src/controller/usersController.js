@@ -105,7 +105,7 @@ const usersController = {
           "departamento",
           "kilometro",
           "gerente",
-          "permission"
+          "permissions"
         ],
       });
       res.send(result);
@@ -125,6 +125,7 @@ const usersController = {
           "departamento",
           "kilometro",
           "gerente",
+          "permissions"
         ],
       });
       res.send(usuario);
@@ -201,6 +202,15 @@ const usersController = {
 
       // Buscar usuario
       let user = await DB.usuarios.findOne({
+        include: [
+          "anticipo",
+          "vacacion",
+          "gasto",
+          "departamento",
+          "kilometro",
+          "gerente",
+          "permissions"
+        ],
         where: {
           email: e,
         },

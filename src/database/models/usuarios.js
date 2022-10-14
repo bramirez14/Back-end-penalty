@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     apellido: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    roles:DataTypes.STRING,
+    role:DataTypes.STRING,
     tipousuario: DataTypes.STRING,
     categoria:DataTypes.STRING,
     nvendedor: DataTypes.STRING,
@@ -45,7 +45,7 @@ usuarios.associate = function(models) {
       as:'gerente'
     })
     usuarios.belongsToMany(models.permissions,{
-      as:'permission',
+      as:'permissions',
       through:'users_permissions',
       foreignKey:'userId',
       otherKey:'permissionId'
