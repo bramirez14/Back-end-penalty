@@ -144,6 +144,7 @@ const usersController = {
 
   //Registro de Usuarios
   register: async (req, res) => {
+    console.log(req.body,'is  REGISTER');
     try {
       let data = req.body;
       const { email, password, password2 } = data;
@@ -166,6 +167,17 @@ const usersController = {
             password: encryptedKey,
             email: e,
           });
+          console.log(user.dataValues.id,'is USUARIO');
+            //CREAMOS LA RELACIOS PERMISOS Y USUARIO
+            //EJ checkedList: [ 1, 2, 3, 7 ]
+          for (const iterator of req.body.checkedList) {
+            
+            await DB.users_permissions.create({
+              userId:user.dataValues.id,
+              permissionId:iterator
+            })
+          }
+
           let token;
           !user
             ? res.send(
