@@ -85,7 +85,6 @@ const reportesController = {
           );
         }
         if (element.Estado === "PRE") {
-          console.log(element);
           await DB.w_remitos.update(
             {
               ESTADO: "PREPARADO",

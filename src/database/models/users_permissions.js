@@ -5,6 +5,10 @@ const usuarios = require("./usuarios");
 
 module.exports = (sequelize, DataTypes) => {
   const users_permissions = sequelize.define('users_permissions', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     userId: DataTypes.INTEGER,
     permissionId: DataTypes.INTEGER
   }, {});
