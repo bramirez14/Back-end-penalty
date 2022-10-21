@@ -7,9 +7,9 @@ const regex = /^[0-9]*$/; //solo contenga numero
 const reportesController = {
   remito: async (req, res) => {
     try {
-      let ress = await DB.w_remitos.findAll();
+      let response = await DB.w_remitos.findAll({order:[["fecemision","DESC"]]});
 
-      res.send(ress);
+      res.send(response);
     } catch (error) {
       res.send(error);
     }
