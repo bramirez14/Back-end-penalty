@@ -1,6 +1,6 @@
 module.exports = {
   "development": {
-      "database": "WBT12",
+      "database": "WBT12-TEMP",
       "username": "sa",
        "password": "Cambuci2018",
        "dialect": "mssql",

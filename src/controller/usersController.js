@@ -105,7 +105,7 @@ const usersController = {
           "departamento",
           "kilometro",
           "gerente",
-          "permissions"
+          "permissions",
         ],
       });
       res.send(result);
@@ -125,7 +125,7 @@ const usersController = {
           "departamento",
           "kilometro",
           "gerente",
-          "permissions"
+          "permissions",
         ],
       });
       res.send(usuario);
@@ -166,6 +166,15 @@ const usersController = {
             password: encryptedKey,
             email: e,
           });
+          //CREAMOS LA RELACIOS PERMISOS Y USUARIO
+          //EJ checkedList: [ 1, 2, 3, 7 ]
+          for (const iterator of req.body.checkedList) {
+            await DB.users_permissions.create({
+              userId: user.dataValues.id,
+              permissionId: iterator,
+            });
+          }
+
           let token;
           !user
             ? res.send(
@@ -181,7 +190,7 @@ const usersController = {
                   res.json({
                     user: user,
                     token: token,
-                    status:200
+                    status: 200,
                   });
                 }
               );
@@ -209,7 +218,7 @@ const usersController = {
           "departamento",
           "kilometro",
           "gerente",
-          "permissions"
+          "permissions",
         ],
         where: {
           email: e,
@@ -1268,22 +1277,53 @@ const usersController = {
       const data = req.body;
       if (data.epassword === undefined) {
         await DB.usuarios.update({ ...data }, { where: { id: id } });
-        res.send({ message: "Editamos el usuario", status: 200 });
-      } else {
-        if (data.epassword === data.epassword2) {
-          //Editamos el usuario
-          const user = await DB.usuarios.update(
-            { ...data, password: bcrypt.hashSync(data.epassword, 10) },
-            { where: { id: id } }
-          );
-          res.send({
-            message: "Editamos el usuario y cambiamos contrasena",
-            status: 200,
-            result: user,
+        if (req.body.checkedListDelete.length > 0) {
+          const id_permission_users = await DB.users_permissions.findAll({
+            where: { userId: id },
           });
-          throw Exception("Las contraseñas no son iguales");
+          for (const iterator of id_permission_users) {
+            await DB.users_permissions.destroy({
+              where: { id: iterator.dataValues.id },
+            });
+          }
         }
+
+        for (const iterator of req.body.checkedList) {
+          await DB.users_permissions.create({
+            userId: id,
+            permissionId: iterator,
+          });
+        }
+
       }
+
+      if (data.epassword === data.epassword2) {
+        //Editamos el usuario
+        const user = await DB.usuarios.update(
+          { ...data, password: bcrypt.hashSync(data.epassword, 10) },
+          { where: { id: id } }
+        );
+
+        if (req.body.checkedListDelete.length > 0) {
+          const id_permission_users = await DB.users_permissions.findAll({
+            where: { userId: id },
+          });
+          for (const iterator of id_permission_users) {
+            await DB.users_permissions.destroy({
+              where: { id: iterator.dataValues.id },
+            });
+          }
+        }
+        for (const iterator of req.body.checkedList) {
+          await DB.users_permissions.create({
+            userId: id,
+            permissionId: iterator,
+          });
+        }
+        
+      }
+      res.send({ message: "Editamos el usuario", status: 200 });
+
     } catch (error) {
       res.send(error);
     }
@@ -1291,7 +1331,7 @@ const usersController = {
   deleteUser: async (req, res) => {
     try {
       const { id } = req.params;
-      
+
       let response = await DB.usuarios.findByPk(id, {
         include: [
           "anticipo",
