@@ -191,6 +191,7 @@ router.post("/agregar/newscc", async (req, res) => {
         'I',
         null,
         '1',
+        null
         null)`);
 
       for (let j = 0; j < buscarItemsClientes.length; j++) {
