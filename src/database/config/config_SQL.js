@@ -4,7 +4,8 @@ module.exports = {
       "username": "sa",
        "password": "Cambuci2018",
        "dialect": "mssql",
-       "host": "192.168.1.15",
+      //  "host": "192.168.1.15",
+       "host": "192.168.1.24",
        "params":{
          "storage":"WBT12-db.mssql",
          "define":{
