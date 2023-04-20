@@ -1,4 +1,6 @@
 const { getConnection } = require("../sql/conexion");
+require('dotenv').config()
+const TABLE =process.env.TABLE
 const zsccController = {
   todasZSCC: async (req, res) => {
     try {
@@ -6,7 +8,7 @@ const zsccController = {
 
       const result = await pool
         .request()
-        .query("SELECT * FROM [WBT12].[dbo].[SCCvista]");
+        .query(`SELECT * FROM ${TABLE}.[SCCvista]`);
       res.send(result.recordsets);
     } catch (e) {
       res.send(e);
