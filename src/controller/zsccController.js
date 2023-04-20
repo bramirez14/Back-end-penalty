@@ -62,7 +62,7 @@ const zsccController = {
     const { id } = req.params;
     try {
       const pool = await getConnection();
-      await pool.request().query(`UPDATE [WBT12].[dbo].[Z_SCC] SET 
+      await pool.request().query(`UPDATE ${TABLE}.[Z_SCC] SET 
         CANTPED=${req.body.CANTPED}, 
         PRECIO=${req.body.PRECIO},
         COMENTARIO='${req.body.COMENTARIO}',
@@ -88,7 +88,7 @@ const zsccController = {
       const resulte = await pool
         .request()
         .query(
-          `SELECT * FROM  [WBT12].[dbo].[Z_SCC]  Where NROSCC = ${id}`
+          `SELECT * FROM  ${TABLE}.[Z_SCC]  Where NROSCC = ${id}`
         );
 
       res.send({ ...resulte.recordsets[0][0], status: 200 });
@@ -100,7 +100,7 @@ const zsccController = {
     try {
       const pool = await getConnection();
       const result = await pool.request()
-        .query(` SELECT* FROM [WBT12].[dbo].[Z_SCC]
+        .query(` SELECT* FROM ${TABLE}.[Z_SCC]
       WHERE  NROCOMP is null AND APROBCRED ='S' AND APROBDEP='S' `);
       res.send(result.recordset);
     } catch (e) {
@@ -129,7 +129,7 @@ delete: async (req, res) => {
 },
 //NUEVA SCC 
 
-newSCC:async()=>{ 
+newSCC:async(req,res)=>{ 
   try {
     let date = new Date();
     let day = date.getDate();
