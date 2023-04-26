@@ -2,7 +2,7 @@ module.exports = {
   "development": {
     "username": "root",
      "password": "Cambuci14",
-     "database": "intranetpenalty",
+     "database": "intranetpenalty_temp",
      "host": "181.45.252.13",
      "dialect": "mysql",
      "define": {
