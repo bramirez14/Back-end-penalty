@@ -1,6 +1,6 @@
 {
   "name": "back-end-penalty",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "private": true,
   "scripts": {
     "start": " nodemon ./src/bin/www",
