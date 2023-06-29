@@ -9,11 +9,16 @@ const validationUser = require("../middlewares/validationUser");
 const validationLogin = require("../middlewares/validationLogin");
 const { uid } = require("uid");
 const alertaController = require("../controller/alertaController");
+
 //fx de multer
 const storage = multer.diskStorage({
   destination: path.join(__dirname, "../../public/upload"),
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().split("T")[0];
+    const formattedTime = currentDate.toLocaleTimeString([], { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" }).replace(/:/g, ".");
+    const name = file.originalname.split(".")[0];
+    cb(null, name + "-" + formattedDate + "-" + formattedTime + path.extname(file.originalname));
   },
 });
 var upload = multer({ storage });
